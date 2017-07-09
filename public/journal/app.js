@@ -1,3 +1,5 @@
+const isUrl = require('is-url')
+
 const MOCK_JOURNAL_ENTRIES = {
 	"journalEntries": [
 		{
@@ -86,25 +88,37 @@ const MOCK_JOURNAL_ENTRIES = {
 									"<label>Priority</label>" +
 									"<select name=\"priority\" id=\"linkPriority\">" +
 										"<option value=\"high\">High</option>" +
-										"<option value=\"medium\">Medium</option>" +
+										"<option value=\"medium\" selected>Medium</option>" +
 										"<option value=\"low\">Low</option>" +
 									"<input type=\"submit\" name=\"submit\" id=\"newLinkFormSubmit\"></input>" +
+									"<button type=\"cancel\">Cancel</button>" +
 								"<form>" +
 							"</div>";
 
 		$('#newLink').on('click', () => {
-			$('#linkSection').prepend(formTemplate)
+			if(!($('#newLinkForm').length)){
+				$('#linkSection').prepend(formTemplate)
+			}
 		})
 	}
+
 
 	function postJournalEntry(){
 		$("#linkSection").on('click', '#newLinkFormSubmit', (event) => {
 			event.preventDefault();
 
 			let title = $('#linkTitle').val()
-			let url = $('#linkUrl').val()
+			let url =  (isUrl($('#linkUrl').val()) == true) ? $('#linkUrl').val() : "http://" + $('#linkUrl').val()
 			let priority = $('#linkPriority').val()
 			let randId = (Math.floor(100000 + Math.random() * 900000)).toString()
+
+			console.log(title)
+
+			if (title.search(/[a-zA-Z0-9]/g) == -1){
+				alert('please enter a title for your entry')
+				$('#linkTitle').focus()
+				return 
+			}
 
 			let newLink = {
 				'id': randId,
@@ -114,7 +128,6 @@ const MOCK_JOURNAL_ENTRIES = {
 				'user': 'john doe',
 				'date': Date.now
 			}
-
 
 			MOCK_JOURNAL_ENTRIES["journalEntries"].push(newLink)
 
@@ -228,7 +241,7 @@ const MOCK_JOURNAL_ENTRIES = {
 	}
 // *********************************** //
 
-	//Add/remove edit features
+	//Add and remove edit features
 // *********************************** //
 	function addEditDeleteButtons(){
 		$("#editLink").on('click', () => {
@@ -240,9 +253,7 @@ const MOCK_JOURNAL_ENTRIES = {
 		$('.udButton').addClass('hidden')
 	}
 // *********************************** //
-
-
-
+ 
 $(() => {
 	getAndDisplayJournalEntries()
 	addJournalEntryForm()
