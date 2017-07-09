@@ -182,17 +182,12 @@ const MOCK_JOURNAL_ENTRIES = {
 			let editPriority = $('#linkPriority').val()
 			let editURL = $('#linkUrl').val()
 
-			console.log(editID, editTitle, editPriority, editURL)
-
 			for (index in data.journalEntries){
 				let entry = data.journalEntries[index]
 				if(entry.id === editID){
-					console.log(entry)
 					entry.title = editTitle
 					entry.priority = editPriority
 					entry.link = editURL
-					console.log('finished edits')
-					console.log(entry)
 				}
 			}
 			$('.editForm').remove()
@@ -214,14 +209,13 @@ const MOCK_JOURNAL_ENTRIES = {
 			let parentDiv = $(this).parent().parent()
 			let linkID = $(parentDiv).attr('id')
 
-			console.log(MOCK_JOURNAL_ENTRIES)
 			for (index in data.journalEntries){
 				let entry = data.journalEntries[index]
 				if (entry.id === linkID){
 					data.journalEntries.splice(index, 1)
 				}
 			}
-			
+
 			removeEditDeleteButtons()
 			$(".postDiv").remove()
 			getAndDisplayJournalEntries()
