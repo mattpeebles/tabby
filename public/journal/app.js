@@ -129,7 +129,7 @@ const MOCK_JOURNAL_ENTRIES = {
 	}
 // *********************************** //
 
-	//Put journal entries
+	// Put journal entries
 // *********************************** //
 	function addUpdateEntriesForm(){
 		$("#linkSection").on('click', ".edit", function(){
@@ -151,6 +151,7 @@ const MOCK_JOURNAL_ENTRIES = {
 								"<option id=\"medium\"value=\"medium\">Medium</option>" +
 								"<option id=\"low\" value=\"low\">Low</option>" +
 							"<input type=\"submit\" name=\"submit\" id=\"editLinkFormSubmit\"></input>" +
+							"<button type=\'cancel\' id=\'cancelEditForm\'>Cancel</button>"
 						"<form>" +
 					"</div>";
 
@@ -206,6 +207,32 @@ const MOCK_JOURNAL_ENTRIES = {
 	}
 // *********************************** //
 
+	// Delete journal entries
+// *********************************** //
+	function deleteEntry(data){
+		$('#linkSection').on('click', '.delete', function(){
+			let parentDiv = $(this).parent().parent()
+			let linkID = $(parentDiv).attr('id')
+
+			console.log(MOCK_JOURNAL_ENTRIES)
+			for (index in data.journalEntries){
+				let entry = data.journalEntries[index]
+				if (entry.id === linkID){
+					data.journalEntries.splice(index, 1)
+				}
+			}
+			
+			removeEditDeleteButtons()
+			$(".postDiv").remove()
+			getAndDisplayJournalEntries()
+		})
+	}
+
+	function deleteEntryFromDataBase(){
+		deleteEntry(MOCK_JOURNAL_ENTRIES)
+	}
+// *********************************** //
+
 
 	//Add/remove edit features
 // *********************************** //
@@ -228,4 +255,5 @@ $(() => {
 	postJournalEntry()
 	addEditDeleteButtons()
 	addUpdateEntriesForm()
+	deleteEntryFromDataBase()
 })
