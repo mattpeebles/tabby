@@ -104,7 +104,7 @@ const MOCK_JOURNAL_ENTRIES = {
 			let title = $('#linkTitle').val()
 			let url = $('#linkUrl').val()
 			let priority = $('#linkPriority').val()
-			let randId = Math.floor(100000 + Math.random() * 900000)
+			let randId = (Math.floor(100000 + Math.random() * 900000)).toString()
 
 			let newLink = {
 				'id': randId,
@@ -197,7 +197,6 @@ const MOCK_JOURNAL_ENTRIES = {
 
 			getAndDisplayJournalEntries()
 
-
 		})
 	}
 // *********************************** //
@@ -209,6 +208,7 @@ const MOCK_JOURNAL_ENTRIES = {
 			let parentDiv = $(this).parent().parent()
 			let linkID = $(parentDiv).attr('id')
 
+
 			for (index in data.journalEntries){
 				let entry = data.journalEntries[index]
 				if (entry.id === linkID){
@@ -219,6 +219,7 @@ const MOCK_JOURNAL_ENTRIES = {
 			removeEditDeleteButtons()
 			$(".postDiv").remove()
 			getAndDisplayJournalEntries()
+
 		})
 	}
 
@@ -226,7 +227,6 @@ const MOCK_JOURNAL_ENTRIES = {
 		deleteEntry(MOCK_JOURNAL_ENTRIES)
 	}
 // *********************************** //
-
 
 	//Add/remove edit features
 // *********************************** //
