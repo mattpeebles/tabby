@@ -1,31 +1,3 @@
-function validateForm(){
-	$('#signUpForm').validate({
-		rules: {
-			password: "required",
-			confirmPassword: {
-				equalTo: "#password"
-			},
-			email: {
-				required: true,
-				email: true
-			},
-
-		},
-
-		// changes success messages
-		success: function(label){
-    		label.addClass("valid").text("Ok!");                        
-		},
-		// changes error messages
-		messages: {
-			password: "Please enter a password",
-			confirmPassword: "Please enter a matching password"
-		}
-	})
-}
-
-let MOCK_USER_DATA = {"users": []};
-
 const MOCK_JOURNAL_ENTRIES = {
 	"journalEntries": [
 		{
@@ -63,31 +35,76 @@ const MOCK_JOURNAL_ENTRIES = {
 	]
 }
 
-function submitForm(){
-	$("#signUp").on('click', (event) => {
+const MOCK_USER_DATA = {
+	"users": [
+				{
+					'firstName': "Isabella",
+					"lastName": "Johannason",
+					"email": "testemail@email.com",
+					"password": "pseudohashedpassword",
+					"journalEntries": MOCK_JOURNAL_ENTRIES.journalEntries
+				},
+				{
+					'firstName': "Heather",
+					"lastName": "Gray",
+					"email": "testemail1@email.com",
+					"password": "pseudohashedpassword",
+					"journalEntries": MOCK_JOURNAL_ENTRIES.journalEntries
+				},
+				{
+					'firstName': "Geoffrey",
+					"lastName": "Lucas",
+					"email": "testemail2@email.com",
+					"password": "pseudohashedpassword",
+					"journalEntries": MOCK_JOURNAL_ENTRIES.journalEntries
+				},
+				{
+					'firstName': "Ezra",
+					"lastName": "Wild",
+					"email": "testemail3@email.com",
+					"password": "pseudohashedpassword",
+					"journalEntries": MOCK_JOURNAL_ENTRIES.journalEntries
+				},
+			]
+		};
+
+
+
+function signIn(){
+	$('#logIn').on('click', (event) => {
 		event.preventDefault()
-		var data = $('#signUpForm').serializeArray().reduce((obj, item) => {
-   		 if(item.name === "password"){
-   		 	obj[item.name] = "pseudohashedpassword" //this will need to be changed to bcrypt hashed password for production
-   		 }
-   		 else if(item.name !== "confirmPassword"){
-   		 	obj[item.name] = item.value;
 
-   		 }
-   		 return obj;
-		}, {});
+		let data = $('#signInForm').serializeArray().reduce((obj, item) => {
+				obj[item.name] = item.value
 
-		data.MOCK_JOURNAL_ENTRIES = MOCK_JOURNAL_ENTRIES.journalEntries;
-		
-		MOCK_USER_DATA['users'].push(data)
+			return obj
+		}, {})
 
-		console.log(MOCK_USER_DATA)
+		let userData; 
 
+		MOCK_USER_DATA["users"].forEach((user) => {
+			if (data.email === user.email){
+				if(data.password === user.password){
+					userData = {
+						'firstName': user.firstName,
+						'lastName': user.lastName,
+						'email': user.email,
+						'journalEntries': user.journalEntries
+					}
+				}
+			}
+		})
+
+		if (userData !== undefined){
+			console.log(userData)
+		}
+		else{
+			console.log('Sorry, we could not match the information provided')
+		}
 	})
 }
 
 
 $(() => {
-	validateForm()
-	submitForm()
+	signIn()
 })
