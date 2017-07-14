@@ -5,12 +5,14 @@ const userSchema = mongoose.Schema({
 			firstName: String,
 			lastName: String },
 	date: {type: Date, default: Date.now},
+	expiry: {type: Date},
 	email: {type: String, required: true},
 	password: {type: String, required: true},
-	journalEntries: {type: Array}
+	journalEntries: {type: Array},
+	priorityExpiry: {type: Object}
 })
 
-userSchema.virtual('fullName').get(function(){ //cannot use =>
+userSchema.virtual('fullName').get(function(){
 	return `${this.user.firstName} ${this.user.lastName}`.trim()
 })
 
@@ -21,20 +23,9 @@ userSchema.methods.userRepr = function(){
 		user: this.fullName,
 		email: this.email,
 		entries: this.journalEntries,
-		date: this.date
-	}
-}
-
-userSchema.methods.entriesRepr = function(){
-	let entries = this.journalEntries
-	return {
-		id: entries.id,
-		title: entries.title,
-		priority: entries.priority,
-		link: entries.link,
-		user: entry.user,
-		date: entry.date
-
+		date: this.date,
+		expiry: this.expiry,
+		priorityExpiry: this.priorityExpiry
 	}
 }
 
