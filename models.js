@@ -4,11 +4,11 @@ const userSchema = mongoose.Schema({
 	user: { 
 			firstName: String,
 			lastName: String },
-	date: {type: Date, default: Date.now},
+	joinDate: {type: Date, default: Date.now},
 	expiry: {type: Date},
 	email: {type: String, required: true},
 	password: {type: String, required: true},
-	journalEntries: {type: Array},
+	entries: {type: Array},
 	priorityExpiry: {type: Object}
 })
 
@@ -22,8 +22,8 @@ userSchema.methods.userRepr = function(){
 		id: this._id,
 		user: this.fullName,
 		email: this.email,
-		entries: this.journalEntries,
-		date: this.date,
+		entries: this.entries,
+		joinDate: this.joinDate.toString(),
 		expiry: this.expiry,
 		priorityExpiry: this.priorityExpiry
 	}
