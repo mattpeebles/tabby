@@ -44,7 +44,7 @@ upInRouter.post("/", jsonParser, (req, res) => {
 			email: req.body.email,
 			password: req.body.password,
 			joinDate: req.body.joinDate || Date.now(),
-			entries: [],
+			journalId: req.body.journalId,
 		})
 		.then(
 			user => res.status(201).json(user.userRepr()))
@@ -54,4 +54,29 @@ upInRouter.post("/", jsonParser, (req, res) => {
 		})
 })
 
+upInRouter.put('/:id', jsonParser, (req, res) => {
+	if (!(req.params.id && req.body.id && req.params.id === req.body.id)){
+		const message = (
+		  `Request path id (${req.params.id}) and request body id ` +
+		  `(${req.body.id}) must match`);
+		console.error(message);
+		res.status(400).json({message: message});
+	}
+	const toUpdate = {}
+	const updatedableFields = ['user', 'email', 'password']
+
+	console.log(req.body)
+
+	updatedableFields.forEach(field =>{
+		if (field in req.body){
+			toUpdate[field] = req.body[field]
+		}
+	})
+
+	Users
+		.findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
+		.exec()
+		.then(updatedUser => res.status(201).json(updatedUser.userRepr()))
+		.catch(err => res.status(500).json({message: 'Internal server error'}))
+})
 module.exports = upInRouter
