@@ -33,8 +33,8 @@ function generateUserData(){
 		user: name,
 		email: generateEmail(),
 		password: generatePassword(),
-		date: generateDate(),
-		journalEntries: generateJournalEntries(name)
+		joinDate: generateDate(),
+		entries: generateJournalEntries(name)
 	}
 }
 
@@ -53,7 +53,7 @@ function generateDate(){
 	return faker.date.recent()
 }
 
-function generateJournalEntries(name){
+function generateEntry(name){
 	let priorityArray = ['high', 'medium', 'low']
 
 	function addDays(startDate, numberOfDays){
@@ -101,6 +101,14 @@ function generateJournalEntries(name){
 	}
 
 	return entries
+}
+
+function generateJournalEntries(name){
+	let journalEntries = []
+	for (let i = 1; i <= 5; i++){
+		journalEntries.push(generateEntry(name))
+	}
+	return journalEntries
 }
 
 function generatePassword(){
@@ -156,7 +164,10 @@ describe('Users API resource', () => {
 						user.id.should.be.a('string')
 						user.user.should.be.a('string')
 						user.email.should.be.a('string')
-						user.date.should.be.a('string')
+						user.joinDate.should.be.a('string')
+						entries.should.be.a('array')
+						entries.should.have.length.of.at.least(5)
+						entries.should.have.length.of.at.most(5)
 
 						entries.forEach((entry) =>{
 
@@ -193,5 +204,32 @@ describe('Users API resource', () => {
 					res.body.users.should.have.length.of.at.least(count)
 				})
 		}) //this is just a test, will not be in production
+	})
+
+	describe('Post', () => {
+		it('should add new user on POST to /users', () => {
+			let date = new Date(Date.now()).toString()
+			const newUser = {
+				firstName: faker.name.firstName(),
+				lastName: faker.name.lastName(), 
+				email: generateEmail(),
+				password: generatePassword(),
+				entries: [],
+				joinDate: date
+			}
+
+			return chai.request(app)
+				.post('/users')
+				.send(newUser)
+				.then(function(res){
+					console.log(newUser.joinDate)
+					res.should.have.status(201)
+					res.should.be.json
+					res.body.should.be.a('object')
+					res.body.should.include.keys('user', 'email', 'id', 'entries', 'joinDate')
+					res.body.id.should.not.be.null
+					res.body.should.eql({user: newUser.firstName + " " + newUser.lastName, email: newUser.email, entries: newUser.entries, id: res.body.id, joinDate: newUser.joinDate})
+				})
+		})
 	})
 })
