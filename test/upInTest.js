@@ -3,6 +3,8 @@ const chaiHttp = require('chai-http')
 const should = chai.should()
 const expect = chai.expect
 
+const btoa = require('btoa')
+
 chai.use(chaiHttp)
 
 const mongoose = require('mongoose')
@@ -26,7 +28,9 @@ function seedUserData(){
 	return Users.insertMany(seedData)
 }
 
+
 function generateUserData(){
+
 	return {
 		user: {firstName: generateFirstName(),
 				lastName: generateLastName()
@@ -95,89 +99,77 @@ describe('Users API resource', () => {
 
 	describe('Get endpoint', () => {
 
-		it('should return all existing users', () => {
+		it('should return signed in user on GET', () => {
+			const newUser = {
+						user: {
+							firstName: 'Matt',
+							lastName: 'Peebles'
+						}, 
+						email: 'testemail@test.com',
+						password: 'yolo',
+						journalId: generateJournalId(),
+						joinDate: new Date(Date.now()),
+						priorityExpiry: {'high': 2, 'medium': 4, 'low': 7}
+					}
 			let res;
+			let BasicAuthToken = 'Basic ' + btoa(unescape(encodeURIComponent(newUser.email + ':' + newUser.password)))
+
 			return chai.request(app)
-				.get('/users')
-				.then(_res => {
-					res = _res;
+				.post('/users')
+				.send(newUser)
+				.then((res) => {
+					res.should.have.status(201)
+					res.should.be.a('object')
+					res.body.id.should.not.be.null
+					res.body.email.should.be.equal('testemail@test.com')
 					
-					let users = res.body.users
-
-					res.should.have.status(200)
-					res.body.should.be.an('object')
-					res.body.users.should.have.length.of.at.least(1)
-					
-
-					users.forEach((user) => {
-						let entries = user.entries
-
-						user.id.should.be.a('string')
-						user.user.should.be.a('string')
-						user.email.should.be.a('string')
-						user.joinDate.should.be.a('string')
-						user.journalId.should.be.a('string')
-						user.priorityExpiry.should.be.a('object')
-						user.priorityExpiry.should.include.keys('high', 'medium', 'low')
-
-						// entries.forEach((entry) =>{
-
-						// 	entry.id.should.be.a('string')
-						// 	entry.title.should.be.a('string')
-						// 	entry.link.should.be.a('string')
-						// 	entry.name.should.be.a('string')
-						// 	entry.priority.should.be.a('string')
-						// 	expect(['high', 'medium', 'low']).to.include(entry.priority)
-						// 	entry.date.should.be.a('string')
-						// 	entry.expiry.should.be.a('string')
-
-						// 	let expiryDate = new Date(entry.expiry)
-						// 	let createdDate = new Date(entry.date)
-
-						// 	if (entry.priority == 'high'){
-						// 		(Math.round((expiryDate.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24))).should.equal(entry.priorityExpiry.high)
-						// 	}
-						// 	else if (entry.priority == 'medium'){
-						// 		(Math.round((expiryDate.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24))).should.equal(entry.priorityExpiry.medium)
-						// 	}
-						// 	else if (entry.priority == 'low'){
-						// 		(Math.round((expiryDate.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24))).should.equal(entry.priorityExpiry.low)
-						// 	}
-						// })
-					})
-
-					return Users.count()
+					return chai.request(app)
+						.get('/users/me')
+						.set('Authorization', BasicAuthToken)					
+						.then(_res => {
+							res = _res
+							let user = res.body.user
+							res.should.have.status(200)
+							res.should.be.json
+							user.id.should.be.a('string')
+							user.user.should.be.a('string')
+							user.email.should.be.a('string')
+							user.joinDate.should.be.a('string')
+							user.journalId.should.be.a('string')
+							user.priorityExpiry.should.be.a('object')
+							user.priorityExpiry.should.include.keys('high', 'medium', 'low')
+						})
 				})
-				.then(count => {
-					res.body.users.should.have.length.of.at.most(count)
-					res.body.users.should.have.length.of.at.least(count)
-				})
-		}) //this is just a test, will not be in production
+		});
 	})
 
+
+
 	describe('POST endpoint', () => {
-		it('should add new user on POST to /users', () => {
+		it('should add new user on POST', () => {
 			let date = new Date(Date.now()).toString()
 			const newUser = {
-				firstName: faker.name.firstName(),
-				lastName: faker.name.lastName(), 
+				user: {
+					firstName: generateFirstName(),
+					lastName: generateLastName()
+				}, 
 				email: generateEmail(),
 				password: generatePassword(),
 				journalId: generateJournalId(),
-				joinDate: date
+				joinDate: date,
+				priorityExpiry: generatePriorityExpiry()
 			}
 
 			return chai.request(app)
 				.post('/users')
 				.send(newUser)
 				.then(function(res){
-					console.log(newUser.joinDate)
 					res.should.have.status(201)
 					res.should.be.json
 					res.body.should.be.a('object')
 					res.body.should.include.keys('user', 'email', 'id', 'journalId', 'joinDate')
 					res.body.id.should.not.be.null
-					res.body.should.eql({user: newUser.firstName + " " + newUser.lastName, email: newUser.email, journalId: newUser.journalId, id: res.body.id, joinDate: newUser.joinDate})
+					res.body.should.eql({user: newUser.user.firstName + " " + newUser.user.lastName, email: newUser.email, journalId: newUser.journalId, id: res.body.id, joinDate: newUser.joinDate, priorityExpiry: newUser.priorityExpiry})
 				})
 		})
 	})
@@ -191,18 +183,37 @@ describe('Users API resource', () => {
 				'password': 'pseudorandompassword'
 			}
 			return chai.request(app)
-				.get('/users')
-				.then((res)=>{
-					updateUser.id = res.body.users[0].id
-					return chai.request(app)
-						.put(`/users/${updateUser.id}`)
-						.send(updateUser)
-				})
-				.then((res)=>{
-					res.should.have.status(201)
-					res.body.should.be.a('object')
-					res.body.should.deep.equal({id: updateUser.id, user: updateUser.user.firstName + " " + updateUser.user.lastName, email: updateUser.email, joinDate: res.body.joinDate, journalId: res.body.journalId, priorityExpiry: res.body.priorityExpiry})
-				})
+				Users
+					.findOne()
+					.exec()
+					.then((res)=>{
+						updateUser.id = res.body.users[0].id
+						return chai.request(app)
+							.put(`/users/${updateUser.id}`)
+							.send(updateUser)
+					})
+					.then((res)=>{
+						res.should.have.status(201)
+						res.body.should.be.a('object')
+						res.body.should.deep.equal({id: updateUser.id, user: updateUser.user.firstName + " " + updateUser.user.lastName, email: updateUser.email, joinDate: res.body.joinDate, journalId: res.body.journalId, priorityExpiry: res.body.priorityExpiry})
+					})
+		})
+	})
+
+	describe('DELETE endpoint', ()=> {
+		it('should delete user on DELETE', () => {
+			return chai.request(app)
+				Users
+					.findOne()
+					.exec()
+					.then((res) => {
+						let deleteUserId = res.body.users[0].id
+						return chai.request(app)
+							.delete(`/users/${deleteUserId}`)
+					})
+					.then((res) => {
+						res.should.have.status(204)
+					})
 		})
 	})
 })
