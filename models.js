@@ -1,35 +1,43 @@
 const mongoose = require('mongoose')
 
-const userSchema = mongoose.Schema({
+const bcrypt = require('bcryptjs')
+
+const UserSchema = mongoose.Schema({
 	user: { 
-			firstName: String,
-			lastName: String },
+			firstName: {type: String, default: ''},
+			lastName: {type: String, default: ''}},
 	joinDate: {type: Date, default: Date.now},
-	expiry: {type: Date},
-	email: {type: String, required: true},
+	email: {type: String, required: true, unique: true},
 	password: {type: String, required: true},
 	journalId: {type: String}, //will be unique string that identifies the journal entries in seperate collection
 	priorityExpiry: {type: Object}
 })
 
-userSchema.virtual('fullName').get(function(){
+UserSchema.virtual('fullName').get(function(){
 	return `${this.user.firstName} ${this.user.lastName}`.trim()
 })
 
 
-userSchema.methods.userRepr = function(){
+UserSchema.methods.userRepr = function(){
 	return {
 		id: this._id,
 		user: this.fullName,
 		email: this.email,
 		journalId: this.journalId,
 		joinDate: this.joinDate.toString(),
-		expiry: this.expiry,
 		priorityExpiry: this.priorityExpiry
 	}
 }
 
-const entrySchema = mongoose.Schema({
+UserSchema.methods.validatePassword = function(password) {
+	return bcrypt.compare(password, this.password)
+}
+
+UserSchema.statics.hashPassword = function(password){
+	return bcrypt.hash(password, 10)
+}
+
+const EntrySchema = mongoose.Schema({
 	journalId: {type: String, required: true},
 	entryId: {type: String, required: true},
 	title: {type: String},
@@ -39,7 +47,7 @@ const entrySchema = mongoose.Schema({
 	expiry: {type: Date}
 })
 
-entrySchema.methods.entryRepr = function(){
+EntrySchema.methods.entryRepr = function(){
 	return {
 		journalId: this.journalId,
 		entryId: this._id,
@@ -51,8 +59,8 @@ entrySchema.methods.entryRepr = function(){
 	}
 }
 
-const Users = mongoose.model('users', userSchema) //first option must match collection name
-const Entry = mongoose.model('entries', entrySchema)
+const Users = mongoose.model('users', UserSchema) //first option must match collection name
+const Entry = mongoose.model('entries', EntrySchema)
 
 
 module.exports = {Users}
