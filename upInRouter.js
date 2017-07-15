@@ -1,5 +1,9 @@
 const express = require('express')
 const app = express()
+const faker = require('faker')
+
+const {BasicStrategy} = require('passport-http')
+const passport = require('passport')
 
 const upInRouter = express.Router()
 
@@ -8,53 +12,107 @@ const {Users} = require('./models')
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 
+upInRouter.use(jsonParser)
 
-upInRouter.get("/", (req, res) => {
+function generateJournalId(){
+	return faker.random.word() + faker.random.word() + faker.random.word()
+}
+
+const basicStrategy = new BasicStrategy((email, password, callback) => {
+	let user;
 	Users
-		.find()
+		.findOne({email: email})
 		.exec()
-		.then(users => {
-			res.json({
-				users: users.map(
-					(user) => user.userRepr())
-			});
+		.then(_user => {
+			user = _user
+			if (!user){
+				return callback(null, false)
+			}
+			return user.validatePassword(password)
 		})
-		.catch(
-			err => {
-				console.error(err)
-				res.status(500).json({message: 'Internal server error'})
-			})
+		.then(isValid => {
+			if (!isValid){
+				return callback(null, false)
+			}
+			else{
+				return callback(null, user)
+			}
+		})
+		.catch(err => callback(err))
 })
 
-upInRouter.post("/", jsonParser, (req, res) => {
-	const requiredKeys = ['firstName', 'lastName', 'email', 'password']
-	requiredKeys.forEach(key => {
-		if (!(key in req.body)){
-			const message = `Missing ${key} in request body`
-			console.error(message)
-			return res.status(400).send(message)
-		}
-	})
+passport.use(basicStrategy)
+upInRouter.use(passport.initialize())
+
+
+upInRouter.get('/me', passport.authenticate('basic', {session: false}), (req, res) => {
+	res.json({user: req.user.userRepr()})
+})
+
+upInRouter.post("/", (req, res) => {
+	if (!req.body){
+		return res.status(400).json({message: 'No request body'})
+	}
 	
-	Users
-		.create({
-			user: {	firstName: req.body.firstName,
-					lastName: req.body.lastName
-				},
-			email: req.body.email,
-			password: req.body.password,
-			joinDate: req.body.joinDate || Date.now(),
-			journalId: req.body.journalId,
+	if (!('email' in req.body)){
+		return res.status(400).json({message: 'Missing field: email'})
+	}
+
+	let {user, email, password, joinDate, journalId, priorityExpiry} = req.body
+	let {firstName, lastName} = req.body.user
+
+	if (typeof email !== 'string'){
+		return res.status(422).json({message: 'Incorrect field type: email'})
+	}
+
+	if (!(password)){
+		return res.status(422).json({message: 'Missing field: password'})
+	}
+
+	if (typeof password !== 'string'){
+		return res.status(422).json({message: 'Incorrect field type: password'})
+	}
+
+
+	password = password.trim()
+
+	if (password === ''){
+				return res.status(422).json({message: 'Incorrect field length: password'})
+	}
+
+	return Users
+		.find({email})
+		.count()
+		.exec()
+		.then(count => {
+			if (count > 0){
+				return res.status(422).json({message: 'Email has already been used to create an account'})
+			}
+
+			return Users.hashPassword(password)
 		})
-		.then(
-			user => res.status(201).json(user.userRepr()))
+		.then(hash => {
+			return Users
+				.create({
+					user: {	firstName: firstName,
+							lastName: lastName
+						},
+					email: email,
+					password: hash,
+					joinDate: joinDate || Date.now(),
+					journalId: journalId || generateJournalId(),
+					priorityExpiry: priorityExpiry || {'high': 2, 'medium': 4, 'low': 7}
+				})
+		})
+		.then(user => {
+			return res.status(201).json(user.userRepr())
+		})
 		.catch(err => {
-			console.error(err)
 			res.status(500).json({message: 'Internal server error'})
 		})
 })
 
-upInRouter.put('/:id', jsonParser, (req, res) => {
+upInRouter.put('/:id', (req, res) => {
 	if (!(req.params.id && req.body.id && req.params.id === req.body.id)){
 		const message = (
 		  `Request path id (${req.params.id}) and request body id ` +
@@ -64,8 +122,6 @@ upInRouter.put('/:id', jsonParser, (req, res) => {
 	}
 	const toUpdate = {}
 	const updatedableFields = ['user', 'email', 'password']
-
-	console.log(req.body)
 
 	updatedableFields.forEach(field =>{
 		if (field in req.body){
@@ -77,6 +133,17 @@ upInRouter.put('/:id', jsonParser, (req, res) => {
 		.findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
 		.exec()
 		.then(updatedUser => res.status(201).json(updatedUser.userRepr()))
+		.catch(err => res.status(500).json({message: 'Internal server error'}))
+})
+
+upInRouter.delete('/:id', (req, res) => {
+	Users
+		.findByIdAndRemove(req.params.id)
+		.exec()
+		.then(() => {
+			console.log(`Deleted user ${req.params.id}`)
+				res.status(204).end()
+		})
 		.catch(err => res.status(500).json({message: 'Internal server error'}))
 })
 module.exports = upInRouter
