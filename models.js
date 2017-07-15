@@ -53,7 +53,7 @@ EntrySchema.methods.entryRepr = function(){
 		entryId: this._id,
 		title: this.title,
 		link: this.link,
-		prioirty: this.priority,
+		priority: this.priority,
 		addDate: this.addDate,
 		expiry: this.expiry
 	}
@@ -63,4 +63,4 @@ const Users = mongoose.model('users', UserSchema) //first option must match coll
 const Entry = mongoose.model('entries', EntrySchema)
 
 
-module.exports = {Users}
+module.exports = {Users, Entry}
