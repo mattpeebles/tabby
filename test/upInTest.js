@@ -19,7 +19,7 @@ const {Users} = require('../models')
 
 //fills test database with 10 fake users
 function seedUserData(){
-	console.info('creating test database of users with journal entries')
+	console.info('creating test database of users')
 	const seedData = []
 
 	for (let i = 1; i <= 10; i++){
