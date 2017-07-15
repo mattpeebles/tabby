@@ -18,6 +18,8 @@ function generateJournalId(){
 	return faker.random.word() + faker.random.word() + faker.random.word()
 }
 
+//strategy for encrypting user password and ensuring
+//new user uses a unique email address when creating their profile
 const basicStrategy = new BasicStrategy((email, password, callback) => {
 	let user;
 	Users
@@ -45,11 +47,18 @@ passport.use(basicStrategy)
 upInRouter.use(passport.initialize())
 
 
+//grabs signed in user database information
+//disallows a person from viewing info if they are
+//not authenticated without the right Basic authorization header
+
 upInRouter.get('/me', passport.authenticate('basic', {session: false}), (req, res) => {
 	res.json({user: req.user.userRepr()})
 })
 
-upInRouter.post("/", (req, res) => {
+//this api hook allows a new user to be posted to the user collection in the database
+upInRouter.post('/', (req, res) => {
+	
+	//control logic to ensure request body exists, possess a non-empty string for email and password
 	if (!req.body){
 		return res.status(400).json({message: 'No request body'})
 	}
@@ -80,6 +89,7 @@ upInRouter.post("/", (req, res) => {
 				return res.status(422).json({message: 'Incorrect field length: password'})
 	}
 
+	//ensures email is unique
 	return Users
 		.find({email})
 		.count()
@@ -91,6 +101,7 @@ upInRouter.post("/", (req, res) => {
 
 			return Users.hashPassword(password)
 		})
+		//hashes password and actually creates the new user
 		.then(hash => {
 			return Users
 				.create({
@@ -100,8 +111,8 @@ upInRouter.post("/", (req, res) => {
 					email: email,
 					password: hash,
 					joinDate: joinDate || Date.now(),
-					journalId: journalId || generateJournalId(),
-					priorityExpiry: priorityExpiry || {'high': 2, 'medium': 4, 'low': 7}
+					journalId: journalId || generateJournalId(), //the first option shouldn't be called except for testing
+					priorityExpiry: priorityExpiry || {'high': 2, 'medium': 4, 'low': 7} //default is likely to change
 				})
 		})
 		.then(user => {
@@ -112,8 +123,11 @@ upInRouter.post("/", (req, res) => {
 		})
 })
 
+
+//put hook that allows for user object to be updated
+//only email, password, first name, last name, and priority expiration settings can be updated
 upInRouter.put('/:id', (req, res) => {
-	if (!(req.params.id && req.body.id && req.params.id === req.body.id)){
+	if (!(req.params.id === req.body.id)){
 		const message = (
 		  `Request path id (${req.params.id}) and request body id ` +
 		  `(${req.body.id}) must match`);
@@ -136,6 +150,8 @@ upInRouter.put('/:id', (req, res) => {
 		.catch(err => res.status(500).json({message: 'Internal server error'}))
 })
 
+
+//delete hook that deletes user
 upInRouter.delete('/:id', (req, res) => {
 	Users
 		.findByIdAndRemove(req.params.id)
@@ -146,4 +162,5 @@ upInRouter.delete('/:id', (req, res) => {
 		})
 		.catch(err => res.status(500).json({message: 'Internal server error'}))
 })
+
 module.exports = upInRouter

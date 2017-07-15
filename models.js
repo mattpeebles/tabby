@@ -9,8 +9,8 @@ const UserSchema = mongoose.Schema({
 	joinDate: {type: Date, default: Date.now},
 	email: {type: String, required: true, unique: true},
 	password: {type: String, required: true},
-	journalId: {type: String}, //will be unique string that identifies the journal entries in seperate collection
-	priorityExpiry: {type: Object}
+	journalId: {type: String}, //unique string that identifies the journal of user
+	priorityExpiry: {type: Object} //object that contains the expiration date for different priorities
 })
 
 UserSchema.virtual('fullName').get(function(){
@@ -44,7 +44,7 @@ const EntrySchema = mongoose.Schema({
 	link: {type: String},
 	priority: {type: String, required: true},
 	addDate: {type: Date},
-	expiry: {type: Date}
+	expiry: {type: Date} //date the link entry is deleted
 })
 
 EntrySchema.methods.entryRepr = function(){

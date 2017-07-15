@@ -14,7 +14,7 @@ app.use(express.static('public'))
 app.use('/resources', express.static('resources'))
 
 const upInRouter = require('./upInRouter')
-app.use("/users", upInRouter)
+app.use('/users', upInRouter) //provides user api route, updated /users will update the path that the api will require
 
 let server;
 

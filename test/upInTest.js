@@ -3,7 +3,7 @@ const chaiHttp = require('chai-http')
 const should = chai.should()
 const expect = chai.expect
 
-const btoa = require('btoa')
+const btoa = require('btoa') //used to generate proper authorization header format is Basic email:unhashedpassword
 
 chai.use(chaiHttp)
 
@@ -13,10 +13,11 @@ mongoose.Promise = global.Promise
 const faker = require('faker')
 
 const {TEST_DATABASE_URL} = require('../config')
-const {app, runServer, closeServer} = require("../server.js")
+const {app, runServer, closeServer} = require('../server.js')
 const {Users} = require('../models')
 
 
+//fills test database with 10 fake users
 function seedUserData(){
 	console.info('creating test database of users with journal entries')
 	const seedData = []
@@ -28,48 +29,54 @@ function seedUserData(){
 	return Users.insertMany(seedData)
 }
 
+	//creates faked data to be used
+	//in seedUserData function
+//*********************************//
+	function generateUserData(){
 
-function generateUserData(){
-
-	return {
-		user: {firstName: generateFirstName(),
-				lastName: generateLastName()
-			},
-		email: generateEmail(),
-		password: generatePassword(),
-		joinDate: generateDate(),
-		journalId: generateJournalId(),
-		priorityExpiry: generatePriorityExpiry()
+		return {
+			user: {firstName: generateFirstName(),
+					lastName: generateLastName()
+				},
+			email: generateEmail(),
+			password: generatePassword(),
+			joinDate: generateDate(),
+			journalId: generateJournalId(),
+			priorityExpiry: generatePriorityExpiry()
+		}
 	}
-}
 
-function generateFirstName(){
-	return faker.name.firstName()
-}
+	function generateFirstName(){
+		return faker.name.firstName()
+	}
 
-function generateLastName(){
-	return faker.name.lastName()
-}
+	function generateLastName(){
+		return faker.name.lastName()
+	}
 
-function generateEmail(){
-	return faker.internet.email()
-}
+	function generateEmail(){
+		return faker.internet.email()
+	}
 
-function generateDate(){
-	return faker.date.recent()
-}
+	function generateDate(){
+		return faker.date.recent()
+	}
 
-function generatePassword(){
-	return faker.internet.password()
-}
+	function generatePassword(){
+		return faker.internet.password()
+	}
 
-function generateJournalId(){
-	return faker.random.word() + faker.random.word() + faker.random.word()
-}
+	function generateJournalId(){
+		return faker.random.word() + faker.random.word() + faker.random.word()
+	}
 
-function generatePriorityExpiry(){
-	return {high: faker.random.number(), medium: faker.random.number(), low: faker.random.number()}
-}
+	function generatePriorityExpiry(){
+		return {high: faker.random.number(), medium: faker.random.number(), low: faker.random.number()}
+	}
+//*********************************//
+
+
+	//deletes test database 
 function tearDownDb(){
 	return new Promise((resolve, reject) => {
 		console.warn('Deleting test database')
@@ -100,6 +107,7 @@ describe('Users API resource', () => {
 	describe('Get endpoint', () => {
 
 		it('should return signed in user on GET', () => {
+				// this variable is required in order to make an authorized get request on users/me
 			const newUser = {
 						user: {
 							firstName: 'Matt',
@@ -112,18 +120,22 @@ describe('Users API resource', () => {
 						priorityExpiry: {'high': 2, 'medium': 4, 'low': 7}
 					}
 			let res;
-			let BasicAuthToken = 'Basic ' + btoa(unescape(encodeURIComponent(newUser.email + ':' + newUser.password)))
+			let BasicAuthToken = 'Basic ' + btoa(newUser.email + ':' + newUser.password) //authorization header value
 
 			return chai.request(app)
+				// posts newUser to users
 				.post('/users')
 				.send(newUser)
 				.then((res) => {
+					//these tests ensures new user was properly posted
 					res.should.have.status(201)
 					res.should.be.a('object')
 					res.body.id.should.not.be.null
 					res.body.email.should.be.equal('testemail@test.com')
 					
 					return chai.request(app)
+						//tests ensures that get users/me properly validates authorization header
+						//and provides user data
 						.get('/users/me')
 						.set('Authorization', BasicAuthToken)					
 						.then(_res => {
@@ -138,6 +150,16 @@ describe('Users API resource', () => {
 							user.journalId.should.be.a('string')
 							user.priorityExpiry.should.be.a('object')
 							user.priorityExpiry.should.include.keys('high', 'medium', 'low')
+
+							//ensures bad request returns unauthorized status
+							return chai.request(app)
+								.get('/users/me')
+								.then(res => {
+									return res
+								})
+								.catch(err => {
+									err.should.have.status(401)
+								})
 						})
 				})
 		});
@@ -167,9 +189,9 @@ describe('Users API resource', () => {
 					res.should.have.status(201)
 					res.should.be.json
 					res.body.should.be.a('object')
-					res.body.should.include.keys('user', 'email', 'id', 'journalId', 'joinDate')
+					res.body.should.include.keys('user', 'email', 'id', 'journalId', 'joinDate', 'priorityExpiry')
 					res.body.id.should.not.be.null
-					res.body.should.eql({user: newUser.user.firstName + " " + newUser.user.lastName, email: newUser.email, journalId: newUser.journalId, id: res.body.id, joinDate: newUser.joinDate, priorityExpiry: newUser.priorityExpiry})
+					res.body.should.eql({user: newUser.user.firstName + ' ' + newUser.user.lastName, email: newUser.email, journalId: newUser.journalId, id: res.body.id, joinDate: newUser.joinDate, priorityExpiry: newUser.priorityExpiry})
 				})
 		})
 	})
@@ -177,10 +199,13 @@ describe('Users API resource', () => {
 	describe('PUT endpoint', () => {
 		it('should update user fields on PUT', ()=> {
 			const updateUser = {
-				'user': {'firstName': 'Matt',
-				'lastName': 'Peebles'},
+				'user': {
+							'firstName': 'Matt',
+							'lastName': 'Peebles'
+						},
 				'email': 'testemail1@test.com',
-				'password': 'pseudorandompassword'
+				'password': 'pseudorandompassword',
+				'priorityExpiry': {'high': 3, 'medium': 7, 'low': 11}
 			}
 			return chai.request(app)
 				Users
@@ -195,7 +220,7 @@ describe('Users API resource', () => {
 					.then((res)=>{
 						res.should.have.status(201)
 						res.body.should.be.a('object')
-						res.body.should.deep.equal({id: updateUser.id, user: updateUser.user.firstName + " " + updateUser.user.lastName, email: updateUser.email, joinDate: res.body.joinDate, journalId: res.body.journalId, priorityExpiry: res.body.priorityExpiry})
+						res.body.should.deep.equal({id: updateUser.id, user: updateUser.user.firstName + ' ' + updateUser.user.lastName, email: updateUser.email, joinDate: res.body.joinDate, journalId: res.body.journalId, priorityExpiry: updateUser.priorityExpiry})
 					})
 		})
 	})
