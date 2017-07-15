@@ -5,102 +5,58 @@ const {app} = require('../server')
 
 chai.use(chaiHttp)
 
-const MOCK_JOURNAL_ENTRIES = {
-	"journalEntries": [
-		{
-			'id': '111111',
-			'title': 'cool page',
-			'priority': 'high',
-			'link': 'https://www.google.com',
-			'user': 'john doe',
-			'date': Date.now
-		},
-		{
-			'id': '222222',
-			'title': 'not so cool page',
-			'priority': 'low',
-			'link': 'https://www.bing.com',
-			'user': 'john doe',
-			'date': Date.now
-		},
-		{
-			'id': '333333',
-			'title': 'really really cool page',
-			'priority': 'high',
-			'link': 'https://www.yahoo.com',
-			'user': 'john doe',
-			'date': Date.now
-		},
-		{
-			'id': '444444',
-			'title': 'look at later',
-			'priority': 'medium',
-			'link': 'https://www.chess.com',
-			'user': 'john doe',
-			'date': Date.now
-		},
-	]
-}
 
-describe('Mock database of journal entries', () => {
-	it('should return array of values', () => {
-		MOCK_JOURNAL_ENTRIES.should.be.an('object')
-		MOCK_JOURNAL_ENTRIES.journalEntries.should.be.an('array')
-		MOCK_JOURNAL_ENTRIES.journalEntries.should.be.length(4)
-		MOCK_JOURNAL_ENTRIES.journalEntries.forEach(item => {
-			item.should.be.an('object')
-			item.should.include.keys('id', 'title', 'priority', 'link', 'user', 'date')
-			item.id.should.be.an('string')
-			item.title.should.be.an('string')
-			item.priority.should.be.an('string')
-			item.link.should.be.a('string')
-			item.user.should.be.a('string')
-			item.date.should.be.a('function')
-		})
-	})
-})
+// function generateEntry(name){
+// 	let priorityArray = ['high', 'medium', 'low']
 
-describe('Mock Get Request', () =>{
-	it('should provide 200 status code and html', () => {
-		chai.request(app)
-			.get('/journal')
-			.then(_res => {
-				res = _res
-				res.should.have.status(200)
-				res.should.be.html
-			})
-	})
-})
+// 	function addDays(startDate, numberOfDays){
+// 		var returnDate = new Date(
+// 								startDate.getFullYear(),
+// 								startDate.getMonth(),
+// 								startDate.getDate() + numberOfDays,
+// 								startDate.getHours(),
+// 								startDate.getMinutes(),
+// 								startDate.getSeconds());
+// 		return returnDate;
+// 	}
 
-describe('Mock Post Request', () => {
-	it('should add item to MOCK_JOURNAL_ENTRIES', () => {
-		let mockPost = {
-							"id": "324324",
-							"title": "awesome vanity site",
-							"priority": "high",
-							"link": "https://www.vanity-cathedral.herokuapp.com",
-							"user": "matt p",
-							"date": Date.now
+// 	let addDate = generateDate()
 
-						}
-		function postJournalEntry(){
-			MOCK_JOURNAL_ENTRIES["journalEntries"].push(mockPost)
-		}
+// 	let priority = priorityArray[Math.floor(Math.random()*priorityArray.length)]
 
-		postJournalEntry()
+// 	let highExpiry = addDays(addDate, priorityExpiry.high)
+// 	let medExpiry = addDays(addDate, priorityExpiry.medium)
+// 	let lowExpiry = addDays(addDate, priorityExpiry.low)
 
-		MOCK_JOURNAL_ENTRIES.should.be.an('object')
-		MOCK_JOURNAL_ENTRIES.journalEntries.should.be.an('array')
-		MOCK_JOURNAL_ENTRIES.journalEntries.should.be.length(5)
-		MOCK_JOURNAL_ENTRIES.journalEntries.forEach(item => {
-			item.should.be.an('object')
-			item.should.include.keys('id', 'title', 'priority', 'link', 'user', 'date')
-			item.id.should.be.an('string')
-			item.title.should.be.an('string')
-			item.priority.should.be.an('string')
-			item.link.should.be.a('string')
-			item.user.should.be.a('string')
-			item.date.should.be.a('function')
-		})
-	})
-})
+// 	let expiry;
+
+// 	if (priority == 'high'){
+// 		expiry = highExpiry
+// 	}
+// 	else if(priority == "medium"){
+// 		expiry = medExpiry
+// 	}
+// 	else if(priority == 'low'){
+// 		expiry = lowExpiry
+// 	}
+
+// 	let entries = {
+// 		id: faker.random.uuid().toString(),
+// 		title: faker.random.words(),
+// 		link: faker.internet.url(),
+// 		name: name.firstName + " " + name.lastName,
+// 		priority: priority,
+// 		addDate: addDate,
+// 		expiry: expiry,
+// 	}
+
+// 	return entries
+// }
+
+// function generateJournalEntries(name){
+// 	let journalEntries = []
+// 	for (let i = 1; i <= 5; i++){
+// 		journalEntries.push(generateEntry(name))
+// 	}
+// 	return journalEntries
+// }
