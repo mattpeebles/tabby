@@ -106,7 +106,7 @@ describe('Users API resource', () => {
 
 	describe('Get endpoint', () => {
 
-		it('should return signed in user on GET', () => {
+		it('should return authorized user on GET', () => {
 				// this variable is required in order to make an authorized get request on users/me
 			const newUser = {
 						user: {
@@ -150,21 +150,22 @@ describe('Users API resource', () => {
 							user.journalId.should.be.a('string')
 							user.priorityExpiry.should.be.a('object')
 							user.priorityExpiry.should.include.keys('high', 'medium', 'low')
-
-							//ensures bad request returns unauthorized status
-							return chai.request(app)
-								.get('/users/me')
-								.then(res => {
-									return res
-								})
-								.catch(err => {
-									err.should.have.status(401)
-								})
 						})
 				})
 		});
 	})
 
+	it('should reject unauthorized user on GET', () => {
+			//ensures bad request returns unauthorized status
+		return chai.request(app)
+			.get('/users/me')
+			.then(res => {
+				return res
+			})
+			.catch(err => {
+				err.should.have.status(401)
+			})
+	})
 
 
 	describe('POST endpoint', () => {
