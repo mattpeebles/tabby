@@ -77,7 +77,7 @@ let priorityExpiryArray = []
 	}
 
 	function generatePriorityExpiry(){
-		return {high: Math.floor(Math.random() * (5 - 1 + 1)) + 1, medium: Math.floor(Math.random() * (9 - 4 + 1)) + 4, low: Math.floor(Math.random() * (10 - 7 + 1)) + 7}
+		return {high: faker.random.number(), medium: faker.random.number(), low: faker.random.number()}
 	}
 //*********************************//
 
@@ -87,61 +87,79 @@ let priorityExpiryArray = []
 	function seedEntryData(){
 		console.info('creating test database of entries')
 		const seedData = []
-		for (let i = 1; i <= 30; i++){
+		for (let i = 1; i <= 10; i++){
 			seedData.push(generateEntry())
 		}
 		return Entry.insertMany(seedData)
 	}
 
 	function generateEntry(){
-		let priorityArray = ['high', 'medium', 'low']
 		let randIndex = Math.floor((Math.random()*(8-0)) + 0)
 
-		function addDays(startDate, numberOfDays){
-			var returnDate = new Date(
-									startDate.getFullYear(),
-									startDate.getMonth(),
-									startDate.getDate() + numberOfDays,
-									startDate.getHours(),
-									startDate.getMinutes(),
-									startDate.getSeconds());
-			return returnDate;
-		}
-
 		let addDate = generateDate()
-
-		let priority = priorityArray[Math.floor(Math.random() * priorityArray.length)]
-
 		let priorityExpiry = priorityExpiryArray[randIndex]
-
-		let highExpiry = addDays(addDate, priorityExpiry.high)
-		let medExpiry = addDays(addDate, priorityExpiry.medium)
-		let lowExpiry = addDays(addDate, priorityExpiry.low)
-
+		let priority = generatePriority()
+		
 		let expiry;
-
-		if (priority == 'high'){
-			expiry = highExpiry
-		}
-		else if(priority == "medium"){
-			expiry = medExpiry
-		}
-		else if(priority == 'low'){
-			expiry = lowExpiry
-		}
 
 		let entries = {
 			journalId: journalIdArray[randIndex],
-			title: faker.random.words(),
-			link: faker.internet.url(),
+			title: generateTitle(),
+			link: generateLink(),
 			entryId: faker.random.uuid().toString(),
 			priority: priority,
 			addDate: addDate,
-			expiry: expiry,
+			expiry: generateExpiry(priority, addDate, priorityExpiry),
 		}
 
 		return entries
 	}
+
+function addDays(startDate, numberOfDays){
+	var returnDate = new Date(
+							startDate.getFullYear(),
+							startDate.getMonth(),
+							startDate.getDate() + numberOfDays,
+							startDate.getHours(),
+							startDate.getMinutes(),
+							startDate.getSeconds());
+	return returnDate;
+}
+
+
+function generateTitle(){
+	return faker.random.words()
+}
+
+function generateLink(){
+	return faker.internet.url()
+}
+
+function generatePriority(){
+	let priorityArray = ['high', 'medium', 'low']
+	let priority = priorityArray[Math.floor(Math.random() * priorityArray.length)]
+	return priority
+}
+
+function generateExpiry(priority, addDate, priorityExpiry){
+	let expiry;
+
+	let highExpiry = addDays(addDate, priorityExpiry.high)
+	let medExpiry = addDays(addDate, priorityExpiry.medium)
+	let lowExpiry = addDays(addDate, priorityExpiry.low)
+
+	if (priority == 'high'){
+		expiry = highExpiry
+	}
+	else if(priority == "medium"){
+		expiry = medExpiry
+	}
+	else if(priority == 'low'){
+		expiry = lowExpiry
+	}
+
+	return expiry
+}
 //*********************************//
 
 
@@ -164,7 +182,6 @@ function tearDownDb(){
 		})
 		beforeEach(() => {
 			return seedEntryData()
-
 		})
 		afterEach(() => {
 			return tearDownDb()
@@ -174,7 +191,7 @@ function tearDownDb(){
 			return closeServer()
 		})
 
-		describe('Get resource', () => {
+		describe('Get endpoint', () => {
 			it('should return a list of all entries in database on GET', ()=> {
 				let res;
 				return chai.request(app)
@@ -187,7 +204,7 @@ function tearDownDb(){
 			})
 
 			it('should return a list of entries specific to user', () =>{
-				let randIndex = Math.floor((Math.random()*8-0) + 0)
+				let randIndex = Math.floor(Math.random()*(9-0)) + 0
 				let journalId = journalIdArray[randIndex]
 				let priorityExpiry = priorityExpiryArray[randIndex]
 				let res;
@@ -198,35 +215,50 @@ function tearDownDb(){
 						let entries = res.body.entries
 						res.should.have.status(200)
 						res.should.be.json
-						entries.should.be.a('array')
-					
-						entries.forEach(entry => {
-							console.log(entry)
-							entry.journalId.should.be.equal(journalId)
-							entry.entryId.should.be.a('string')
-							entry.link.should.be.a('string')
-							entry.title.should.be.a('string')
-							entry.priority.should.be.a('string')
-							entry.addDate.should.be.a('string')
-							entry.expiry.should.be.a('string')
+						
+						if (res.body.entries === undefined){
+							res.should.have.status(200)
+							res.should.be.json
+							res.body.message.should.be.equal('You have no links saved')			
+						}
+						else {
+							entries.should.be.a('array')
+						
+							entries.forEach(entry => {
+								entry.journalId.should.be.equal(journalId)
+								entry.entryId.should.be.a('string')
+								entry.link.should.be.a('string')
+								entry.title.should.be.a('string')
+								entry.priority.should.be.a('string')
+								entry.addDate.should.be.a('string')
+								entry.expiry.should.be.a('string')
 
-							let expiryDate = new Date(entry.expiry)
-							let addDate = new Date(entry.addDate)
+								
+								//need to determine a better way to test below
 
-							if (entry.priority == 'high'){
-								(Math.round((expiryDate.getTime() - addDate.getTime()) / (1000 * 60 * 60 * 24))).should.equal(priorityExpiry.high)
-							}
-							else if (entry.priority == 'medium'){
-								(Math.round((expiryDate.getTime() - addDate.getTime()) / (1000 * 60 * 60 * 24))).should.equal(priorityExpiry.medium)
-							}
-							else if (entry.priority == 'low'){
-								(Math.round((expiryDate.getTime() - addDate.getTime()) / (1000 * 60 * 60 * 24))).should.equal(priorityExpiry.low)
-							}
-						})
+								//maybe -> let testExpiry = addDays(entry.addDate, entry.priority)
+
+								let expiry = new Date(entry.expiry)
+								let addDate = new Date(entry.addDate)
+
+								let dateDiff = Math.round((expiry.getTime() - addDate.getTime()) / (1000 * 60 * 60 * 24))
+							
+								
+								if (entry.priority == 'high'){
+									(dateDiff).should.equal(priorityExpiry.high)
+								}
+								else if (entry.priority == 'medium'){
+									(dateDiff).should.equal(priorityExpiry.medium)
+								}
+								else if (entry.priority == 'low'){
+									(dateDiff).should.equal(priorityExpiry.low)
+								}
+							})
+						}
 					})
 			})
 
-			it('should return a json message for a new user', () => {
+			it('should return a json message for a user with no entries', () => {
 				let journalId = journalIdArray[9]
 				let priorityExpiry = priorityExpiryArray[9]
 					return chai.request(app)
@@ -238,4 +270,29 @@ function tearDownDb(){
 						})
 			})
 		})
+
+		describe('POST endpoint', () => {
+			it('should add entry on user\'s journal', () => {
+				
+				const newEntry = generateEntry()
+
+				return chai.request(app)
+					.post('/entry')
+					.send(newEntry)
+					.then(res => {
+						console.log(typeof newEntry.addDate)
+						res.should.have.status(201)
+						res.body.journalId.should.be.a('string')
+						res.body.journalId.should.be.equal(newEntry.journalId)
+						res.body.entryId.should.be.a('string')
+						res.body.title.should.be.a('string')
+						res.body.title.should.be.equal(newEntry.title)
+						res.body.priority.should.be.a('string')
+						res.body.priority.should.be.equal(newEntry.priority)
+						res.body.addDate.should.be.a('string')
+						res.body.expiry.should.be.a('string')
+			})
+		})
+
 	})
+})
