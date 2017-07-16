@@ -39,11 +39,11 @@ UserSchema.statics.hashPassword = function(password){
 
 const EntrySchema = mongoose.Schema({
 	journalId: {type: String, required: true},
-	entryId: {type: String, required: true},
+	entryId: {type: String},
 	title: {type: String},
 	link: {type: String},
 	priority: {type: String, required: true},
-	addDate: {type: Date},
+	addDate: {type: Date, default: Date.now},
 	expiry: {type: Date} //date the link entry is deleted
 })
 
@@ -55,7 +55,7 @@ EntrySchema.methods.entryRepr = function(){
 		link: this.link,
 		priority: this.priority,
 		addDate: this.addDate,
-		expiry: this.expiry
+		expiry: this.expiry || undefined
 	}
 }
 
