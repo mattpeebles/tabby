@@ -48,5 +48,33 @@ entryRouter.get('/:journalId', (req, res) => {
 		})
 })
 
+entryRouter.post('/', (req, res) => {
+	const requiredFields = ['title', 'link', 'priority', 'journalId'];
+	
+	requiredFields.forEach((field) => {
+		if (!(field in req.body)) {
+			const message = `Missing ${field} in request body`;
+			console.error(message)
+			return res.status(400).send(message)
+		}
+	})
+
+
+		Entry
+			.create({
+				title: req.body.title,
+				link: req.body.entry,
+				journalId: req.body.journalId,
+				priority: req.body.priority,
+				addDate: req.body.addDate,
+				expiry: req.body.expiry
+			})
+			.then(entry => res.status(201).json(entry.entryRepr()))
+			.catch(err => {
+				console.error(err)
+				return res.status(400).json({message: 'Internal server error'})
+			})
+})
+
 
 module.exports = entryRouter
