@@ -7,7 +7,7 @@ const passport = require('passport')
 
 const upInRouter = express.Router()
 
-const {Users} = require('./models')
+const {Entry, Users} = require('./models')
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 
@@ -153,8 +153,23 @@ upInRouter.put('/:id', (req, res) => {
 //delete hook that deletes user
 upInRouter.delete('/:id', (req, res) => {
 	Users
-		.findByIdAndRemove(req.params.id)
+		.findById(req.params.id)
 		.exec()
+		.then(res => {
+			return res.journalId
+		})
+		.then(journalId => {
+				console.log(`Delete journal ${journalId}`)
+				Entry
+					.find({journalId: journalId})
+					.remove()
+					.exec()
+		})
+		.then(() => {
+			Users
+				.findByIdAndRemove(req.params.id)
+				.exec()
+		})
 		.then(() => {
 			console.log(`Deleted user ${req.params.id}`)
 				res.status(204).end()
