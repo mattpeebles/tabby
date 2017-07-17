@@ -8,7 +8,6 @@ const passport = require('passport')
 const upInRouter = express.Router()
 
 const {Users} = require('./models')
-
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 
