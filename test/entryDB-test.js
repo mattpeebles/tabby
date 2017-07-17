@@ -13,6 +13,7 @@ const faker = require('faker')
 const {TEST_DATABASE_URL} = require('../config')
 const {app, runServer, closeServer} = require('../server')
 const {Users, Entry} = require('../models')
+const {addDays} = require('../resources/date-module')
 
 
 let journalIdArray = [] //array is filled with ids from user Database
@@ -87,14 +88,17 @@ let priorityExpiryArray = []
 	function seedEntryData(){
 		console.info('creating test database of entries')
 		const seedData = []
-		for (let i = 1; i <= 10; i++){
+		
+		for (let i = 0; i < 20; i++){
 			seedData.push(generateEntry())
 		}
+
 		return Entry.insertMany(seedData)
 	}
 
 	function generateEntry(){
-		let randIndex = Math.floor((Math.random()*(8-0)) + 0)
+
+		let randIndex = Math.floor(Math.random() * (8 + 0)) + 0 //this ensures the last journalId has no entries in it
 
 		let addDate = generateDate()
 		let priorityExpiry = priorityExpiryArray[randIndex]
@@ -114,17 +118,6 @@ let priorityExpiryArray = []
 
 		return entries
 	}
-
-function addDays(startDate, numberOfDays){
-	var returnDate = new Date(
-							startDate.getFullYear(),
-							startDate.getMonth(),
-							startDate.getDate() + numberOfDays,
-							startDate.getHours(),
-							startDate.getMinutes(),
-							startDate.getSeconds());
-	return returnDate;
-}
 
 
 function generateTitle(){
@@ -232,27 +225,6 @@ function tearDownDb(){
 								entry.priority.should.be.a('string')
 								entry.addDate.should.be.a('string')
 								entry.expiry.should.be.a('string')
-
-								
-								//need to determine a better way to test below
-
-								//maybe -> let testExpiry = addDays(entry.addDate, entry.priority)
-
-								let expiry = new Date(entry.expiry)
-								let addDate = new Date(entry.addDate)
-
-								let dateDiff = Math.round((expiry.getTime() - addDate.getTime()) / (1000 * 60 * 60 * 24))
-							
-								
-								if (entry.priority == 'high'){
-									(dateDiff).should.equal(priorityExpiry.high)
-								}
-								else if (entry.priority == 'medium'){
-									(dateDiff).should.equal(priorityExpiry.medium)
-								}
-								else if (entry.priority == 'low'){
-									(dateDiff).should.equal(priorityExpiry.low)
-								}
 							})
 						}
 					})
@@ -260,7 +232,6 @@ function tearDownDb(){
 
 			it('should return a json message for a user with no entries', () => {
 				let journalId = journalIdArray[9]
-				let priorityExpiry = priorityExpiryArray[9]
 					return chai.request(app)
 						.get(`/entry/${journalId}`)
 						.then(res => {
@@ -274,13 +245,19 @@ function tearDownDb(){
 		describe('POST endpoint', () => {
 			it('should add entry on user\'s journal', () => {
 				
-				const newEntry = generateEntry()
+				randIndex = Math.floor(Math.random() * (journalIdArray.length - 1))
 
+				const newEntry = {
+						journalId: journalIdArray[randIndex],
+						title: generateTitle(),
+						link: generateLink(),
+						priority: generatePriority(),
+						addDate: generateDate()
+					}
 				return chai.request(app)
 					.post('/entry')
 					.send(newEntry)
 					.then(res => {
-						console.log(typeof newEntry.addDate)
 						res.should.have.status(201)
 						res.body.journalId.should.be.a('string')
 						res.body.journalId.should.be.equal(newEntry.journalId)
@@ -291,8 +268,57 @@ function tearDownDb(){
 						res.body.priority.should.be.equal(newEntry.priority)
 						res.body.addDate.should.be.a('string')
 						res.body.expiry.should.be.a('string')
-			})
+					})
+					.catch(err => console.error(err))
 		})
 
+		describe('PUT endpoint', () => {
+			it('should update entry on PUT', () => {
+				let updateEntry = {
+					"title": generateTitle(),
+					"link": generateLink(),
+				}
+
+				return chai.request(app)
+					Entry
+						.findOne()
+						.exec()
+						.then(entry => {
+							updateEntry.entryId = res.body.entries[0].entryId
+							return chai.request(app)
+								.put(`/entry/${updateEntry.entryId}`)
+								.send(updateEntry)
+						})
+						.then(res => {
+							res.should.have.status(201)
+							res.body.should.be.a('object')
+							res.body.should.deep.equal(updateEntry)
+						})
+			})
+
+			it('should update expiry when priority is updated', () => {
+				let updateEntry = {
+					"title": generateTitle(),
+					"link": generateLink(),
+					"priority": generatePriority()
+				}
+
+				return chai.request(app)
+					Entry
+						.findOne()
+						.exec()
+						.then(res => {
+							updateEntry.entryId = res.body.entries[0].entryId
+							return chai.request(app)
+								.put(`/entry/${updateEntry.entryId}`)
+								.send(updateEntry)
+						})
+						.then(res => {
+							res.should.have.status(201)
+							res.body.should.be.a('object')
+							res.body.should.deep.equal(updateEntry)
+						})
+			})
+		})
 	})
 })
