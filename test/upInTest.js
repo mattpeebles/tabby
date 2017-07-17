@@ -16,6 +16,9 @@ const {TEST_DATABASE_URL} = require('../config')
 const {app, runServer, closeServer} = require('../server.js')
 const {Users} = require('../models')
 
+let journalIdArray = []
+let priorityExpiryArray = []
+
 
 //fills test database with 10 fake users
 function seedUserData(){
@@ -75,6 +78,78 @@ function seedUserData(){
 	}
 //*********************************//
 
+	//creates Entry Database
+//*********************************//
+	function seedEntryData(){
+		console.info('creating test database of entries')
+		const seedData = []
+		
+		for (let i = 0; i < 20; i++){
+			seedData.push(generateEntry())
+		}
+
+		return Entry.insertMany(seedData)
+	}
+
+	function generateEntry(){
+
+		let randIndex = Math.floor(Math.random() * (8 + 0)) + 0 //this ensures the last journalId has no entries in it
+
+		let addDate = generateDate()
+		let priorityExpiry = priorityExpiryArray[randIndex]
+		let priority = generatePriority()
+		
+		let expiry;
+
+		let entries = {
+			journalId: journalIdArray[0],
+			title: generateTitle(),
+			link: generateLink(),
+			entryId: faker.random.uuid().toString(),
+			priority: priority,
+			addDate: addDate,
+			expiry: generateExpiry(priority, addDate, priorityExpiry),
+		}
+
+		return entries
+	}
+
+
+	function generateTitle(){
+		return faker.random.words()
+	}
+
+	function generateLink(){
+		return faker.internet.url()
+	}
+
+	function generatePriority(){
+		let priorityArray = ['high', 'medium', 'low']
+		let priority = priorityArray[Math.floor(Math.random() * priorityArray.length)]
+		return priority
+	}
+
+	function generateExpiry(priority, addDate, priorityExpiry){
+		let expiry;
+
+		let highExpiry = addDays(addDate, priorityExpiry.high)
+		let medExpiry = addDays(addDate, priorityExpiry.medium)
+		let lowExpiry = addDays(addDate, priorityExpiry.low)
+
+		if (priority == 'high'){
+			expiry = highExpiry
+		}
+		else if(priority == "medium"){
+			expiry = medExpiry
+		}
+		else if(priority == 'low'){
+			expiry = lowExpiry
+		}
+
+		return expiry
+	}
+//*********************************//
+
 
 	//deletes test database 
 function tearDownDb(){
@@ -90,6 +165,12 @@ describe('Users API resource', () => {
 	before(() => {
 		console.info(`Opening test server at ${TEST_DATABASE_URL}`)
 		return runServer(TEST_DATABASE_URL)
+	})
+
+	beforeEach(() => {
+		journalIdArray = []
+		priorityExpiryArray = []
+		return seedUserData()
 	})
 
 	beforeEach(() => {
@@ -227,18 +308,28 @@ describe('Users API resource', () => {
 	})
 
 	describe('DELETE endpoint', ()=> {
-		it('should delete user on DELETE', () => {
+		it('should delete user and associated journal on DELETE', () => {
 			return chai.request(app)
+				let journalId;
 				Users
 					.findOne()
 					.exec()
 					.then((res) => {
 						let deleteUserId = res.body.users[0].id
+						journalId = res.body.users[0].journalId
 						return chai.request(app)
 							.delete(`/users/${deleteUserId}`)
 					})
 					.then((res) => {
 						res.should.have.status(204)
+						return chai.request(app)
+							Entry
+								.get(`/entry/${jouranlId}`)
+					})
+					.then(res => {
+						res.should.have.status(200)
+						res.should.be.json
+						res.body.message.should.be.equal('You have no links saved')
 					})
 		})
 	})
