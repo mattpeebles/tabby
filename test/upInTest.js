@@ -14,7 +14,9 @@ const faker = require('faker')
 
 const {TEST_DATABASE_URL} = require('../config')
 const {app, runServer, closeServer} = require('../server.js')
-const {Users} = require('../models')
+const {Users, Entry} = require('../models')
+
+const {addDays, nowDate} = require('../resources/date-module')
 
 let journalIdArray = []
 let priorityExpiryArray = []
@@ -37,6 +39,12 @@ function seedUserData(){
 //*********************************//
 	function generateUserData(){
 
+		let journalId = generateJournalId()
+		journalIdArray.push(journalId)
+
+		let priorityExpiry = generatePriorityExpiry()
+		priorityExpiryArray.push(priorityExpiry)
+
 		return {
 			user: {firstName: generateFirstName(),
 					lastName: generateLastName()
@@ -44,7 +52,7 @@ function seedUserData(){
 			email: generateEmail(),
 			password: generatePassword(),
 			joinDate: generateDate(),
-			journalId: generateJournalId(),
+			journalId: journalId,
 			priorityExpiry: generatePriorityExpiry()
 		}
 	}
@@ -62,7 +70,7 @@ function seedUserData(){
 	}
 
 	function generateDate(){
-		return faker.date.recent()
+		return nowDate()
 	}
 
 	function generatePassword(){
@@ -93,10 +101,8 @@ function seedUserData(){
 
 	function generateEntry(){
 
-		let randIndex = Math.floor(Math.random() * (8 + 0)) + 0 //this ensures the last journalId has no entries in it
-
 		let addDate = generateDate()
-		let priorityExpiry = priorityExpiryArray[randIndex]
+		let priorityExpiry = priorityExpiryArray[0]
 		let priority = generatePriority()
 		
 		let expiry;
@@ -168,16 +174,16 @@ describe('Users API resource', () => {
 	})
 
 	beforeEach(() => {
-		journalIdArray = []
-		priorityExpiryArray = []
 		return seedUserData()
 	})
 
 	beforeEach(() => {
-		return seedUserData()
+		return seedEntryData()
 	})
 
 	afterEach(() => {
+		journalIdArray = []
+		priorityExpiryArray = []
 		return tearDownDb()
 	})
 
@@ -208,6 +214,7 @@ describe('Users API resource', () => {
 				.post('/users')
 				.send(newUser)
 				.then((res) => {
+					
 					//these tests ensures new user was properly posted
 					res.should.have.status(201)
 					res.should.be.a('object')
@@ -289,42 +296,92 @@ describe('Users API resource', () => {
 				'password': 'pseudorandompassword',
 				'priorityExpiry': {'high': 3, 'medium': 7, 'low': 11}
 			}
-			return chai.request(app)
-				Users
+			return Users
 					.findOne()
 					.exec()
 					.then((res)=>{
-						updateUser.id = res.body.users[0].id
+						updateUser.id = res.id
 						return chai.request(app)
 							.put(`/users/${updateUser.id}`)
 							.send(updateUser)
 					})
 					.then((res)=>{
+						let priorityExpiry = res.body.priorityExpiry
+
 						res.should.have.status(201)
 						res.body.should.be.a('object')
-						res.body.should.deep.equal({id: updateUser.id, user: updateUser.user.firstName + ' ' + updateUser.user.lastName, email: updateUser.email, joinDate: res.body.joinDate, journalId: res.body.journalId, priorityExpiry: updateUser.priorityExpiry})
+						res.body.should.deep.equal({id: updateUser.id, user: updateUser.user.firstName + ' ' + updateUser.user.lastName, email: updateUser.email, joinDate: res.body.joinDate, journalId: res.body.journalId, priorityExpiry: res.body.priorityExpiry})
 					})
+		});
+
+		it('should update priorityExpiry and all user entries expiry on PUT', () => {
+			const updateUser = {
+				'priorityExpiry': {'high': 2, 'medium': 5, 'low': 7}
+			}
+
+			return Users
+				.find({journalId: journalIdArray[0]})
+				.exec()
+				.then((res) => {
+					let journalId = res[0].journalId
+					updateUser.id = res[0].id
+						return chai.request(app)
+							.put(`/users/${updateUser.id}`)
+							.send(updateUser)
+				})
+				.then(res => {
+					let journalId = res.body.journalId
+						return Entry
+							.find({journalId: journalId})
+							.exec()
+							.then(res => {
+								res.forEach(entry => {
+									entry.journalId.should.be.a('string')
+									entry.entryId.should.be.a('string')
+									entry.title.should.be.a('string')
+									entry.priority.should.be.a('string')
+
+									
+									let priorityExpiry = priorityExpiryArray[0]
+									let expiryDate = new Date(entry.expiry)
+									let addDate = new Date(entry.addDate)
+									let dateDiff = Math.round((expiryDate.getTime() - addDate.getTime()) / (1000 * 60 * 60 * 24))
+
+									switch(entry.priority){
+										case 'high': 
+											(dateDiff).should.equal(priorityExpiry.high) 
+											break;
+										case 'medium': 
+											(dateDiff).should.equal(priorityExpiry.medium) 
+											break;
+										case 'low': 
+											(dateDiff).should.equal(priorityExpiry.low) 
+											break;
+									}
+								})
+							})
+				})
 		})
 	})
 
 	describe('DELETE endpoint', ()=> {
 		it('should delete user and associated journal on DELETE', () => {
-			return chai.request(app)
-				let journalId;
-				Users
+			let journalId;
+			
+			return Users
 					.findOne()
 					.exec()
 					.then((res) => {
-						let deleteUserId = res.body.users[0].id
-						journalId = res.body.users[0].journalId
+						let deleteUserId = res.id
+						journalId = res.journalId
 						return chai.request(app)
 							.delete(`/users/${deleteUserId}`)
 					})
 					.then((res) => {
 						res.should.have.status(204)
+						
 						return chai.request(app)
-							Entry
-								.get(`/entry/${jouranlId}`)
+							.get(`/entry/${journalId}`)
 					})
 					.then(res => {
 						res.should.have.status(200)
