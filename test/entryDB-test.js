@@ -107,7 +107,7 @@ let priorityExpiryArray = []
 		let expiry;
 
 		let entries = {
-			journalId: journalIdArray[randIndex],
+			journalId: journalIdArray[0],
 			title: generateTitle(),
 			link: generateLink(),
 			entryId: faker.random.uuid().toString(),
@@ -120,39 +120,40 @@ let priorityExpiryArray = []
 	}
 
 
-function generateTitle(){
-	return faker.random.words()
-}
-
-function generateLink(){
-	return faker.internet.url()
-}
-
-function generatePriority(){
-	let priorityArray = ['high', 'medium', 'low']
-	let priority = priorityArray[Math.floor(Math.random() * priorityArray.length)]
-	return priority
-}
-
-function generateExpiry(priority, addDate, priorityExpiry){
-	let expiry;
-
-	let highExpiry = addDays(addDate, priorityExpiry.high)
-	let medExpiry = addDays(addDate, priorityExpiry.medium)
-	let lowExpiry = addDays(addDate, priorityExpiry.low)
-
-	if (priority == 'high'){
-		expiry = highExpiry
-	}
-	else if(priority == "medium"){
-		expiry = medExpiry
-	}
-	else if(priority == 'low'){
-		expiry = lowExpiry
+	function generateTitle(){
+		return faker.random.words()
 	}
 
-	return expiry
-}
+	function generateLink(){
+		return faker.internet.url()
+	}
+
+	function generatePriority(){
+		let priorityArray = ['high', 'medium', 'low']
+		let priority = priorityArray[Math.floor(Math.random() * priorityArray.length)]
+		return priority
+	}
+
+	function generateExpiry(priority, addDate, priorityExpiry){
+		let expiry;
+
+		let highExpiry = addDays(addDate, priorityExpiry.high)
+		let medExpiry = addDays(addDate, priorityExpiry.medium)
+		let lowExpiry = addDays(addDate, priorityExpiry.low)
+
+		if (priority == 'high'){
+			expiry = highExpiry
+		}
+		else if(priority == "medium"){
+			expiry = medExpiry
+		}
+		else if(priority == 'low'){
+			expiry = lowExpiry
+		}
+
+		return expiry
+	}
+
 //*********************************//
 
 
@@ -171,6 +172,8 @@ function tearDownDb(){
 			return runServer(TEST_DATABASE_URL)
 		})
 		beforeEach(() => {
+			journalIdArray = []
+			priorityExpiryArray = []
 			return seedUserData()
 		})
 		beforeEach(() => {
@@ -198,7 +201,7 @@ function tearDownDb(){
 
 			it('should return a list of entries specific to user', () =>{
 				let randIndex = Math.floor(Math.random()*(9-0)) + 0
-				let journalId = journalIdArray[randIndex]
+				let journalId = journalIdArray[0]
 				let priorityExpiry = priorityExpiryArray[randIndex]
 				let res;
 				return chai.request(app)
@@ -245,10 +248,10 @@ function tearDownDb(){
 		describe('POST endpoint', () => {
 			it('should add entry on user\'s journal', () => {
 				
-				randIndex = Math.floor(Math.random() * (journalIdArray.length - 1))
+				//randIndex = Math.floor(Math.random() * (journalIdArray.length - 2))
 
 				const newEntry = {
-						journalId: journalIdArray[randIndex],
+						journalId: journalIdArray[0],
 						title: generateTitle(),
 						link: generateLink(),
 						priority: generatePriority(),
@@ -318,6 +321,36 @@ function tearDownDb(){
 							res.body.should.be.a('object')
 							res.body.should.deep.equal(updateEntry)
 						})
+			})
+		})
+
+		describe('DELETE endpoint', () => {
+			it('should remove entry on DELETE', () => {
+				Entry
+					.findOne()
+					.exec()
+					.then(res => {
+						let entryId = res.entryId
+						return chai.request(app)
+							.delete(`/entry/${entryId}`)
+					})
+					.then(res => {
+						res.should.have.status(204)
+					})
+			})
+
+			it('should remove all entries from journal', () => {
+				Users
+					.findOne()
+					.exec()
+					.then(res => {
+						let journalId = res.journalId
+						return chai.request(app)
+							.delete(`/entry/journal/${journalId}`)
+					})
+					.then(res => {
+						res.should.have.status(204)
+					})
 			})
 		})
 	})
