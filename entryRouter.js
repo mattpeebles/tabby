@@ -161,4 +161,26 @@ entryRouter.put('/:entryId', (req, res) => {
 })
 
 
+entryRouter.delete('/:entryId', (req, res) => {
+	Entry
+		.find({entryId: req.params.entryId})
+		.remove()
+		.exec()
+		.then(() => {
+			console.log(`Entry ${req.params.entryId} was deleted`)
+			res.status(204).end()
+		})
+})
+
+entryRouter.delete('/journal/:journalId', (req, res) => {
+	Entry
+		.find({journalId: req.params.journalId})
+		.remove()
+		.exec()
+		.then(() => {
+			console.log(`Journal ${req.params.journalId} was deleted`)
+			res.status(204).end()
+		})
+})
+
 module.exports = entryRouter
