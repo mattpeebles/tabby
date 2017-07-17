@@ -25,7 +25,7 @@ UserSchema.methods.userRepr = function(){
 		email: this.email,
 		journalId: this.journalId,
 		joinDate: this.joinDate.toString(),
-		priorityExpiry: this.priorityExpiry
+		priorityExpiry: this.priorityExpiry || {high: 2, medium: 4, low: 7}
 	}
 }
 
@@ -47,6 +47,7 @@ const EntrySchema = mongoose.Schema({
 	expiry: {type: Date} //date the link entry is deleted
 })
 
+
 EntrySchema.methods.entryRepr = function(){
 	return {
 		journalId: this.journalId,
@@ -55,7 +56,7 @@ EntrySchema.methods.entryRepr = function(){
 		link: this.link,
 		priority: this.priority,
 		addDate: this.addDate,
-		expiry: this.expiry || undefined
+		expiry: this.expiry
 	}
 }
 
