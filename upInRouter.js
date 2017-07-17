@@ -11,6 +11,8 @@ const {Entry, Users} = require('./models')
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 
+const {addDays, nowDate} = require('./resources/date-module')
+
 upInRouter.use(jsonParser)
 
 function generateJournalId(){
@@ -134,7 +136,7 @@ upInRouter.put('/:id', (req, res) => {
 		res.status(400).json({message: message});
 	}
 	const toUpdate = {}
-	const updatedableFields = ['user', 'email', 'password']
+	const updatedableFields = ['user', 'email', 'password', "priorityExpiry"]
 
 	updatedableFields.forEach(field =>{
 		if (field in req.body){
@@ -142,11 +144,74 @@ upInRouter.put('/:id', (req, res) => {
 		}
 	})
 
-	Users
-		.findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
-		.exec()
-		.then(updatedUser => res.status(201).json(updatedUser.userRepr()))
-		.catch(err => res.status(500).json({message: 'Internal server error'}))
+	if(toUpdate.priorityExpiry !== undefined){
+		Users
+			.findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
+			.exec()
+			.then(res => {
+				return res
+			})
+			.then(res => {
+				return res.journalId
+			})
+			.then(journalId => {
+				Entry
+					.find({journalId: journalId})
+					.exec()
+					.then(res => {
+						journalId = res[0].journalId
+						res.forEach(entry => {
+							let priority = entry.priority
+							let entryId = entry._id
+							Users
+								.find({journalId: journalId})
+								.exec()
+								.then(res => {
+									let priorityExpiryObject = res[0].priorityExpiry
+									return priorityExpiryObject
+								})
+								.then(object => {
+									let priorityExpiry = object[priority]
+									return priorityExpiry
+								})
+								.then(priorityExpiry => {
+									Entry
+										.find({entryId: entryId})
+										.exec()
+										.then(res => {
+											addDate = nowDate()
+											expiry = addDays(addDate, priorityExpiry)
+											
+											return expiry 
+										})
+										.then(expiry => {
+											toUpdate.expiry = expiry
+											Entry
+												.findByIdAndUpdate(entryId, {$set: toUpdate}, {new: true})
+												.exec()
+										})
+								})
+						})
+					})
+			})
+			.then(() => {
+				Users
+					.findById(req.params.id)
+					.exec()
+					.then(updatedUser => res.status(201).json(updatedUser.userRepr()))
+					.catch(err => res.status(500).json({message: 'Internal server'}))
+			})
+			.catch(err => res.status(500).json({message: 'Internal server error'}))
+	}
+
+	else{
+		Users
+			.findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
+			.exec()
+			.then(updatedUser => {
+				res.status(201).json(updatedUser.userRepr())})
+			.catch(err => res.status(500).json({message: 'Internal server error'}))
+	}
 })
 
 
