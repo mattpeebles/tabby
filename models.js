@@ -2,11 +2,13 @@ const mongoose = require('mongoose')
 
 const bcrypt = require('bcryptjs')
 
+const {nowDate} = require('./resources/date-module')
+
 const UserSchema = mongoose.Schema({
 	user: { 
 			firstName: {type: String, default: ''},
 			lastName: {type: String, default: ''}},
-	joinDate: {type: Date, default: Date.now},
+	joinDate: {type: Date, default: nowDate()},
 	email: {type: String, required: true, unique: true},
 	password: {type: String, required: true},
 	journalId: {type: String}, //unique string that identifies the journal of user

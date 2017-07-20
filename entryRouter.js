@@ -12,7 +12,36 @@ entryRouter.use(jsonParser)
 
 const {Users, Entry} = require('./models')
 
-const {addDays} = require('./resources/date-module')
+const {addDays, nowDate} = require('./resources/date-module')
+
+const {BasicStrategy} = require('passport-http')
+const passport = require('passport')
+
+const basicStrategy = new BasicStrategy((email, password, callback) => {
+	let user;
+	Users
+		.findOne({email: email})
+		.exec()
+		.then(_user => {
+			user = _user
+			if (!user){
+				return callback(null, false)
+			}
+			return user.validatePassword(password)
+		})
+		.then(isValid => {
+			if (!isValid){
+				return callback(null, false)
+			}
+			else{
+				return callback(null, user)
+			}
+		})
+		.catch(err => callback(err))
+})
+
+passport.use(basicStrategy)
+entryRouter.use(passport.initialize())
 
 
 entryRouter.get('/', (req, res) => {
@@ -31,9 +60,10 @@ entryRouter.get('/', (req, res) => {
 
 })
 
-entryRouter.get('/:journalId', (req, res) => {
+entryRouter.get('/entries', passport.authenticate('basic', {session: false}), (req, res) => {
+	let user = req.user.userRepr()
 	Entry
-		.find({journalId: req.params.journalId})
+		.find({journalId: user.journalId})
 		.exec()
 		.then(entries => {
 			if (entries.length == 0){
@@ -55,7 +85,7 @@ entryRouter.post('/', (req, res) => {
 	const requiredFields = ['title', 'link', 'priority', 'journalId'];
 	let priorityExpiryObject = {}
 	let priority = req.body.priority
-	let addDate = new Date(Date(req.body.addDate))
+	let addDate = nowDate()
 	requiredFields.forEach((field) => {
 		if (!(field in req.body)) {
 			const message = `Missing ${field} in request body`;
@@ -76,10 +106,10 @@ entryRouter.post('/', (req, res) => {
 				Entry
 							.create({
 								title: req.body.title,
-								link: req.body.entry,
+								link: req.body.link,
 								journalId: req.body.journalId,
 								priority: req.body.priority,
-								addDate: req.body.addDate,
+								addDate: addDate,
 								expiry: expiry
 							})
 							.then(entry => res.status(201).json(entry.entryRepr()))
@@ -91,10 +121,11 @@ entryRouter.post('/', (req, res) => {
 })
 
 entryRouter.put('/:entryId', (req, res) => {
+
 	if (!(req.params.entryId === req.body.entryId)){
 		const message = (
-		  `Request path entryId (${req.params.id}) and request body entryId ` +
-		  `(${req.body.id}) must match`);
+		  `Request path entryId (${req.params.entryId}) and request body entryId ` +
+		  `(${req.body.entryId}) must match`);
 		console.error(message);
 		res.status(400).json({message: message});
 	}
@@ -111,9 +142,10 @@ entryRouter.put('/:entryId', (req, res) => {
 
 	if (!("priority" in toUpdate)){
 		Entry
-			.findByIdAndUpdate(req.params.entryId, {$set: toUpdate}, {new: true})
+			.findByIdAndUpdate(req.body.entryId, {$set: toUpdate}, {new: true})
 			.then(updateEntry => res.status(201).json(updateEntry.entryRepr()))
 	}
+
 	else {
 		Entry
 			.findById(req.body.entryId)
@@ -133,35 +165,35 @@ entryRouter.put('/:entryId', (req, res) => {
 					.then(object => {
 						let priority = req.body.priority
 						let priorityExpiry = object[priority]
-						console.log("PRIORITY EXPIRY: " + priorityExpiry)
 						return priorityExpiry
 					})
 					.then(priorityExpiry => {
-						Entry
-							.find({entryId: req.params.entryId})
-							.exec()
-							.then(res => {
-								addDate = new Date(Date(res.addDate))
-								expiry = addDays(addDate, priorityExpiry)
-								console.log("ADD DATE: " + addDate)
-								console.log("EXPIRY: " + expiry)
-								return expiry 
-							})
-							.then(expiry => {
-								toUpdate.expiry = expiry
-								Entry
-									.findByIdAndUpdate(req.params.entryId, {$set: toUpdate}, {new: true})
-									.then(updateEntry => res.status(201).json(updateEntry.entryRepr()))
-									.catch(err => res.status(500).message({message: 'Internal server error'}))
-							})
-					
+						addDate = nowDate()
+						expiry = addDays(addDate, priorityExpiry)
+						return expiry 
 					})
+					.then(expiry => {
+						console.log(req.params.entryId)
+						toUpdate.expiry = expiry
+						Entry
+							.findByIdAndUpdate(req.params.entryId, {$set: toUpdate}, {new: true})
+							.then(updateEntry => res.status(201).json(updateEntry.entryRepr()))
+							.catch(err => res.status(500).json({message: 'Internal server error'}))
+					})
+			
 			})
 	}
 })
 
 
 entryRouter.delete('/:entryId', (req, res) => {
+
+	if(/^[A-Z]/.test(req.params.entryId)){
+		const message = `Please enter an entry id rather than a journal id`
+		console.error(message)
+		return res.status(400).json({message: message})
+	}
+
 	Entry
 		.find({entryId: req.params.entryId})
 		.remove()

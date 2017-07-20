@@ -1,13 +1,29 @@
 function addDays(startDate, numberOfDays){
-	var returnDate = new Date(
+	let returnDate = new Date(
 							startDate.getFullYear(),
 							startDate.getMonth(),
-							startDate.getDate() + numberOfDays,
-							startDate.getHours(),
-							startDate.getMinutes(),
-							startDate.getSeconds());
+							startDate.getDate() + numberOfDays)
 	return returnDate;
 }
 
+function subtractDays(startDate, numberOfDays){
+	let returnDate = new Date(
+							startDate.getFullYear(),
+							startDate.getMonth(),
+							startDate.getDate() - numberOfDays)
+	return returnDate;
+}
 
-module.exports = {addDays}
+function nowDate(){
+	let now = new Date(Date.now())
+
+	let noTime = new Date(
+							now.getFullYear(),
+							now.getMonth(),
+							now.getDate());
+
+	return noTime
+}
+
+
+module.exports = {addDays, nowDate}
