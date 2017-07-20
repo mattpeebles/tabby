@@ -233,7 +233,6 @@ upInRouter.delete('/:id', (req, res) => {
 		.then(() => {
 			Users
 				.findByIdAndRemove(req.params.id)
-				.exec()
 		})
 		.then(() => {
 			console.log(`Deleted user ${req.params.id}`)

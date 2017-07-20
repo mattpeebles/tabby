@@ -306,8 +306,6 @@ describe('Users API resource', () => {
 							.send(updateUser)
 					})
 					.then((res)=>{
-						let priorityExpiry = res.body.priorityExpiry
-
 						res.should.have.status(201)
 						res.body.should.be.a('object')
 						res.body.should.deep.equal({id: updateUser.id, user: updateUser.user.firstName + ' ' + updateUser.user.lastName, email: updateUser.email, joinDate: res.body.joinDate, journalId: res.body.journalId, priorityExpiry: res.body.priorityExpiry})
@@ -379,14 +377,6 @@ describe('Users API resource', () => {
 					})
 					.then((res) => {
 						res.should.have.status(204)
-						
-						return chai.request(app)
-							.get(`/entry/${journalId}`)
-					})
-					.then(res => {
-						res.should.have.status(200)
-						res.should.be.json
-						res.body.message.should.be.equal('You have no links saved')
 					})
 		})
 	})

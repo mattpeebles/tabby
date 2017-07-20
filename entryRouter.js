@@ -14,6 +14,35 @@ const {Users, Entry} = require('./models')
 
 const {addDays, nowDate} = require('./resources/date-module')
 
+const {BasicStrategy} = require('passport-http')
+const passport = require('passport')
+
+const basicStrategy = new BasicStrategy((email, password, callback) => {
+	let user;
+	Users
+		.findOne({email: email})
+		.exec()
+		.then(_user => {
+			user = _user
+			if (!user){
+				return callback(null, false)
+			}
+			return user.validatePassword(password)
+		})
+		.then(isValid => {
+			if (!isValid){
+				return callback(null, false)
+			}
+			else{
+				return callback(null, user)
+			}
+		})
+		.catch(err => callback(err))
+})
+
+passport.use(basicStrategy)
+entryRouter.use(passport.initialize())
+
 
 entryRouter.get('/', (req, res) => {
 	Entry
@@ -31,9 +60,10 @@ entryRouter.get('/', (req, res) => {
 
 })
 
-entryRouter.get('/:journalId', (req, res) => {
+entryRouter.get('/entries', passport.authenticate('basic', {session: false}), (req, res) => {
+	let user = req.user.userRepr()
 	Entry
-		.find({journalId: req.params.journalId})
+		.find({journalId: user.journalId})
 		.exec()
 		.then(entries => {
 			if (entries.length == 0){
