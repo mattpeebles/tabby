@@ -14,34 +14,7 @@ const {Users, Entry} = require('./models')
 
 const {addDays, nowDate} = require('./resources/date-module')
 
-const {BasicStrategy} = require('passport-http')
-const passport = require('passport')
-
-const basicStrategy = new BasicStrategy((email, password, callback) => {
-	let user;
-	Users
-		.findOne({email: email})
-		.exec()
-		.then(_user => {
-			user = _user
-			if (!user){
-				return callback(null, false)
-			}
-			return user.validatePassword(password)
-		})
-		.then(isValid => {
-			if (!isValid){
-				return callback(null, false)
-			}
-			else{
-				return callback(null, user)
-			}
-		})
-		.catch(err => callback(err))
-})
-
-passport.use(basicStrategy)
-entryRouter.use(passport.initialize())
+const passport = require('./passportModule')
 
 
 entryRouter.get('/', (req, res) => {
@@ -57,10 +30,9 @@ entryRouter.get('/', (req, res) => {
 			console.error(err)
 			res.status(500).json({message: 'Internal server error'})
 		})
-
 })
 
-entryRouter.get('/entries', passport.authenticate('basic', {session: false}), (req, res) => {
+entryRouter.get('/entries', passport.authenticate('basic', {session: true}), (req, res) => {
 	let user = req.user.userRepr()
 	Entry
 		.find({journalId: user.journalId})

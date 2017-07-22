@@ -19,34 +19,6 @@ function generateJournalId(){
 	return faker.random.word() + faker.random.word() + faker.random.word()
 }
 
-//strategy for encrypting user password and ensuring
-//new user uses a unique email address when creating their profile
-const basicStrategy = new BasicStrategy((email, password, callback) => {
-	let user;
-	Users
-		.findOne({email: email})
-		.exec()
-		.then(_user => {
-			user = _user
-			if (!user){
-				return callback(null, false)
-			}
-			return user.validatePassword(password)
-		})
-		.then(isValid => {
-			if (!isValid){
-				return callback(null, false)
-			}
-			else{
-				return callback(null, user)
-			}
-		})
-		.catch(err => callback(err))
-})
-
-passport.use(basicStrategy)
-upInRouter.use(passport.initialize())
-
 
 //grabs signed in user database information
 //disallows a person from viewing info if they are

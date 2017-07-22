@@ -8,18 +8,29 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 mongoose.Promise = global.Promise
 
-const morgan = require('morgan')
+const passport = require('./passportModule')
 
-app.use(express.static('public'))
-app.use('/resources', express.static('resources'))
+const morgan = require('morgan')
+const session  = require('express-session')
 
 const upInRouter = require('./upInRouter')
 const entryRouter = require('./entryRouter')
+
+app.use(express.static('public'))
+app.use('/resources', express.static('resources'))
+app.use(require('cookie-parser')())
+app.use(require('body-parser').urlencoded({extended: true}))
+app.use(require('express-session')({secret: 'keyboard cat', resave: true, saveUninitialized: true }))
+app.use(passport.initialize())
+app.use(passport.session())
 app.use('/users', upInRouter) //provides user api route, updated /users will update the path that the api will require
 app.use('/entry', entryRouter)
 
-
 let server;
+
+app.post('/login', passport.authenticate('local'), function(req, res){
+	res.redirect('/journal/index.html')
+})
 
 function runServer(databaseUrl = DATABASE_URL, port=PORT){
 	return new Promise((resolve, reject) => {
