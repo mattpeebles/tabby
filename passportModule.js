@@ -4,12 +4,15 @@ const {Users} = require('./models')
 
 
 const basicStrategy = new BasicStrategy((email, password, callback) => {
+	console.log('basic strategy: ')
+	console.log(email, password)
 	let user;
 	Users
 		.findOne({email: email})
 		.exec()
 		.then(_user => {
 			user = _user
+			console.log(user)
 			if (!user){
 				return callback(null, false)
 			}
@@ -27,11 +30,15 @@ const basicStrategy = new BasicStrategy((email, password, callback) => {
 })
 
 passport.serializeUser(function(user, done) {
+  console.log('serializing: ')
+  console.log(user)
   done(null, user.id);
 });
 
 passport.deserializeUser(function(id, done) {
-  User.findById(id, function (err, user) {
+  Users.findById(id, function (err, user) {
+    console.log('deserializing: ')
+    console.log(user)
     done(err, user);
   });
 });

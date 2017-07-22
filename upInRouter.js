@@ -24,7 +24,7 @@ function generateJournalId(){
 //disallows a person from viewing info if they are
 //not authenticated without the right Basic authorization header
 
-upInRouter.get('/me', passport.authenticate('basic', {session: false}), (req, res) => {
+upInRouter.get('/me', passport.authenticate('basic', {session: true}), (req, res) => {
 	res.json({user: req.user.userRepr()})
 })
 

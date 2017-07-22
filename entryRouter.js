@@ -14,7 +14,7 @@ const {Users, Entry} = require('./models')
 
 const {addDays, nowDate} = require('./resources/date-module')
 
-const passport = require('./passportModule')
+let passport = require('./passportModule')
 
 
 entryRouter.get('/', (req, res) => {
