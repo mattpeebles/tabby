@@ -116,6 +116,29 @@ upInRouter.put('/:id', (req, res) => {
 		}
 	})
 
+	if(toUpdate.password !== undefined){
+		return Users
+			.findById(req.params.id)
+			.exec()
+			.then((user) => {
+				return Users.hashPassword(toUpdate.password)
+			})
+			//hashes password and actually creates the new user
+			.then(hash => {
+				toUpdate["password"] = hash
+				console.log(hash)
+				console.log(toUpdate)
+				return toUpdate
+			})
+			.then(() => {
+				Users
+					.findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
+					.exec()
+					.then(updatedUser => res.status(200).json(updatedUser.userRepr()))
+					.catch(err => res.status(500).json({message: 'Internal server'}))
+			})
+	}
+
 	if(toUpdate.priorityExpiry !== undefined){
 		Users
 			.findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
@@ -170,7 +193,7 @@ upInRouter.put('/:id', (req, res) => {
 				Users
 					.findById(req.params.id)
 					.exec()
-					.then(updatedUser => res.status(201).json(updatedUser.userRepr()))
+					.then(updatedUser => res.status(200).json(updatedUser.userRepr()))
 					.catch(err => res.status(500).json({message: 'Internal server'}))
 			})
 			.catch(err => res.status(500).json({message: 'Internal server error'}))

@@ -1,33 +1,37 @@
 const {BasicStrategy} = require('passport-http')
 const passport = require('passport')
+const LocalStrategy = require('passport-local').Strategy
 const {Users} = require('./models')
 
 
-const basicStrategy = new BasicStrategy((email, password, callback) => {
-	console.log('basic strategy: ')
-	console.log(email, password)
-	let user;
-	Users
-		.findOne({email: email})
-		.exec()
-		.then(_user => {
-			user = _user
-			console.log(user)
-			if (!user){
-				return callback(null, false)
-			}
-			return user.validatePassword(password)
-		})
-		.then(isValid => {
-			if (!isValid){
-				return callback(null, false)
-			}
-			else{
-				return callback(null, user)
-			}
-		})
-		.catch(err => callback(err))
-})
+passport.use(new LocalStrategy(
+    {
+        usernameField: 'email',
+        passwordField: 'password'   
+    },
+    function verify(email, password, done) {
+	 	let user;
+	 	Users
+			.findOne({email: email})
+			.exec()
+			.then(_user => {
+				user = _user
+				if (!user){
+					return done(null, false)
+				}
+				return user.validatePassword(password)
+			})
+			.then(isValid => {
+				if (!isValid){
+					return done(null, false)
+				}
+				else{
+					return done(null, user)
+				}
+			})
+			.catch(err => done(err))
+	}
+))
 
 passport.serializeUser(function(user, done) {
   console.log('serializing: ')
@@ -43,6 +47,5 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
-passport.use(basicStrategy)
 
 module.exports = passport

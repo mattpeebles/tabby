@@ -3,7 +3,6 @@ const btoa = require('btoa')
 
 
 function signIn(){
-	console.log('hi')
 	$('#logIn').on('click', (event) => {
 		event.preventDefault()
 		let data = $('#signInForm').serializeArray().reduce((obj, item) => {
@@ -21,8 +20,7 @@ function signIn(){
 			contentType: 'application/json',
 			beforeSend: function(xhr){
 				xhr.setRequestHeader('Authorization', 'Basic ' + btoa($('#email').val() + ':' + $('#password').val()))
-			},
-			success: function(){alert(`i signed in user`)}
+			}
 		})
 	})
 }

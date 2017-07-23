@@ -32,7 +32,7 @@ entryRouter.get('/', (req, res) => {
 		})
 })
 
-entryRouter.get('/entries', passport.authenticate('basic', {session: true}), (req, res) => {
+entryRouter.get('/entries', passport.authenticate('local'), (req, res) => {
 	let user = req.user.userRepr()
 	Entry
 		.find({journalId: user.journalId})
@@ -54,7 +54,8 @@ entryRouter.get('/entries', passport.authenticate('basic', {session: true}), (re
 })
 
 entryRouter.post('/', (req, res) => {
-	const requiredFields = ['title', 'link', 'priority', 'journalId'];
+	console.log(req.user)
+	const requiredFields = ['title', 'link', 'priority'];
 	let priorityExpiryObject = {}
 	let priority = req.body.priority
 	let addDate = nowDate()

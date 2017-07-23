@@ -1,52 +1,19 @@
 const isUrl = require('is-url')
 
-const MOCK_JOURNAL_ENTRIES = {
-	"journalEntries": [
-		{
-			'id': '111111',
-			'title': 'cool page',
-			'priority': 'high',
-			'link': 'https://www.google.com',
-			'user': 'john doe',
-			'date': Date.now
-		},
-		{
-			'id': '222222',
-			'title': 'not so cool page',
-			'priority': 'low',
-			'link': 'https://www.bing.com',
-			'user': 'john doe',
-			'date': Date.now
-		},
-		{
-			'id': '333333',
-			'title': 'really really cool page',
-			'priority': 'high',
-			'link': 'https://www.yahoo.com',
-			'user': 'john doe',
-			'date': Date.now
-		},
-		{
-			'id': '444444',
-			'title': 'look at later',
-			'priority': 'medium',
-			'link': 'https://www.chess.com',
-			'user': 'john doe',
-			'date': Date.now
-		},
-	]
-}
+const DATABASE_URL = 'http://localhost:3030/entry'
 
+MOCK_JOURNAL_ENTRIES =[]
 
 	// Get journal entries
 // *********************************** //
 	function getJournalEntries(callback){
-		setTimeout(() => {callback(MOCK_JOURNAL_ENTRIES)}, 100)
+		$.getJSON(DATABASE_URL + '/entries', callback)
 	}
 
 	function displayJournalEntries(data){
-		for (index in data.journalEntries) {
-			let entry = data.journalEntries[index]
+		console.log(data)
+		for (index in data.entries) {
+			let entry = data.entries[index]
 			let entryHTML = '<div class=\"postDiv\" id=\"' + entry.id + '\">' +
 								'<p class=\"linkTitle\" value=\"' + entry.priority + '\"><a class=\"url\" href=\"' + entry.link + '\">' + entry.title + '</a></p>' +
 								'<div class=\"editDiv\">' +

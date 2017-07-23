@@ -306,7 +306,7 @@ describe('Users API resource', () => {
 							.send(updateUser)
 					})
 					.then((res)=>{
-						res.should.have.status(201)
+						res.should.have.status(200)
 						res.body.should.be.a('object')
 						res.body.should.deep.equal({id: updateUser.id, user: updateUser.user.firstName + ' ' + updateUser.user.lastName, email: updateUser.email, joinDate: res.body.joinDate, journalId: res.body.journalId, priorityExpiry: res.body.priorityExpiry})
 					})

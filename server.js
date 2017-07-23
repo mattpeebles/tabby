@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 
 const {DATABASE_URL, PORT} = require('./config')
+const {Users, Entry} = require('./models')
 
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
@@ -13,62 +14,53 @@ const passport = require('./passportModule')
 
 const morgan = require('morgan')
 const session  = require('express-session')
-
 const upInRouter = require('./upInRouter')
 const entryRouter = require('./entryRouter')
+
+
+app.use(jsonParser)
 
 app.use(express.static('public'))
 app.use('/resources', express.static('resources'))
 app.use(require('cookie-parser')())
-app.use(jsonParser)
-app.use(require('express-session')({secret: 'keyboard cat', resave: true, saveUninitialized: true }))
+app.use(require('express-session')({secret: 'keyboard cat', resave: true, saveUninitialized: true, cookie: { secure : false, maxAge : (4 * 60 * 60 * 1000)} }))
 app.use(passport.initialize())
 app.use(passport.session())
+
 app.use('/users', upInRouter) //provides user api route, updated /users will update the path that the api will require
 app.use('/entry', entryRouter)
-
 
 let server;
 
 
-app.post('/login', (req, res, next) => {
-	console.log(req.body)
-	passport.authenticate(('basic'), (err, user, info) => {
-		console.log(user)
-		if (err){
-			console.log('immediate error')
-			return next(err)
-		}
 
-		if (!user){
-			console.log('no user')
-			return res.status(401).json({err: info})
-		}
+app.post('/login', function handleLocalAuthentication(req, res, next) {
+    passport.authenticate('local', function(err, user, info) {
+        if (err) return next(err);
+        if (!user) {
+            return res.json(403, {
+                message: "no user found"
+            });
+        }
 
-		req.login(user, (err) => {
-			if (err){
-				console.log('error logging in')
-				return res.status(500).json({
-					err: "Could not log in user"
-				})
-			}
-
-			res.status(200).json({
-				status: 'Login successfull'
-			})
-		})
-	})(req, res, next)
-})
-
-// app.post('/login', passport.authenticate('basic', {session: true}), function(req, res){
-// 	console.log(req)
-// 	res.redirect('/journal/index.html')
-// })
+        // Manually establish the session...
+        req.login(user, function(err) {
+            if (err) return next(err);
+            res.redirect('/journal/index.html')
+        });
+    })(req, res, next);
+});
 
 app.get('/logout', (req, res) => {
 	req.logOut()
-	return res.status(200).json({status: 'Logout successfull'})
+	return res.status(200).json({status: 'Logout successful'})
 
+})
+
+app.get('/session', (req, res) => {
+	console.log(req.session)
+	console.log(req.user)
+	res.status(200).json({user: req.user.userRepr()})
 })
 
 function runServer(databaseUrl = DATABASE_URL, port=PORT){
