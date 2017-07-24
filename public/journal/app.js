@@ -11,10 +11,9 @@ MOCK_JOURNAL_ENTRIES =[]
 	}
 
 	function displayJournalEntries(data){
-		console.log(data)
 		for (index in data.entries) {
 			let entry = data.entries[index]
-			let entryHTML = '<div class=\"postDiv\" id=\"' + entry.id + '\">' +
+			let entryHTML = '<div class=\"postDiv\" id=\"' + entry.entryId + '\">' +
 								'<p class=\"linkTitle\" value=\"' + entry.priority + '\"><a class=\"url\" href=\"' + entry.link + '\">' + entry.title + '</a></p>' +
 								'<div class=\"editDiv\">' +
 									'<button class=\"edit udButton hidden\">Edit</button>' +
@@ -77,9 +76,6 @@ MOCK_JOURNAL_ENTRIES =[]
 			let title = $('#linkTitle').val()
 			let url =  (isUrl($('#linkUrl').val()) == true) ? $('#linkUrl').val() : "http://" + $('#linkUrl').val()
 			let priority = $('#linkPriority').val()
-			let randId = (Math.floor(100000 + Math.random() * 900000)).toString()
-
-			console.log(title)
 
 			if (title.search(/[a-zA-Z0-9]/g) == -1){
 				alert('please enter a title for your entry')
@@ -88,15 +84,19 @@ MOCK_JOURNAL_ENTRIES =[]
 			}
 
 			let newLink = {
-				'id': randId,
 				'title': title,
 				'priority': priority,
-				'link': url,
-				'user': 'john doe',
-				'date': Date.now
+				'link': url
 			}
 
-			MOCK_JOURNAL_ENTRIES["journalEntries"].push(newLink)
+			console.log(newLink)
+
+			$.ajax({
+				type: 'POST',
+				url: DATABASE_URL,
+				data: JSON.stringify(newLink),
+				contentType: 'application/json'
+			})
 
 			$(".postDiv").remove()
 
@@ -104,7 +104,7 @@ MOCK_JOURNAL_ENTRIES =[]
 
 			$('#newLinkFormDiv').remove()
 
-
+			location.reload()
 		})
 	}
 // *********************************** //
@@ -150,26 +150,34 @@ MOCK_JOURNAL_ENTRIES =[]
 				$(priorityFormOption).attr("selected", 'selected')
 			}
 			
-			updateEntryInDatabase(MOCK_JOURNAL_ENTRIES)
+			updateEntryInDatabase()
 		})
 	}
 
-	function updateEntryInDatabase(data){
+	function updateEntryInDatabase(){
 		$('#editLinkFormSubmit').on('click', function(event){
 			event.preventDefault()
-			let editID = $(".editForm").attr('id').split('-')[1]
-			let editTitle = $("#linkTitle").val()
-			let editPriority = $('#linkPriority').val()
-			let editURL = $('#linkUrl').val()
+			
+			let id = $(".editForm").attr('id').split('-')[1]
 
-			for (index in data.journalEntries){
-				let entry = data.journalEntries[index]
-				if(entry.id === editID){
-					entry.title = editTitle
-					entry.priority = editPriority
-					entry.link = editURL
-				}
+			let editEntry = {
+				entryId: id,
+				title: $("#linkTitle").val(),
+				priority: $('#linkPriority').val(),
+				url: $('#linkUrl').val()
 			}
+
+			console.log('Put object')
+			console.log(editEntry) //TODO: NOT UPDATED LINK
+
+			$.ajax({
+				type: 'put',
+				url: DATABASE_URL + '/' + id,
+				data: JSON.stringify(editEntry),
+				contentType: 'application/json'
+			})
+
+
 			$('.editForm').remove()
 			removeEditDeleteButtons()
 
@@ -186,15 +194,15 @@ MOCK_JOURNAL_ENTRIES =[]
 	function deleteEntry(data){
 		$('#linkSection').on('click', '.delete', function(){
 			let parentDiv = $(this).parent().parent()
-			let linkID = $(parentDiv).attr('id')
+			let entryId = $(parentDiv).attr('id')
 
 
-			for (index in data.journalEntries){
-				let entry = data.journalEntries[index]
-				if (entry.id === linkID){
-					data.journalEntries.splice(index, 1)
-				}
-			}
+			$.ajax({
+				type: 'delete',
+				url: DATABASE_URL + "/" + entryId
+			})
+
+
 
 			removeEditDeleteButtons()
 			$(".postDiv").remove()
