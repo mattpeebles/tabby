@@ -33,19 +33,26 @@ passport.use(new LocalStrategy(
 	}
 ))
 
+function authorize(req, res, next){
+	if (req.user !== undefined){
+		console.log('authorized')
+		next()
+	}
+	else {
+		console.log('not authorized')
+		res.status(403).send('Forbidden')	
+	}
+}
+
 passport.serializeUser(function(user, done) {
-  console.log('serializing: ')
-  console.log(user)
   done(null, user.id);
 });
 
 passport.deserializeUser(function(id, done) {
   Users.findById(id, function (err, user) {
-    console.log('deserializing: ')
-    console.log(user)
     done(err, user);
   });
 });
 
 
-module.exports = passport
+module.exports = {passport, authorize}
