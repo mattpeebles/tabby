@@ -1,5 +1,4 @@
 const DATABASE_URL = 'http://localhost:3030'
-const btoa = require('btoa')
 
 
 function signIn(){
@@ -11,15 +10,13 @@ function signIn(){
 			return obj
 		}, {})
 
-		console.log(JSON.stringify(data))
-
 		$.ajax({
 			type: 'POST',
 			url: DATABASE_URL + '/login',
 			data: JSON.stringify(data),
 			contentType: 'application/json',
-			beforeSend: function(xhr){
-				xhr.setRequestHeader('Authorization', 'Basic ' + btoa($('#email').val() + ':' + $('#password').val()))
+			success: function(data){
+				window.location.href = data.redirect
 			}
 		})
 	})
