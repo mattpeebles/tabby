@@ -53,7 +53,7 @@ app.post('/login', function handleLocalAuthentication(req, res, next) {
 
 app.get('/logout', (req, res) => {
 	req.logOut()
-	return res.status(200).json({status: 'Logout successful'})
+	return res.status(200).json({redirect: '/', message: 'Log out successful'})
 
 })
 
