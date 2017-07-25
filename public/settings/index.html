@@ -22,26 +22,20 @@
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-  		<button type="button" class="btn btn-default navbar-btn" id="newLink">Add Link</button>
-  		<button type="button" class="btn btn-default navbar-btn" id="editLink">Edit Entries</button>
-  		<button type="button" class="btn btn-default navbar-btn navbar-right" id="logOut">Log Out</button>
-  		<a href="/settings/index.html" role="button" class="btn btn-default navbar-btn navbar-right" id="settings">Settings</a>
+  		<a href="/entry/entries/" role="button" class="btn btn-default navbar-btn" id="journal">Journal</a>
     </div>
   </div><!-- /.container-fluid -->
 </nav>
 	<header>
 
 	</header>
-	<section id="linkSection">
-		<section id="highPriority">
-			<p>High Priority</p>
-		</section>
-		<section id="medPriority">
-			<p>Medium Priority</p>
-		</section>
-		<section id="lowPriority">
-			<p>Low Priority</p>
-		</section>
+	<section id="userSection">
+		<div id="editUser">
+			<button id="editUserButton" class="btn btn-default">Edit User</button>
+		</div>
+		<div id="userInfo">
+
+		</div>
 	</section>
 	<footer>
 		
@@ -51,5 +45,5 @@
 
 <script type="text/javascript" src="/resources/jquery.js"></script>
 
-<script type="text/javascript" src="./app-brow.js"></script>
+<script type="text/javascript" src="./app.js"></script>
 </html>

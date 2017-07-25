@@ -2,7 +2,8 @@ function addDays(startDate, numberOfDays){
 	let returnDate = new Date(
 							startDate.getFullYear(),
 							startDate.getMonth(),
-							startDate.getDate() + numberOfDays)
+							startDate.getDate() + numberOfDays);
+
 	return returnDate;
 }
 

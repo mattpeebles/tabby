@@ -195,6 +195,8 @@ describe('Users API resource', () => {
 
 		it('should return authorized user on GET', () => {
 				// this variable is required in order to make an authorized get request on users/me
+			let joinDate = nowDate
+
 			const newUser = {
 						user: {
 							firstName: 'Matt',
@@ -203,23 +205,43 @@ describe('Users API resource', () => {
 						email: 'testemail@test.com',
 						password: 'yolo',
 						journalId: generateJournalId(),
-						joinDate: new Date(Date.now()),
+						joinDate: joinDate,
 						priorityExpiry: {'high': 2, 'medium': 4, 'low': 7}
 					}
 			let res;
-			let BasicAuthToken = 'Basic ' + btoa(newUser.email + ':' + newUser.password) //authorization header value
+
+			let agent = chai.request.agent(app)
 
 			return chai.request(app)
 				// posts newUser to users
 				.post('/users')
 				.send(newUser)
 				.then((res) => {
-					
-					//these tests ensures new user was properly posted
-					res.should.have.status(201)
-					res.should.be.a('object')
-					res.body.id.should.not.be.null
-					res.body.email.should.be.equal('testemail@test.com')
+					return agent.post('/login')
+						.send({email: newUser.email, password: newUser.password})
+						.then(res => {
+							return agent.get('/users/me')
+								.then(_res => {
+									res = _res
+									let user = res.body.user
+				
+									res.should.have.status(200)
+									res.should.be.json
+									user.id.should.be.a('string')
+									user.user.should.be.a('object')
+									user.user.firstName.should.be.a('string')
+									user.user.lastName.should.be.a('string')
+									user.user.should.deep.equal(newUser.user)
+									user.email.should.be.a('string')
+									user.email.should.be.equal(`${newUser.email}`)
+									user.joinDate.should.be.a('string')
+									user.journalId.should.be.a('string')
+									user.journalId.should.be.equal(`${newUser.journalId}`)
+									user.priorityExpiry.should.be.a('object')
+									user.priorityExpiry.should.include.keys('high', 'medium', 'low')
+									user.priorityExpiry.should.deep.equal(newUser.priorityExpiry)
+								})
+						})
 					
 					return chai.request(app)
 						//tests ensures that get users/me properly validates authorization header
@@ -251,7 +273,8 @@ describe('Users API resource', () => {
 				return res
 			})
 			.catch(err => {
-				err.should.have.status(401)
+				err.should.have.status(403)
+				err.message.should.be.equal('Forbidden')
 			})
 	})
 
@@ -277,10 +300,10 @@ describe('Users API resource', () => {
 				.then(function(res){
 					res.should.have.status(201)
 					res.should.be.json
-					res.body.should.be.a('object')
-					res.body.should.include.keys('user', 'email', 'id', 'journalId', 'joinDate', 'priorityExpiry')
-					res.body.id.should.not.be.null
-					res.body.should.eql({user: newUser.user.firstName + ' ' + newUser.user.lastName, email: newUser.email, journalId: newUser.journalId, id: res.body.id, joinDate: newUser.joinDate, priorityExpiry: newUser.priorityExpiry})
+					res.body.user.should.be.a('object')
+					res.body.user.should.include.keys('user', 'email', 'id', 'journalId', 'joinDate', 'priorityExpiry')
+					res.body.user.id.should.not.be.null
+					res.body.user.should.eql({user: newUser.user, email: newUser.email, journalId: newUser.journalId, id: res.body.user.id, joinDate: newUser.joinDate, priorityExpiry: newUser.priorityExpiry})
 				})
 		})
 	})
@@ -306,9 +329,9 @@ describe('Users API resource', () => {
 							.send(updateUser)
 					})
 					.then((res)=>{
-						res.should.have.status(201)
+						res.should.have.status(200)
 						res.body.should.be.a('object')
-						res.body.should.deep.equal({id: updateUser.id, user: updateUser.user.firstName + ' ' + updateUser.user.lastName, email: updateUser.email, joinDate: res.body.joinDate, journalId: res.body.journalId, priorityExpiry: res.body.priorityExpiry})
+						res.body.should.deep.equal({id: updateUser.id, user: updateUser.user, email: updateUser.email, joinDate: res.body.joinDate, journalId: res.body.journalId, priorityExpiry: res.body.priorityExpiry})
 					})
 		});
 
@@ -326,37 +349,38 @@ describe('Users API resource', () => {
 						return chai.request(app)
 							.put(`/users/${updateUser.id}`)
 							.send(updateUser)
-				})
-				.then(res => {
-					let journalId = res.body.journalId
-						return Entry
-							.find({journalId: journalId})
-							.exec()
 							.then(res => {
-								res.forEach(entry => {
-									entry.journalId.should.be.a('string')
-									entry.entryId.should.be.a('string')
-									entry.title.should.be.a('string')
-									entry.priority.should.be.a('string')
+								let journalId = res.body.journalId
+									return Entry
+										.find({journalId: journalId})
+										.exec()
+										.then(res => {
+											res.forEach(entry => {
+												entry.journalId.should.be.a('string')
+												entry.entryId.should.be.a('string')
+												entry.title.should.be.a('string')
+												entry.priority.should.be.a('string')
 
-									
-									let priorityExpiry = priorityExpiryArray[0]
-									let expiryDate = new Date(entry.expiry)
-									let addDate = new Date(entry.addDate)
-									let dateDiff = Math.round((expiryDate.getTime() - addDate.getTime()) / (1000 * 60 * 60 * 24))
+												
+												let {high, medium, low} = updateUser.priorityExpiry
+												let expiryDate = new Date(entry.expiry)
 
-									switch(entry.priority){
-										case 'high': 
-											(dateDiff).should.equal(priorityExpiry.high) 
-											break;
-										case 'medium': 
-											(dateDiff).should.equal(priorityExpiry.medium) 
-											break;
-										case 'low': 
-											(dateDiff).should.equal(priorityExpiry.low) 
-											break;
-									}
-								})
+												let addDate = new Date(entry.addDate)
+												let dateDiff = Math.round((expiryDate.getTime() - addDate.getTime()) / (1000 * 60 * 60 * 24))
+
+												switch(entry.priority){
+													case 'high': 
+														(dateDiff).should.equal(high) 
+														break;
+													case 'medium': 
+														(dateDiff).should.equal(medium) 
+														break;
+													case 'low': 
+														(dateDiff).should.equal(low) 
+														break;
+												}
+											})
+										})
 							})
 				})
 		})

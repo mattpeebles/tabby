@@ -7,41 +7,19 @@ mongoose.Promise = global.Promise
 
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
+const {passport, authorize} = require('./passportModule')
 
 entryRouter.use(jsonParser)
+entryRouter.use(require('cookie-parser')())
+entryRouter.use(require('express-session')({secret: 'keyboard cat', resave: true, saveUninitialized: true, cookie: { secure : false, maxAge : (4 * 60 * 60 * 1000)} }))
+entryRouter.use(passport.initialize())
+entryRouter.use(passport.session())
+
+
 
 const {Users, Entry} = require('./models')
 
 const {addDays, nowDate} = require('./resources/date-module')
-
-const {BasicStrategy} = require('passport-http')
-const passport = require('passport')
-
-const basicStrategy = new BasicStrategy((email, password, callback) => {
-	let user;
-	Users
-		.findOne({email: email})
-		.exec()
-		.then(_user => {
-			user = _user
-			if (!user){
-				return callback(null, false)
-			}
-			return user.validatePassword(password)
-		})
-		.then(isValid => {
-			if (!isValid){
-				return callback(null, false)
-			}
-			else{
-				return callback(null, user)
-			}
-		})
-		.catch(err => callback(err))
-})
-
-passport.use(basicStrategy)
-entryRouter.use(passport.initialize())
 
 
 entryRouter.get('/', (req, res) => {
@@ -57,10 +35,9 @@ entryRouter.get('/', (req, res) => {
 			console.error(err)
 			res.status(500).json({message: 'Internal server error'})
 		})
-
 })
 
-entryRouter.get('/entries', passport.authenticate('basic', {session: false}), (req, res) => {
+entryRouter.get('/entries', authorize, (req, res) => {
 	let user = req.user.userRepr()
 	Entry
 		.find({journalId: user.journalId})
@@ -81,8 +58,8 @@ entryRouter.get('/entries', passport.authenticate('basic', {session: false}), (r
 		})
 })
 
-entryRouter.post('/', (req, res) => {
-	const requiredFields = ['title', 'link', 'priority', 'journalId'];
+entryRouter.post('/', authorize, (req, res) => {
+	const requiredFields = ['title', 'link', 'priority'];
 	let priorityExpiryObject = {}
 	let priority = req.body.priority
 	let addDate = nowDate()
@@ -94,8 +71,9 @@ entryRouter.post('/', (req, res) => {
 		}
 	})
 
+
 		Users
-			.find({journalId: req.body.journalId})
+			.find({journalId: req.user.journalId})
 			.exec()
 			.then(res => {
 				priorityExpiryObject = res[0].priorityExpiry
@@ -107,7 +85,7 @@ entryRouter.post('/', (req, res) => {
 							.create({
 								title: req.body.title,
 								link: req.body.link,
-								journalId: req.body.journalId,
+								journalId: req.user.journalId,
 								priority: req.body.priority,
 								addDate: addDate,
 								expiry: expiry
@@ -173,7 +151,6 @@ entryRouter.put('/:entryId', (req, res) => {
 						return expiry 
 					})
 					.then(expiry => {
-						console.log(req.params.entryId)
 						toUpdate.expiry = expiry
 						Entry
 							.findByIdAndUpdate(req.params.entryId, {$set: toUpdate}, {new: true})
@@ -188,16 +165,8 @@ entryRouter.put('/:entryId', (req, res) => {
 
 entryRouter.delete('/:entryId', (req, res) => {
 
-	if(/^[A-Z]/.test(req.params.entryId)){
-		const message = `Please enter an entry id rather than a journal id`
-		console.error(message)
-		return res.status(400).json({message: message})
-	}
-
 	Entry
-		.find({entryId: req.params.entryId})
-		.remove()
-		.exec()
+		.findByIdAndRemove(req.params.entryId)
 		.then(() => {
 			console.log(`Entry ${req.params.entryId} was deleted`)
 			res.status(204).end()

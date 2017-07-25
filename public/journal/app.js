@@ -1,54 +1,37 @@
-const isUrl = require('is-url')
+const isUrl = require('is-url') //validates url
 
-const MOCK_JOURNAL_ENTRIES = {
-	"journalEntries": [
-		{
-			'id': '111111',
-			'title': 'cool page',
-			'priority': 'high',
-			'link': 'https://www.google.com',
-			'user': 'john doe',
-			'date': Date.now
-		},
-		{
-			'id': '222222',
-			'title': 'not so cool page',
-			'priority': 'low',
-			'link': 'https://www.bing.com',
-			'user': 'john doe',
-			'date': Date.now
-		},
-		{
-			'id': '333333',
-			'title': 'really really cool page',
-			'priority': 'high',
-			'link': 'https://www.yahoo.com',
-			'user': 'john doe',
-			'date': Date.now
-		},
-		{
-			'id': '444444',
-			'title': 'look at later',
-			'priority': 'medium',
-			'link': 'https://www.chess.com',
-			'user': 'john doe',
-			'date': Date.now
-		},
-	]
-}
+const DATABASE_URL = 'http://localhost:3030'
 
 
 	// Get journal entries
 // *********************************** //
 	function getJournalEntries(callback){
-		setTimeout(() => {callback(MOCK_JOURNAL_ENTRIES)}, 100)
+		$.getJSON(DATABASE_URL + '/entry/entries', callback)
 	}
 
+	
+		//displays journal entries in correct location on DOM
+		//depending on priority
 	function displayJournalEntries(data){
-		for (index in data.journalEntries) {
-			let entry = data.journalEntries[index]
-			let entryHTML = '<div class=\"postDiv\" id=\"' + entry.id + '\">' +
+		
+			//if user has no entries in journal, it renders
+			//a message saying such
+		if (data.message){
+			$('#linkSection').empty()
+			let messageHTMl = '<div class=\'postDiv\'>' +
+									'<p>' + data.message + '</p>' +
+								'</div>';
+
+			$('#linkSection').append(messageHTMl)
+		}
+
+		$('.postDiv').remove()
+
+		for (index in data.entries) {
+			let entry = data.entries[index]
+			let entryHTML = '<div class=\"postDiv\" id=\"' + entry.entryId + '\">' +
 								'<p class=\"linkTitle\" value=\"' + entry.priority + '\"><a class=\"url\" href=\"' + entry.link + '\">' + entry.title + '</a></p>' +
+								`<p class=\'expiryDate\'>${entry.expiry}</p>` +
 								'<div class=\"editDiv\">' +
 									'<button class=\"edit udButton hidden\">Edit</button>' +
 								'</div>' +
@@ -58,14 +41,16 @@ const MOCK_JOURNAL_ENTRIES = {
 							'</div>'
 
 
-			if (entry.priority == 'high'){
-				$('#highPriority').append(entryHTML)
-			}
-			else if(entry.priority == 'medium'){
-				$('#medPriority').append(entryHTML)
-			}
-			else if(entry.priority == 'low'){
-				$('#lowPriority').append(entryHTML)
+			switch(entry.priority){
+				case "high": 
+					$('#highPriority').append(entryHTML)
+					break;
+				case "medium": 
+					$('#medPriority').append(entryHTML)
+					break;
+				case "low":
+					$('#lowPriority').append(entryHTML)
+					break;
 			}
 		}
 	}
@@ -78,6 +63,7 @@ const MOCK_JOURNAL_ENTRIES = {
 
 	// Post journal entries
 // *********************************** //
+	
 	function addJournalEntryForm(){
 		let formTemplate = "<div id=\"newLinkFormDiv\">" +
 								"<form id=\"newLinkForm\">" +
@@ -105,15 +91,13 @@ const MOCK_JOURNAL_ENTRIES = {
 
 	function postJournalEntry(){
 		$("#linkSection").on('click', '#newLinkFormSubmit', (event) => {
-			event.preventDefault();
 
 			let title = $('#linkTitle').val()
-			let url =  (isUrl($('#linkUrl').val()) == true) ? $('#linkUrl').val() : "http://" + $('#linkUrl').val()
+			let url =  (isUrl($('#linkUrl').val()) == true) ? $('#linkUrl').val() : "http://" + $('#linkUrl').val() //ensures link is a url otherwise it appends http:// at the beginning
 			let priority = $('#linkPriority').val()
-			let randId = (Math.floor(100000 + Math.random() * 900000)).toString()
 
-			console.log(title)
-
+				//ensures user enters a title that is
+				//not just a blank space
 			if (title.search(/[a-zA-Z0-9]/g) == -1){
 				alert('please enter a title for your entry')
 				$('#linkTitle').focus()
@@ -121,36 +105,39 @@ const MOCK_JOURNAL_ENTRIES = {
 			}
 
 			let newLink = {
-				'id': randId,
 				'title': title,
 				'priority': priority,
-				'link': url,
-				'user': 'john doe',
-				'date': Date.now
+				'link': url
 			}
 
-			MOCK_JOURNAL_ENTRIES["journalEntries"].push(newLink)
-
-			$(".postDiv").remove()
-
-			getAndDisplayJournalEntries()
-
-			$('#newLinkFormDiv').remove()
-
+			$.ajax({
+				type: 'POST',
+				url: DATABASE_URL + '/entry',
+				data: JSON.stringify(newLink),
+				contentType: 'application/json',
+				success: function(){
+					location.reload()
+				}
+			})
 
 		})
 	}
+
 // *********************************** //
 
 	// Put journal entries
 // *********************************** //
 	function addUpdateEntriesForm(){
 		$("#linkSection").on('click', ".edit", function(){
-			let parentDiv = $(this).parent().parent()
-			let linkURL = $(parentDiv).children('.linkTitle').children('.url').attr('href')
-			let linkTitle = $(parentDiv).children('.linkTitle').text()
-			let linkPriority = $(parentDiv).children('.linkTitle').attr('value')
-			let linkID = $(parentDiv).attr('id')
+			
+			
+				//grabs link information to add as placeholder in 
+				//form to make editing easier for user
+			let parentDiv = $(this).parent().parent() //targets postDiv
+			let linkURL = $(parentDiv).children('.linkTitle').children('.url').attr('href') //grabs the url of link
+			let linkTitle = $(parentDiv).children('.linkTitle').text() //grabs title of link
+			let linkPriority = $(parentDiv).children('.linkTitle').attr('value') //grabs priority of link
+			let linkID = $(parentDiv).attr('id') //grabs id of link
 
 			let formTemplate = "<div class=\"editForm\" id=\"editLinkFormDiv-" + linkID + "\">" +
 						"<form id=\"editLinkForm\">" +
@@ -173,7 +160,7 @@ const MOCK_JOURNAL_ENTRIES = {
 				// prevents user from accidentally hitting edit multiple times
 			if (!($(parentDiv).children(formParentDiv).length)){
 				
-					//removes any other edit forms
+					//removes any other edit forms if one already exists
 				$('#linkSection').children().children().children(".editForm").remove()
 				
 				$(parentDiv).prepend(formTemplate)
@@ -183,63 +170,81 @@ const MOCK_JOURNAL_ENTRIES = {
 				$(priorityFormOption).attr("selected", 'selected')
 			}
 			
-			updateEntryInDatabase(MOCK_JOURNAL_ENTRIES)
+			updateEntryInDatabase()
 		})
 	}
 
-	function updateEntryInDatabase(data){
+	function updateEntryInDatabase(){
 		$('#editLinkFormSubmit').on('click', function(event){
-			event.preventDefault()
-			let editID = $(".editForm").attr('id').split('-')[1]
-			let editTitle = $("#linkTitle").val()
-			let editPriority = $('#linkPriority').val()
-			let editURL = $('#linkUrl').val()
+			
+			
+				// edit form has id of editLinkFormDiv-id,
+				//splits the id on hyphen and returns database id
+			let id = $(".editForm").attr('id').split('-')[1]
 
-			for (index in data.journalEntries){
-				let entry = data.journalEntries[index]
-				if(entry.id === editID){
-					entry.title = editTitle
-					entry.priority = editPriority
-					entry.link = editURL
-				}
+			let editEntry = {
+				entryId: id,
+				title: $("#linkTitle").val(),
+				priority: $('#linkPriority').val(),
+				link: $('#linkUrl').val()
 			}
-			$('.editForm').remove()
-			removeEditDeleteButtons()
 
-			$(".postDiv").remove()
-
-			getAndDisplayJournalEntries()
-
+			$.ajax({
+				type: 'put',
+				url: DATABASE_URL + '/entry/' + id,
+				data: JSON.stringify(editEntry),
+				contentType: 'application/json',
+				success: function(){
+					location.reload()
+				}
+			})
 		})
 	}
 // *********************************** //
 
 	// Delete journal entries
 // *********************************** //
-	function deleteEntry(data){
+	function deleteEntry(){
 		$('#linkSection').on('click', '.delete', function(){
 			let parentDiv = $(this).parent().parent()
-			let linkID = $(parentDiv).attr('id')
+			let entryId = $(parentDiv).attr('id')
 
 
-			for (index in data.journalEntries){
-				let entry = data.journalEntries[index]
-				if (entry.id === linkID){
-					data.journalEntries.splice(index, 1)
+			$.ajax({
+				type: 'delete',
+				url: DATABASE_URL + "/entry/" + entryId,
+				success: function(){
+					location.reload()
 				}
-			}
-
-			removeEditDeleteButtons()
-			$(".postDiv").remove()
-			getAndDisplayJournalEntries()
-
+			})
 		})
 	}
 
 	function deleteEntryFromDataBase(){
-		deleteEntry(MOCK_JOURNAL_ENTRIES)
+		deleteEntry()
 	}
 // *********************************** //
+
+	// Signout
+// *********************************** //
+	function signout(){
+		$('#logOut').click((event) => {
+			if(confirm('Log out?')){
+				$.ajax({
+					type: 'get',
+					url: DATABASE_URL + '/logout',
+					success: function(data) {
+						alert(data.message)
+						window.location.href = data.redirect
+					}
+				})
+			}
+		})
+	}
+
+// *********************************** //
+
+
 
 	//Add and remove edit features
 // *********************************** //
@@ -261,4 +266,5 @@ $(() => {
 	addEditDeleteButtons()
 	addUpdateEntriesForm()
 	deleteEntryFromDataBase()
+	signout()
 })

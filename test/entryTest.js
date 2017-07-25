@@ -8,7 +8,6 @@ chai.use(chaiHttp)
 const mongoose = require('mongoose')
 mongoose.Promise = global.Promise
 
-
 const btoa = require('btoa')
 const faker = require('faker')
 
@@ -236,7 +235,12 @@ function tearDownDb(){
 										"priorityExpiry": {"high": 2, "medium": 4, "low": 7}
 								} 
 				
+				let signIn = {email: userData.email,
+							  password: userData.password
+							}
+
 				let res;
+				let Cookies;
 
 				return chai.request(app)
 					.post('/users')
@@ -245,40 +249,41 @@ function tearDownDb(){
 							return Entry.insertMany(entryData)
 					})
 					.then(res => {
-						let BasicAuthToken = 'Basic ' + btoa(userData.email + ':' + userData.password) //authorization header value
-
-
 						let randIndex = Math.floor(Math.random()*(9-0)) + 0
 						let journalId = journalIdArray[0]
 						let priorityExpiry = priorityExpiryArray[randIndex]
-						return chai.request(app)
-							.get(`/entry/entries`)
-							.set('Authorization', BasicAuthToken)
-							.then(_res => {
-								res = _res
-								let entries = res.body.entries
-								res.should.have.status(200)
-								res.should.be.json
-								
-								if (res.body.entries === undefined){
-									res.should.have.status(200)
-									res.should.be.json
-									res.body.message.should.be.equal('You have no links saved')			
-								}
-								else {
-									entries.should.be.a('array')
-									entries.should.have.length(3)
-								
-									entries.forEach(entry => {
-										entry.journalId.should.be.equal(userData.journalId)
-										entry.entryId.should.be.a('string')
-										entry.link.should.be.a('string')
-										entry.title.should.be.a('string')
-										entry.priority.should.be.a('string')
-										entry.addDate.should.be.a('string')
-										entry.expiry.should.be.a('string')
+						let agent = chai.request.agent(app)
+
+						return agent.post('/login')
+							.send(signIn)
+							.then((res) => {
+								return agent.get(`/entry/entries`)
+									.then(_res => {
+										res = _res
+										let entries = res.body.entries
+										res.should.have.status(200)
+										res.should.be.json
+										
+										if (res.body.entries === undefined){
+											res.should.have.status(200)
+											res.should.be.json
+											res.body.message.should.be.equal('You have no links saved')			
+										}
+										else {
+											entries.should.be.a('array')
+											entries.should.have.length(3)
+										
+											entries.forEach(entry => {
+												entry.journalId.should.be.equal(userData.journalId)
+												entry.entryId.should.be.a('string')
+												entry.link.should.be.a('string')
+												entry.title.should.be.a('string')
+												entry.priority.should.be.a('string')
+												entry.addDate.should.be.a('string')
+												entry.expiry.should.be.a('string')
+											})
+										}
 									})
-								}
 							})
 					})
 
@@ -295,20 +300,22 @@ function tearDownDb(){
 										"journalId": "inputFantasticback up", 
 										"priorityExpiry": {"high": 2, "medium": 4, "low": 7}
 								}
-				let BasicAuthToken = 'Basic ' + btoa(userData.email + ':' + userData.password) //authorization header value
 
 				return chai.request(app)
 					.post('/users')
 					.send(userData)
 					.then(res => {
+						let agent = chai.request.agent(app)
 
-						return chai.request(app)
-							.get(`/entry/entries`)
-							.set('Authorization', BasicAuthToken)
-							.then(res => {
-								res.should.have.status(200)
-								res.should.be.json
-								res.body.message.should.be.equal('You have no links saved')
+						return agent.post('/login')
+							.send({email: userData.email, password: userData.password})
+							.then((res) => {
+								return agent.get('/entry/entries')
+									.then(res => {
+										res.should.have.status(200)
+										res.should.be.json
+										res.body.message.should.be.equal('You have no links saved')
+									})
 							})
 					})
 			})
@@ -316,48 +323,66 @@ function tearDownDb(){
 
 		describe('POST endpoint', () => {
 			it('should add entry on user\'s journal', () => {
-				
-				let priorityExpiry = priorityExpiryArray[0]
-
+				let userData = { "user": { 
+											"firstName": "Harry",
+											"lastName": "Potter"
+										},
+										"joinDate": "Fri Jul 14 2017 15:00:22 GMT-0700 (PDT)",
+										"email": "testemail@test.com",
+										"password": "yolo",
+										"journalId": "inputFantasticback up", 
+										"priorityExpiry": {"high": 2, "medium": 4, "low": 7}
+								}
+								
 				const newEntry = {
-						journalId: journalIdArray[0],
 						title: generateTitle(),
 						link: generateLink(),
 						priority: generatePriority(),
-						addDate: generateDate()
 					}
+
 				return chai.request(app)
-					.post('/entry')
-					.send(newEntry)
+					.post('/users')
+					.send(userData)
 					.then(res => {
-						res.should.have.status(201)
-						res.body.journalId.should.be.a('string')
-						res.body.journalId.should.be.equal(newEntry.journalId)
-						res.body.entryId.should.be.a('string')
-						res.body.title.should.be.a('string')
-						res.body.title.should.be.equal(newEntry.title)
-						res.body.priority.should.be.a('string')
-						res.body.priority.should.be.equal(newEntry.priority)
-						res.body.addDate.should.be.a('string')
-						res.body.expiry.should.be.a('string')
+						let agent = chai.request.agent(app)
 
-						
-						let expiryDate = new Date(res.body.expiry)
-						let addDate = new Date(res.body.addDate)
-						let dateDiff = Math.round((expiryDate.getTime() - addDate.getTime()) / (1000 * 60 * 60 * 24))
+						return agent.post('/login')
+							.send({email: userData.email, password: userData.password})
+							.then(res => {
+								return agent.post('/entry')
+									.send(newEntry)
+									.then(res => {
+										res.should.have.status(201)
+										res.body.journalId.should.be.a('string')
+										res.body.journalId.should.be.equal(userData.journalId)
+										res.body.entryId.should.be.a('string')
+										res.body.title.should.be.a('string')
+										res.body.title.should.be.equal(newEntry.title)
+										res.body.priority.should.be.a('string')
+										res.body.priority.should.be.equal(newEntry.priority)
+										res.body.addDate.should.be.a('string')
+										res.body.expiry.should.be.a('string')
 
-						switch(res.body.priority){
-							case 'high': 
-								(dateDiff).should.equal(priorityExpiry.high) 
-								break;
-							case 'medium': 
-								(dateDiff).should.equal(priorityExpiry.medium) 
-								break;
-							case 'low': 
-								(dateDiff).should.equal(priorityExpiry.low) 
-								break;
-						}
-					})
+										
+										let priorityExpiry = userData.priorityExpiry
+										let expiryDate = new Date(res.body.expiry)
+										let addDate = new Date(res.body.addDate)
+										let dateDiff = Math.round((expiryDate.getTime() - addDate.getTime()) / (1000 * 60 * 60 * 24))
+
+										switch(res.body.priority){
+											case 'high': 
+												(dateDiff).should.equal(priorityExpiry.high) 
+												break;
+											case 'medium': 
+												(dateDiff).should.equal(priorityExpiry.medium) 
+												break;
+											case 'low': 
+												(dateDiff).should.equal(priorityExpiry.low) 
+												break;
+										}
+									})
+							})
+				})
 		})
 	})
 
@@ -425,9 +450,9 @@ function tearDownDb(){
 				.findOne()
 				.exec()
 				.then(res => {
-					let entryId = res.entryId
+					let id = res._id
 					return chai.request(app)
-						.delete(`/entry/${entryId}`)
+						.delete(`/entry/${id}`)
 				})
 				.then(res => {
 					res.should.have.status(204)

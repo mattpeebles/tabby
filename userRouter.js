@@ -2,10 +2,7 @@ const express = require('express')
 const app = express()
 const faker = require('faker')
 
-const {BasicStrategy} = require('passport-http')
-const passport = require('passport')
-
-const upInRouter = express.Router()
+const userRouter = express.Router()
 
 const {Entry, Users} = require('./models')
 const bodyParser = require('body-parser')
@@ -13,51 +10,29 @@ const jsonParser = bodyParser.json()
 
 const {addDays, nowDate} = require('./resources/date-module')
 
-upInRouter.use(jsonParser)
+const {passport, authorize} = require('./passportModule')
+
+userRouter.use(jsonParser)
+userRouter.use(require('cookie-parser')())
+userRouter.use(require('express-session')({secret: 'keyboard cat', resave: true, saveUninitialized: true, cookie: { secure : false, maxAge : (4 * 60 * 60 * 1000)} }))
+userRouter.use(passport.initialize())
+userRouter.use(passport.session())
 
 function generateJournalId(){
 	return faker.random.word() + faker.random.word() + faker.random.word()
 }
-
-//strategy for encrypting user password and ensuring
-//new user uses a unique email address when creating their profile
-const basicStrategy = new BasicStrategy((email, password, callback) => {
-	let user;
-	Users
-		.findOne({email: email})
-		.exec()
-		.then(_user => {
-			user = _user
-			if (!user){
-				return callback(null, false)
-			}
-			return user.validatePassword(password)
-		})
-		.then(isValid => {
-			if (!isValid){
-				return callback(null, false)
-			}
-			else{
-				return callback(null, user)
-			}
-		})
-		.catch(err => callback(err))
-})
-
-passport.use(basicStrategy)
-upInRouter.use(passport.initialize())
 
 
 //grabs signed in user database information
 //disallows a person from viewing info if they are
 //not authenticated without the right Basic authorization header
 
-upInRouter.get('/me', passport.authenticate('basic', {session: false}), (req, res) => {
+userRouter.get('/me', authorize, (req, res) => {
 	res.json({user: req.user.userRepr()})
 })
 
 //this api hook allows a new user to be posted to the user collection in the database
-upInRouter.post('/', (req, res) => {
+userRouter.post('/', (req, res) => {
 	
 	//control logic to ensure request body exists, possess a non-empty string for email and password
 	if (!req.body){
@@ -117,7 +92,7 @@ upInRouter.post('/', (req, res) => {
 				})
 		})
 		.then(user => {
-			return res.status(201).json(user.userRepr())
+			return res.status(201).json({redirect: '/login/login-index.html', user: user.userRepr()})
 		})
 		.catch(err => {
 			res.status(500).json({message: 'Internal server error'})
@@ -127,7 +102,7 @@ upInRouter.post('/', (req, res) => {
 
 //put hook that allows for user object to be updated
 //only email, password, first name, last name, and priority expiration settings can be updated
-upInRouter.put('/:id', (req, res) => {
+userRouter.put('/:id', (req, res) => {
 	if (!(req.params.id === req.body.id)){
 		const message = (
 		  `Request path id (${req.params.id}) and request body id ` +
@@ -144,13 +119,31 @@ upInRouter.put('/:id', (req, res) => {
 		}
 	})
 
+	if(toUpdate.password !== undefined){
+		return Users
+			.findById(req.params.id)
+			.exec()
+			.then((user) => {
+				return Users.hashPassword(toUpdate.password)
+			})
+			//hashes password and actually creates the new user
+			.then(hash => {
+				toUpdate["password"] = hash
+				return toUpdate
+			})
+			.then(() => {
+				Users
+					.findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
+					.exec()
+					.then(updatedUser => res.status(200).json(updatedUser.userRepr()))
+					.catch(err => res.status(500).json({message: 'Internal server'}))
+			})
+	}
+
 	if(toUpdate.priorityExpiry !== undefined){
 		Users
 			.findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
 			.exec()
-			.then(res => {
-				return res
-			})
 			.then(res => {
 				return res.journalId
 			})
@@ -159,46 +152,29 @@ upInRouter.put('/:id', (req, res) => {
 					.find({journalId: journalId})
 					.exec()
 					.then(res => {
-						journalId = res[0].journalId
+						let journalId = res[0].journalId
 						res.forEach(entry => {
 							let priority = entry.priority
 							let entryId = entry._id
-							Users
-								.find({journalId: journalId})
+							let addDate = entry.addDate
+							
+							let priorityExpiry = toUpdate.priorityExpiry[priority]
+							
+							let expiry = addDays(addDate, priorityExpiry)
+
+							toUpdate.expiry = expiry
+
+							Entry
+								.findByIdAndUpdate(entryId, {$set: toUpdate}, {new: true})
 								.exec()
-								.then(res => {
-									let priorityExpiryObject = res[0].priorityExpiry
-									return priorityExpiryObject
-								})
-								.then(object => {
-									let priorityExpiry = object[priority]
-									return priorityExpiry
-								})
-								.then(priorityExpiry => {
-									Entry
-										.find({entryId: entryId})
-										.exec()
-										.then(res => {
-											addDate = nowDate()
-											expiry = addDays(addDate, priorityExpiry)
-											
-											return expiry 
-										})
-										.then(expiry => {
-											toUpdate.expiry = expiry
-											Entry
-												.findByIdAndUpdate(entryId, {$set: toUpdate}, {new: true})
-												.exec()
-										})
-								})
-						})
+							})
 					})
-			})
+				})
 			.then(() => {
 				Users
 					.findById(req.params.id)
 					.exec()
-					.then(updatedUser => res.status(201).json(updatedUser.userRepr()))
+					.then(updatedUser => res.status(200).json(updatedUser.userRepr()))
 					.catch(err => res.status(500).json({message: 'Internal server'}))
 			})
 			.catch(err => res.status(500).json({message: 'Internal server error'}))
@@ -216,7 +192,7 @@ upInRouter.put('/:id', (req, res) => {
 
 
 //delete hook that deletes user
-upInRouter.delete('/:id', (req, res) => {
+userRouter.delete('/:id', (req, res) => {
 	Users
 		.findById(req.params.id)
 		.exec()
@@ -241,4 +217,4 @@ upInRouter.delete('/:id', (req, res) => {
 		.catch(err => res.status(500).json({message: 'Internal server error'}))
 })
 
-module.exports = upInRouter
+module.exports = userRouter
