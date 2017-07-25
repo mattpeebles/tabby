@@ -24,11 +24,10 @@ function isUrl(string){
 }
 
 },{}],2:[function(require,module,exports){
-const isUrl = require('is-url')
+const isUrl = require('is-url') //validates url
 
 const DATABASE_URL = 'http://localhost:3030'
 
-MOCK_JOURNAL_ENTRIES =[]
 
 	// Get journal entries
 // *********************************** //
@@ -36,7 +35,13 @@ MOCK_JOURNAL_ENTRIES =[]
 		$.getJSON(DATABASE_URL + '/entry/entries', callback)
 	}
 
+	
+		//displays journal entries in correct location on DOM
+		//depending on priority
 	function displayJournalEntries(data){
+		
+			//if user has no entries in journal, it renders
+			//a message saying such
 		if (data.message){
 			$('#linkSection').empty()
 			let messageHTMl = '<div class=\'postDiv\'>' +
@@ -46,10 +51,13 @@ MOCK_JOURNAL_ENTRIES =[]
 			$('#linkSection').append(messageHTMl)
 		}
 
+		$('.postDiv').remove()
+
 		for (index in data.entries) {
 			let entry = data.entries[index]
 			let entryHTML = '<div class=\"postDiv\" id=\"' + entry.entryId + '\">' +
 								'<p class=\"linkTitle\" value=\"' + entry.priority + '\"><a class=\"url\" href=\"' + entry.link + '\">' + entry.title + '</a></p>' +
+								`<p class=\'expiryDate\'>${entry.expiry}</p>` +
 								'<div class=\"editDiv\">' +
 									'<button class=\"edit udButton hidden\">Edit</button>' +
 								'</div>' +
@@ -59,14 +67,16 @@ MOCK_JOURNAL_ENTRIES =[]
 							'</div>'
 
 
-			if (entry.priority == 'high'){
-				$('#highPriority').append(entryHTML)
-			}
-			else if(entry.priority == 'medium'){
-				$('#medPriority').append(entryHTML)
-			}
-			else if(entry.priority == 'low'){
-				$('#lowPriority').append(entryHTML)
+			switch(entry.priority){
+				case "high": 
+					$('#highPriority').append(entryHTML)
+					break;
+				case "medium": 
+					$('#medPriority').append(entryHTML)
+					break;
+				case "low":
+					$('#lowPriority').append(entryHTML)
+					break;
 			}
 		}
 	}
@@ -79,6 +89,7 @@ MOCK_JOURNAL_ENTRIES =[]
 
 	// Post journal entries
 // *********************************** //
+	
 	function addJournalEntryForm(){
 		let formTemplate = "<div id=\"newLinkFormDiv\">" +
 								"<form id=\"newLinkForm\">" +
@@ -108,9 +119,11 @@ MOCK_JOURNAL_ENTRIES =[]
 		$("#linkSection").on('click', '#newLinkFormSubmit', (event) => {
 
 			let title = $('#linkTitle').val()
-			let url =  (isUrl($('#linkUrl').val()) == true) ? $('#linkUrl').val() : "http://" + $('#linkUrl').val()
+			let url =  (isUrl($('#linkUrl').val()) == true) ? $('#linkUrl').val() : "http://" + $('#linkUrl').val() //ensures link is a url otherwise it appends http:// at the beginning
 			let priority = $('#linkPriority').val()
 
+				//ensures user enters a title that is
+				//not just a blank space
 			if (title.search(/[a-zA-Z0-9]/g) == -1){
 				alert('please enter a title for your entry')
 				$('#linkTitle').focus()
@@ -127,16 +140,12 @@ MOCK_JOURNAL_ENTRIES =[]
 				type: 'POST',
 				url: DATABASE_URL + '/entry',
 				data: JSON.stringify(newLink),
-				contentType: 'application/json'
+				contentType: 'application/json',
+				success: function(){
+					location.reload()
+				}
 			})
 
-			$(".postDiv").remove()
-
-			getAndDisplayJournalEntries()
-
-			$('#newLinkFormDiv').remove()
-
-			location.reload()
 		})
 	}
 
@@ -146,11 +155,15 @@ MOCK_JOURNAL_ENTRIES =[]
 // *********************************** //
 	function addUpdateEntriesForm(){
 		$("#linkSection").on('click', ".edit", function(){
-			let parentDiv = $(this).parent().parent()
-			let linkURL = $(parentDiv).children('.linkTitle').children('.url').attr('href')
-			let linkTitle = $(parentDiv).children('.linkTitle').text()
-			let linkPriority = $(parentDiv).children('.linkTitle').attr('value')
-			let linkID = $(parentDiv).attr('id')
+			
+			
+				//grabs link information to add as placeholder in 
+				//form to make editing easier for user
+			let parentDiv = $(this).parent().parent() //targets postDiv
+			let linkURL = $(parentDiv).children('.linkTitle').children('.url').attr('href') //grabs the url of link
+			let linkTitle = $(parentDiv).children('.linkTitle').text() //grabs title of link
+			let linkPriority = $(parentDiv).children('.linkTitle').attr('value') //grabs priority of link
+			let linkID = $(parentDiv).attr('id') //grabs id of link
 
 			let formTemplate = "<div class=\"editForm\" id=\"editLinkFormDiv-" + linkID + "\">" +
 						"<form id=\"editLinkForm\">" +
@@ -173,7 +186,7 @@ MOCK_JOURNAL_ENTRIES =[]
 				// prevents user from accidentally hitting edit multiple times
 			if (!($(parentDiv).children(formParentDiv).length)){
 				
-					//removes any other edit forms
+					//removes any other edit forms if one already exists
 				$('#linkSection').children().children().children(".editForm").remove()
 				
 				$(parentDiv).prepend(formTemplate)
@@ -190,6 +203,9 @@ MOCK_JOURNAL_ENTRIES =[]
 	function updateEntryInDatabase(){
 		$('#editLinkFormSubmit').on('click', function(event){
 			
+			
+				// edit form has id of editLinkFormDiv-id,
+				//splits the id on hyphen and returns database id
 			let id = $(".editForm").attr('id').split('-')[1]
 
 			let editEntry = {
@@ -203,24 +219,18 @@ MOCK_JOURNAL_ENTRIES =[]
 				type: 'put',
 				url: DATABASE_URL + '/entry/' + id,
 				data: JSON.stringify(editEntry),
-				contentType: 'application/json'
+				contentType: 'application/json',
+				success: function(){
+					location.reload()
+				}
 			})
-
-
-			$('.editForm').remove()
-			removeEditDeleteButtons()
-
-			$(".postDiv").remove()
-
-			getAndDisplayJournalEntries()
-
 		})
 	}
 // *********************************** //
 
 	// Delete journal entries
 // *********************************** //
-	function deleteEntry(data){
+	function deleteEntry(){
 		$('#linkSection').on('click', '.delete', function(){
 			let parentDiv = $(this).parent().parent()
 			let entryId = $(parentDiv).attr('id')
@@ -228,20 +238,16 @@ MOCK_JOURNAL_ENTRIES =[]
 
 			$.ajax({
 				type: 'delete',
-				url: DATABASE_URL + "/entry/" + entryId
+				url: DATABASE_URL + "/entry/" + entryId,
+				success: function(){
+					location.reload()
+				}
 			})
-
-
-
-			removeEditDeleteButtons()
-			$(".postDiv").remove()
-			getAndDisplayJournalEntries()
-
 		})
 	}
 
 	function deleteEntryFromDataBase(){
-		deleteEntry(MOCK_JOURNAL_ENTRIES)
+		deleteEntry()
 	}
 // *********************************** //
 
