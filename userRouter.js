@@ -92,7 +92,7 @@ userRouter.post('/', (req, res) => {
 				})
 		})
 		.then(user => {
-			return res.status(201).json(user.userRepr())
+			return res.status(201).json({redirect: '/login/login-index.html', user: user.userRepr()})
 		})
 		.catch(err => {
 			res.status(500).json({message: 'Internal server error'})
@@ -145,9 +145,6 @@ userRouter.put('/:id', (req, res) => {
 			.findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
 			.exec()
 			.then(res => {
-				return res
-			})
-			.then(res => {
 				return res.journalId
 			})
 			.then(journalId => {
@@ -155,41 +152,24 @@ userRouter.put('/:id', (req, res) => {
 					.find({journalId: journalId})
 					.exec()
 					.then(res => {
-						journalId = res[0].journalId
+						let journalId = res[0].journalId
 						res.forEach(entry => {
 							let priority = entry.priority
 							let entryId = entry._id
-							Users
-								.find({journalId: journalId})
+							let addDate = entry.addDate
+							
+							let priorityExpiry = toUpdate.priorityExpiry[priority]
+							
+							let expiry = addDays(addDate, priorityExpiry)
+
+							toUpdate.expiry = expiry
+
+							Entry
+								.findByIdAndUpdate(entryId, {$set: toUpdate}, {new: true})
 								.exec()
-								.then(res => {
-									let priorityExpiryObject = res[0].priorityExpiry
-									return priorityExpiryObject
-								})
-								.then(object => {
-									let priorityExpiry = object[priority]
-									return priorityExpiry
-								})
-								.then(priorityExpiry => {
-									Entry
-										.find({entryId: entryId})
-										.exec()
-										.then(res => {
-											addDate = nowDate()
-											expiry = addDays(addDate, priorityExpiry)
-											
-											return expiry 
-										})
-										.then(expiry => {
-											toUpdate.expiry = expiry
-											Entry
-												.findByIdAndUpdate(entryId, {$set: toUpdate}, {new: true})
-												.exec()
-										})
-								})
-						})
+							})
 					})
-			})
+				})
 			.then(() => {
 				Users
 					.findById(req.params.id)
