@@ -86,17 +86,22 @@ const DATABASE_URL = "http://localhost:3030/users"
 				event.preventDefault()
 				let user = {};
 				let priorityExpiry = {};
+
+					//serializes object to database standard if input has a string
 				let userData = $('#editUserForm').serializeArray().reduce((obj, item) => {
 			   		 if((item.name === "firstName" || item.name === "lastName") && item.value !== ""){
 			   		 	user[item.name] = item.value
 			   		 }
 			   		 else if((item.name === 'high' || item.name === 'medium' || item.name === 'low') && item.value !== ""){
-			   		 	priorityExpiry[item.name] = parseInt(item.value) //parseInt is required to ensure expiry is added correctly.
+			   		 	priorityExpiry[item.name] = parseInt(item.value) //parseInt is required to ensure expiry is a number.
 			   		 }
 			   		 else if(item.value !== ""){
 			   		 	obj[item.name] = item.value;
 			   		}
 
+
+			   			//adds user and priorityexpiry object to returned object
+			   			//if it is not empty
 			   		if(Object.keys(user).length !== 0 && user.constructor === Object){
 				   		obj["user"] = user
 			   		}
@@ -117,8 +122,7 @@ const DATABASE_URL = "http://localhost:3030/users"
 						data: JSON.stringify(userData),
 						contentType: 'application/json',
 						success: function(){
-							$('#userInfo').empty()
-							getAndDisplayUserData()
+							location.reload()
 						}
 					})
 				})
