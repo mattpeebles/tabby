@@ -23,7 +23,8 @@ UserSchema.virtual('fullName').get(function(){
 UserSchema.methods.userRepr = function(){
 	return {
 		id: this._id,
-		user: this.fullName,
+		user: {firstName: this.user.firstName,
+				lastName: this.user.lastName},
 		email: this.email,
 		journalId: this.journalId,
 		joinDate: this.joinDate.toString(),
