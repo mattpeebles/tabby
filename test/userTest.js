@@ -228,8 +228,10 @@ describe('Users API resource', () => {
 									res.should.have.status(200)
 									res.should.be.json
 									user.id.should.be.a('string')
-									user.user.should.be.a('string')
-									user.user.should.be.equal(`${newUser.user.firstName} ${newUser.user.lastName}`)
+									user.user.should.be.a('object')
+									user.user.firstName.should.be.a('string')
+									user.user.lastName.should.be.a('string')
+									user.user.should.deep.equal(newUser.user)
 									user.email.should.be.a('string')
 									user.email.should.be.equal(`${newUser.email}`)
 									user.joinDate.should.be.a('string')
@@ -298,10 +300,10 @@ describe('Users API resource', () => {
 				.then(function(res){
 					res.should.have.status(201)
 					res.should.be.json
-					res.body.should.be.a('object')
-					res.body.should.include.keys('user', 'email', 'id', 'journalId', 'joinDate', 'priorityExpiry')
-					res.body.id.should.not.be.null
-					res.body.should.eql({user: newUser.user.firstName + ' ' + newUser.user.lastName, email: newUser.email, journalId: newUser.journalId, id: res.body.id, joinDate: newUser.joinDate, priorityExpiry: newUser.priorityExpiry})
+					res.body.user.should.be.a('object')
+					res.body.user.should.include.keys('user', 'email', 'id', 'journalId', 'joinDate', 'priorityExpiry')
+					res.body.user.id.should.not.be.null
+					res.body.user.should.eql({user: newUser.user, email: newUser.email, journalId: newUser.journalId, id: res.body.user.id, joinDate: newUser.joinDate, priorityExpiry: newUser.priorityExpiry})
 				})
 		})
 	})
@@ -329,7 +331,7 @@ describe('Users API resource', () => {
 					.then((res)=>{
 						res.should.have.status(200)
 						res.body.should.be.a('object')
-						res.body.should.deep.equal({id: updateUser.id, user: updateUser.user.firstName + ' ' + updateUser.user.lastName, email: updateUser.email, joinDate: res.body.joinDate, journalId: res.body.journalId, priorityExpiry: res.body.priorityExpiry})
+						res.body.should.deep.equal({id: updateUser.id, user: updateUser.user, email: updateUser.email, joinDate: res.body.joinDate, journalId: res.body.journalId, priorityExpiry: res.body.priorityExpiry})
 					})
 		});
 
@@ -347,37 +349,38 @@ describe('Users API resource', () => {
 						return chai.request(app)
 							.put(`/users/${updateUser.id}`)
 							.send(updateUser)
-				})
-				.then(res => {
-					let journalId = res.body.journalId
-						return Entry
-							.find({journalId: journalId})
-							.exec()
 							.then(res => {
-								res.forEach(entry => {
-									entry.journalId.should.be.a('string')
-									entry.entryId.should.be.a('string')
-									entry.title.should.be.a('string')
-									entry.priority.should.be.a('string')
+								let journalId = res.body.journalId
+									return Entry
+										.find({journalId: journalId})
+										.exec()
+										.then(res => {
+											res.forEach(entry => {
+												entry.journalId.should.be.a('string')
+												entry.entryId.should.be.a('string')
+												entry.title.should.be.a('string')
+												entry.priority.should.be.a('string')
 
-									
-									let priorityExpiry = priorityExpiryArray[0]
-									let expiryDate = new Date(entry.expiry)
-									let addDate = new Date(entry.addDate)
-									let dateDiff = Math.round((expiryDate.getTime() - addDate.getTime()) / (1000 * 60 * 60 * 24))
+												
+												let {high, medium, low} = updateUser.priorityExpiry
+												let expiryDate = new Date(entry.expiry)
 
-									switch(entry.priority){
-										case 'high': 
-											(dateDiff).should.equal(priorityExpiry.high) 
-											break;
-										case 'medium': 
-											(dateDiff).should.equal(priorityExpiry.medium) 
-											break;
-										case 'low': 
-											(dateDiff).should.equal(priorityExpiry.low) 
-											break;
-									}
-								})
+												let addDate = new Date(entry.addDate)
+												let dateDiff = Math.round((expiryDate.getTime() - addDate.getTime()) / (1000 * 60 * 60 * 24))
+
+												switch(entry.priority){
+													case 'high': 
+														(dateDiff).should.equal(high) 
+														break;
+													case 'medium': 
+														(dateDiff).should.equal(medium) 
+														break;
+													case 'low': 
+														(dateDiff).should.equal(low) 
+														break;
+												}
+											})
+										})
 							})
 				})
 		})
