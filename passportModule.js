@@ -35,11 +35,9 @@ passport.use(new LocalStrategy(
 
 function authorize(req, res, next){
 	if (req.user !== undefined){
-		console.log('authorized')
 		next()
 	}
 	else {
-		console.log('not authorized')
 		res.status(403).send('Forbidden')	
 	}
 }
