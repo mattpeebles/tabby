@@ -1,16 +1,25 @@
 const isUrl = require('is-url')
 
-const DATABASE_URL = 'http://localhost:3030/entry'
+const DATABASE_URL = 'http://localhost:3030'
 
 MOCK_JOURNAL_ENTRIES =[]
 
 	// Get journal entries
 // *********************************** //
 	function getJournalEntries(callback){
-		$.getJSON(DATABASE_URL + '/entries', callback)
+		$.getJSON(DATABASE_URL + '/entry/entries', callback)
 	}
 
 	function displayJournalEntries(data){
+		if (data.message){
+			$('#linkSection').empty()
+			let messageHTMl = '<div class=\'postDiv\'>' +
+									'<p>' + data.message + '</p>' +
+								'</div>';
+
+			$('#linkSection').append(messageHTMl)
+		}
+
 		for (index in data.entries) {
 			let entry = data.entries[index]
 			let entryHTML = '<div class=\"postDiv\" id=\"' + entry.entryId + '\">' +
@@ -71,7 +80,6 @@ MOCK_JOURNAL_ENTRIES =[]
 
 	function postJournalEntry(){
 		$("#linkSection").on('click', '#newLinkFormSubmit', (event) => {
-			event.preventDefault();
 
 			let title = $('#linkTitle').val()
 			let url =  (isUrl($('#linkUrl').val()) == true) ? $('#linkUrl').val() : "http://" + $('#linkUrl').val()
@@ -89,11 +97,9 @@ MOCK_JOURNAL_ENTRIES =[]
 				'link': url
 			}
 
-			console.log(newLink)
-
 			$.ajax({
 				type: 'POST',
-				url: DATABASE_URL,
+				url: DATABASE_URL + '/entry',
 				data: JSON.stringify(newLink),
 				contentType: 'application/json'
 			})
@@ -107,6 +113,7 @@ MOCK_JOURNAL_ENTRIES =[]
 			location.reload()
 		})
 	}
+
 // *********************************** //
 
 	// Put journal entries
@@ -156,7 +163,6 @@ MOCK_JOURNAL_ENTRIES =[]
 
 	function updateEntryInDatabase(){
 		$('#editLinkFormSubmit').on('click', function(event){
-			event.preventDefault()
 			
 			let id = $(".editForm").attr('id').split('-')[1]
 
@@ -164,15 +170,12 @@ MOCK_JOURNAL_ENTRIES =[]
 				entryId: id,
 				title: $("#linkTitle").val(),
 				priority: $('#linkPriority').val(),
-				url: $('#linkUrl').val()
+				link: $('#linkUrl').val()
 			}
-
-			console.log('Put object')
-			console.log(editEntry) //TODO: NOT UPDATED LINK
 
 			$.ajax({
 				type: 'put',
-				url: DATABASE_URL + '/' + id,
+				url: DATABASE_URL + '/entry/' + id,
 				data: JSON.stringify(editEntry),
 				contentType: 'application/json'
 			})
@@ -199,7 +202,7 @@ MOCK_JOURNAL_ENTRIES =[]
 
 			$.ajax({
 				type: 'delete',
-				url: DATABASE_URL + "/" + entryId
+				url: DATABASE_URL + "/entry/" + entryId
 			})
 
 
@@ -215,6 +218,27 @@ MOCK_JOURNAL_ENTRIES =[]
 		deleteEntry(MOCK_JOURNAL_ENTRIES)
 	}
 // *********************************** //
+
+	// Signout
+// *********************************** //
+	function signout(){
+		$('#logOut').click((event) => {
+			if(confirm('Log out?')){
+				$.ajax({
+					type: 'get',
+					url: DATABASE_URL + '/logout',
+					success: function(data) {
+						alert(data.message)
+						window.location.href = data.redirect
+					}
+				})
+			}
+		})
+	}
+
+// *********************************** //
+
+
 
 	//Add and remove edit features
 // *********************************** //
@@ -236,4 +260,5 @@ $(() => {
 	addEditDeleteButtons()
 	addUpdateEntriesForm()
 	deleteEntryFromDataBase()
+	signout()
 })
