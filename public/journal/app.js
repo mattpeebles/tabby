@@ -24,33 +24,38 @@ const DATABASE_URL = 'http://localhost:3030'
 
 			$('#linkSection').append(messageHTMl)
 		}
-
-		$('.postDiv').remove()
-
-		for (index in data.entries) {
-			let entry = data.entries[index]
-			let entryHTML = '<div class=\"postDiv\" id=\"' + entry.entryId + '\">' +
-								'<p class=\"linkTitle\" value=\"' + entry.priority + '\"><a class=\"url\" href=\"' + entry.link + '\">' + entry.title + '</a></p>' +
-								`<p class=\'expiryDate\'>${entry.expiry}</p>` +
-								'<div class=\"editDiv\">' +
-									'<button class=\"edit udButton hidden\">Edit</button>' +
-								'</div>' +
-								'<div class=\"deleteDiv\">' + 
-									'<button class=\"delete udButton hidden\">Delete</button>' + 
-								'</div>' +
-							'</div>'
+		else {
+			$('.postDiv').remove()
 
 
-			switch(entry.priority){
-				case "high": 
-					$('#highPriority').append(entryHTML)
-					break;
-				case "medium": 
-					$('#medPriority').append(entryHTML)
-					break;
-				case "low":
-					$('#lowPriority').append(entryHTML)
-					break;
+			for (index in data.entries) {
+				let entry = data.entries[index]
+				let entryHTML = '<div class=\"postDiv\" id=\"' + entry.entryId + '\">' +
+									'<p class=\"linkTitle\" value=\"' + entry.priority + '\"><a class=\"url\" href=\"' + entry.link + '\">' + entry.title + '</a></p>' +
+									`<div class="postImage">` +
+										`<img src='${entry.image}'></img>` +
+									`</div>` +
+									`<p class=\'expiryDate\'>${entry.expiry}</p>` +
+									'<div class=\"editDiv\">' +
+										'<button class=\"edit udButton hidden\">Edit</button>' +
+									'</div>' +
+									'<div class=\"deleteDiv\">' + 
+										'<button class=\"delete udButton hidden\">Delete</button>' + 
+									'</div>' +
+								'</div>'
+
+
+				switch(entry.priority){
+					case "high": 
+						$('#highPriority').append(entryHTML)
+						break;
+					case "medium": 
+						$('#medPriority').append(entryHTML)
+						break;
+					case "low":
+						$('#lowPriority').append(entryHTML)
+						break;
+				}
 			}
 		}
 	}
@@ -67,8 +72,6 @@ const DATABASE_URL = 'http://localhost:3030'
 	function addJournalEntryForm(){
 		let formTemplate = "<div id=\"newLinkFormDiv\">" +
 								"<form id=\"newLinkForm\">" +
-									"<label>Title</label>" +
-									"<input type=\"text\" name=\"title\" placeholder=\"Title\" id=\"linkTitle\"></input>" +
 									"<label>Link</label>" +
 									"<input type=\"text\" name=\"link\" placeholder=\"www.google.com\" id=\"linkUrl\"></input>" +
 									"<label>Priority</label>" +
@@ -92,20 +95,11 @@ const DATABASE_URL = 'http://localhost:3030'
 	function postJournalEntry(){
 		$("#linkSection").on('click', '#newLinkFormSubmit', (event) => {
 
-			let title = $('#linkTitle').val()
 			let url =  (isUrl($('#linkUrl').val()) == true) ? $('#linkUrl').val() : "http://" + $('#linkUrl').val() //ensures link is a url otherwise it appends http:// at the beginning
 			let priority = $('#linkPriority').val()
 
-				//ensures user enters a title that is
-				//not just a blank space
-			if (title.search(/[a-zA-Z0-9]/g) == -1){
-				alert('please enter a title for your entry')
-				$('#linkTitle').focus()
-				return 
-			}
 
 			let newLink = {
-				'title': title,
 				'priority': priority,
 				'link': url
 			}
@@ -115,11 +109,10 @@ const DATABASE_URL = 'http://localhost:3030'
 				url: DATABASE_URL + '/entry',
 				data: JSON.stringify(newLink),
 				contentType: 'application/json',
-				success: function(){
-					location.reload()
+				success: function(data){
+					window.location.reload(true)
 				}
 			})
-
 		})
 	}
 
@@ -134,17 +127,11 @@ const DATABASE_URL = 'http://localhost:3030'
 				//grabs link information to add as placeholder in 
 				//form to make editing easier for user
 			let parentDiv = $(this).parent().parent() //targets postDiv
-			let linkURL = $(parentDiv).children('.linkTitle').children('.url').attr('href') //grabs the url of link
-			let linkTitle = $(parentDiv).children('.linkTitle').text() //grabs title of link
 			let linkPriority = $(parentDiv).children('.linkTitle').attr('value') //grabs priority of link
 			let linkID = $(parentDiv).attr('id') //grabs id of link
 
 			let formTemplate = "<div class=\"editForm\" id=\"editLinkFormDiv-" + linkID + "\">" +
 						"<form id=\"editLinkForm\">" +
-							"<label>Title</label>" +
-							"<input type=\"text\" name=\"title\" placeholder=\"Title\" id=\"linkTitle\" value=\"" + linkTitle + "\"></input>" +
-							"<label>Link</label>" +
-							"<input type=\"text\" name=\"link\" placeholder=\"www.google.com\" id=\"linkUrl\" value=\"" + linkURL + "\"></input>" +
 							"<label>Priority</label>" +
 							"<select name=\"priority\" id=\"linkPriority\">" +
 								"<option id=\"high\" value=\"high\">High</option>" +
@@ -195,6 +182,7 @@ const DATABASE_URL = 'http://localhost:3030'
 				data: JSON.stringify(editEntry),
 				contentType: 'application/json',
 				success: function(){
+					getAndDisplayJournalEntries()
 					location.reload()
 				}
 			})
@@ -214,7 +202,7 @@ const DATABASE_URL = 'http://localhost:3030'
 				type: 'delete',
 				url: DATABASE_URL + "/entry/" + entryId,
 				success: function(){
-					location.reload()
+					getAndDisplayJournalEntries()
 				}
 			})
 		})

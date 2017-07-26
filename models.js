@@ -45,6 +45,7 @@ const EntrySchema = mongoose.Schema({
 	entryId: {type: String},
 	title: {type: String},
 	link: {type: String},
+	image: {type: String},
 	priority: {type: String, required: true},
 	addDate: {type: Date, default: Date.now},
 	expiry: {type: Date} //date the link entry is deleted
@@ -57,6 +58,7 @@ EntrySchema.methods.entryRepr = function(){
 		entryId: this._id,
 		title: this.title,
 		link: this.link,
+		image: this.image,
 		priority: this.priority,
 		addDate: this.addDate,
 		expiry: this.expiry
