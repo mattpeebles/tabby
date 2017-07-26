@@ -103,7 +103,6 @@ entryRouter.post('/', authorize, (req, res) => {
 				return expiry
 			})
 			.then(expiry => {
-					//scrapes title from url
 				if (req.body.title){
 					Entry
 					.create({
@@ -117,6 +116,7 @@ entryRouter.post('/', authorize, (req, res) => {
 					.then(entry => res.status(201).json(entry.entryRepr()))				
 				}
 				else{
+						//scrapes title from url
 					rp(options)
 						.then(($) => {
 							let title = $('head title').html()
@@ -186,7 +186,6 @@ entryRouter.put('/:entryId', (req, res) => {
 			.findById(req.body.entryId)
 			.exec()
 			.then(res => {
-				console.log(res)
 				let journalId = res.journalId
 				return journalId
 			})
