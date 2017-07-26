@@ -25,38 +25,121 @@ const DATABASE_URL = 'http://localhost:3030'
 			$('#linkSection').append(messageHTMl)
 		}
 		else {
+
 			$('.postDiv').remove()
+
+			let highCounter = 0
+			let mediumCounter = 0
+			let lowCounter = 0
+
+			let highArray = [],
+				mediumArray = [],
+				lowArray = []
+
+			let highHtml = '<div class=\"row\">'
+			let mediumHtml = '<div class=\"row\">'
+			let lowHtml = '<div class=\"row\">'
 
 
 			for (index in data.entries) {
 				let entry = data.entries[index]
-				let entryHTML = '<div class=\"postDiv\" id=\"' + entry.entryId + '\">' +
-									'<p class=\"linkTitle\" value=\"' + entry.priority + '\"><a class=\"url\" href=\"' + entry.link + '\">' + entry.title + '</a></p>' +
-									`<div class="postImage">` +
-										`<img src='${entry.image}'></img>` +
-									`</div>` +
-									`<p class=\'expiryDate\'>${entry.expiry}</p>` +
-									'<div class=\"editDiv\">' +
-										'<button class=\"edit udButton hidden\">Edit</button>' +
-									'</div>' +
-									'<div class=\"deleteDiv\">' + 
-										'<button class=\"delete udButton hidden\">Delete</button>' + 
+				let expiryDate = countdown(new Date(Date.now()), new Date(entry.expiry), countdown.DAYS).toString()
+
+				let entryHtml = '<div class=\'postContainer col-xs-12 col-sm-6 col-lg-4\'>' + 
+									'<div class=\"postDiv\" id=\"' + entry.entryId + '\">' +
+										'<p class=\"linkTitle\" value=\"' + entry.priority + '\"><a class=\"url\" href=\"' + entry.link + '\">' + entry.title + '</a></p>' +
+										`<div class="postImage">` +
+											`<img src='${entry.image}'></img>` +
+										`</div>` +
+										`<div class="infoRow row">` +
+											`<div class="col-xs-6">` +
+												`<p class='pull-left expiryDate'>Expires in ${expiryDate}</p>` + 
+											`</div>` +
+											`<div class='manipGroup btn-group col-xs-6' role='group' aria-label='...'>` +
+													'<button class=\"delete pull-right udButton btn btn-default btn-xs\"><span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></button>' + 
+													'<button class=\"edit pull-right udButton btn btn-default btn-xs\"><span class=\"glyphicon glyphicon-edit\" aria-hidden=\"true\"></span></button>' +
+											`</div>` +
+										'</div>' +
 									'</div>' +
 								'</div>'
 
 
 				switch(entry.priority){
 					case "high": 
-						$('#highPriority').append(entryHTML)
+						highArray.push(entryHtml)
+
 						break;
 					case "medium": 
-						$('#medPriority').append(entryHTML)
+						mediumArray.push(entryHtml)
+
 						break;
 					case "low":
-						$('#lowPriority').append(entryHTML)
+						lowArray.push(entryHtml)
+
 						break;
 				}
 			}
+
+			for (index in highArray){
+					//finishes the div if there's less than three in the the row
+				if (index == highArray.length - 1){
+					highHtml += highArray[index] + "</div>"
+					$('#highPriority').append(highHtml)
+				}
+				else if(highCounter < 3){
+					highHtml += highArray[index]
+					highCounter++
+				}
+				else if(highCounter == 3){
+					highHtml += "</div>"
+					$('#highPriority').append(highHtml)
+
+					highHtml = '<div class=\"row\">'
+					highHtml += highArray[index]
+					highCounter = 2 //this is two because i've pushed an element right before.	
+				}
+			}
+
+			for (index in mediumArray){
+					//finishes the div if there's less than three in the the row
+				if (index == mediumArray.length - 1){
+					mediumHtml += mediumArray[index] + "</div>"
+					$('#medPriority').append(mediumHtml)
+				}
+				else if(mediumCounter < 3){
+					mediumHtml += mediumArray[index]
+					mediumCounter++
+				}
+				else if(mediumCounter == 3){
+					mediumHtml += "</div>"
+					$('#medPriority').append(mediumHtml)
+
+					mediumHtml = '<div class=\"row\">'
+					mediumHtml += mediumArray[index]
+					mediumCounter = 1 //this is two because i've pushed an element right before.	
+				}
+			}
+
+			for (index in lowArray){
+					//finishes the div if there's less than three in the the row
+				if (index == lowArray.length - 1){
+					lowHtml += lowArray[index] + "</div>"
+					$('#lowPriority').append(lowHtml)
+				}
+				else if(lowCounter < 3){
+					lowHtml += lowArray[index]
+					lowCounter++
+				}
+				else if(lowCounter == 3){
+					lowHtml += "</div>"
+					$('#lowPriority').append(lowHtml)
+
+					lowHtml = '<div class=\"row\">'
+					lowHtml += lowArray[index]
+					lowCounter = 2 //this is two because i've pushed an element right before.	
+				}
+			}
+
 		}
 	}
 
@@ -109,9 +192,11 @@ const DATABASE_URL = 'http://localhost:3030'
 				url: DATABASE_URL + '/entry',
 				data: JSON.stringify(newLink),
 				contentType: 'application/json',
-				success: function(data){
+				success: function(data){		//not showing a successful posting, even though it does in postman and in tests
+					alert('successfully posted')
 					window.location.reload(true)
-				}
+				},
+
 			})
 		})
 	}
@@ -126,7 +211,7 @@ const DATABASE_URL = 'http://localhost:3030'
 			
 				//grabs link information to add as placeholder in 
 				//form to make editing easier for user
-			let parentDiv = $(this).parent().parent() //targets postDiv
+			let parentDiv = $(this).parent().parent().parent() //targets postDiv
 			let linkPriority = $(parentDiv).children('.linkTitle').attr('value') //grabs priority of link
 			let linkID = $(parentDiv).attr('id') //grabs id of link
 
@@ -150,7 +235,7 @@ const DATABASE_URL = 'http://localhost:3030'
 					//removes any other edit forms if one already exists
 				$('#linkSection').children().children().children(".editForm").remove()
 				
-				$(parentDiv).prepend(formTemplate)
+				$(parentDiv).append(formTemplate)
 				
 				//this custom sets the selected option depending on the user's previous choice
 				let priorityFormOption = formParentDiv + ' > #editLinkForm > #linkPriority > ' + "#" + linkPriority
@@ -194,17 +279,19 @@ const DATABASE_URL = 'http://localhost:3030'
 // *********************************** //
 	function deleteEntry(){
 		$('#linkSection').on('click', '.delete', function(){
-			let parentDiv = $(this).parent().parent()
+			let parentDiv = $(this).parent().parent().parent() //targets postDiv
 			let entryId = $(parentDiv).attr('id')
+			let entryTitle = $(parentDiv).children('.linkTitle').text()
 
-
-			$.ajax({
-				type: 'delete',
-				url: DATABASE_URL + "/entry/" + entryId,
-				success: function(){
-					getAndDisplayJournalEntries()
-				}
-			})
+			if(confirm(`Are you sure you want to delete ${entryTitle}?`)){
+					$.ajax({
+						type: 'delete',
+						url: DATABASE_URL + "/entry/" + entryId,
+						success: function(){
+							getAndDisplayJournalEntries()
+						}
+					})
+			}
 		})
 	}
 

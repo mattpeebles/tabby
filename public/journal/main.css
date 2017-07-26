@@ -1,0 +1,32 @@
+.postDiv{
+	border: 1px solid black;
+	text-align: center;
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 3%;
+
+}
+
+.postContainer{
+	position: relative;
+}
+
+.postImage > img{
+	width: 300px;
+	height: 300px;
+
+}
+
+.infoRow{
+	position: relative;
+}
+
+.manipGroup {
+	position: relative;
+	padding-right: 5%;
+}
+
+.red{
+	border: 5px solid red;
+}
