@@ -51,7 +51,7 @@ const DATABASE_URL = "http://localhost:3030/users"
 				'<div id="userName">'+
 					`<label>First Name: </label>` +
 					`<input type="text" name="firstName" placeholder="${data.user.user.firstName}" id="firstName"></input>` +
-					`<label>First Name: </label>` +
+					`<label>Last Name: </label>` +
 					`<input type="text" name="lastName" placeholder="${data.user.user.lastName}" id="firstName"></input>` +
 				`</div>` +
 				`<div id="userEmail">` +
