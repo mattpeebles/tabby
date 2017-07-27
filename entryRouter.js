@@ -119,8 +119,10 @@ entryRouter.post('/', authorize, (req, res) => {
 						//scrapes title from url
 					rp(options)
 						.then(($) => {
-							let title = $('head title').html()
+							let pageTitle = $('head title').html()
 
+							title = pageTitle.split("-")[0].split('|')[0]
+							
 							if (title == null){
 								linkArray = (url).split('/')
 								title = linkArray[linkArray.length - 1]
