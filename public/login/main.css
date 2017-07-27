@@ -1,0 +1,36 @@
+/*Mobile Styling*/
+
+	body{
+		background-color: white;
+	}
+	
+		/*Log In Form*/
+	/***********************************/
+
+		#formContainer{
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			margin: auto;
+			background-color: rgba(255,0,140,0.05);
+			border: 1px solid rgba(255,0,140, 0.2);
+			border-radius: 5px;
+			width: 90%;
+			height: 50%;
+			padding-top: 5%;
+		}
+
+		#title{
+			text-align: center;
+			margin-bottom: 5%;
+		}
+
+		#buttonContainer{
+			text-align: center;
+		}
+
+		#registerCall{
+			text-align: center;
+		}
