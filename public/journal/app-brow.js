@@ -39,14 +39,19 @@ const DATABASE_URL = 'http://localhost:3030'
 		//displays journal entries in correct location on DOM
 		//depending on priority
 	function displayJournalEntries(data){
-		
 			//if user has no entries in journal, it renders
 			//a message saying such
 		if (data.message){
 			$('#linkSection').empty()
-			let messageHTMl = '<div class=\'postDiv\'>' +
-									'<p>' + data.message + '</p>' +
-								'</div>';
+			let messageHTMl = 	'<div id=\"noEntryContainer\">' +
+									'<div id=\'emptyMessage\'>' +
+										'<p>' + data.message + '</p>' +
+									'</div>' +
+									'<div id="linkButtonContainer">' +
+										'<button type=\"button\" class=\"btn btn-default\" id=\"newLink\">Add An Entry</button>' +
+									'</div>' +
+								'</div>'
+
 
 			$('#linkSection').append(messageHTMl)
 		}
@@ -71,9 +76,10 @@ const DATABASE_URL = 'http://localhost:3030'
 				let entry = data.entries[index]
 				let expiryDate = countdown(new Date(Date.now()), new Date(entry.expiry), countdown.DAYS).toString()
 
-				let entryHtml = '<div class=\'postContainer col-xs-12 col-sm-6 col-lg-4\'>' + 
+				let entryHtml = `<div class='postContainer col-xs-12 col-sm-6 col-lg-4'>` + 
 									'<div class=\"postDiv\" id=\"' + entry.entryId + '\">' +
-										'<p class=\"linkTitle\" value=\"' + entry.priority + '\"><a class=\"url\" href=\"' + entry.link + '\">' + entry.title + '</a></p>' +
+										'<p class=\"linkTitle\" value=\"' + entry.priority + '\">' + entry.title + '</p>' +
+										`<a class="url" href='${entry.link}'><span class='linkSpan'></span></a>` +
 										`<div class="postImage">` +
 											`<img src='${entry.image}'></img>` +
 										`</div>` +
@@ -82,8 +88,8 @@ const DATABASE_URL = 'http://localhost:3030'
 												`<p class='pull-left expiryDate'>Expires in ${expiryDate}</p>` + 
 											`</div>` +
 											`<div class='manipGroup btn-group col-xs-6' role='group' aria-label='...'>` +
-													'<button class=\"delete pull-right udButton btn btn-default btn-xs\"><span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></button>' + 
-													'<button class=\"edit pull-right udButton btn btn-default btn-xs\"><span class=\"glyphicon glyphicon-edit\" aria-hidden=\"true\"></span></button>' +
+													'<span class=\"delete pull-right glyphicon glyphicon-trash\" aria-hidden=\"true\"></span>' + 
+													'<span class=\"edit pull-right glyphicon glyphicon-edit\" aria-hidden=\"true\"></span>' +
 											`</div>` +
 										'</div>' +
 									'</div>' +
@@ -180,22 +186,34 @@ const DATABASE_URL = 'http://localhost:3030'
 	
 	function addJournalEntryForm(){
 		let formTemplate = "<div id=\"newLinkFormDiv\">" +
+								"<h2 id=\"formTitle\">journal</h2>" +
 								"<form id=\"newLinkForm\">" +
-									"<label>Link</label>" +
-									"<input type=\"text\" name=\"link\" placeholder=\"www.google.com\" id=\"linkUrl\"></input>" +
-									"<label>Priority</label>" +
-									"<select name=\"priority\" id=\"linkPriority\">" +
-										"<option value=\"high\">High</option>" +
-										"<option value=\"medium\" selected>Medium</option>" +
-										"<option value=\"low\">Low</option>" +
-									"<input type=\"submit\" name=\"submit\" id=\"newLinkFormSubmit\"></input>" +
-									"<button type=\"cancel\">Cancel</button>" +
+									"<button type=\"cancel\" id=\"cancelNewForm\" class=\"pull-right btn btn-danger\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></button>" +
+									"<div class=\"form-group\">" +
+										"<label>Link</label>" +
+										"<input type=\"text\" class=\"form-control\" name=\"link\" placeholder=\"www.google.com\" id=\"linkUrl\"></input>" +
+									"</div>" +
+									"<div class=\"form-group\">" +
+										"<label for=\"linkPriority\">Priority</label>" +
+										"<select class=\"form-control\" name=\"priority\" id=\"linkPriority\">" +
+											"<option value=\"high\">High</option>" +
+											"<option value=\"medium\" selected>Medium</option>" +
+											"<option value=\"low\">Low</option>" +
+										"</select>" +
+									"</div>" +
+									"<div class=\"form-group\" id=\"submitDiv\">" +
+										"<input type=\"submit\" name=\"submit\" id=\"newLinkFormSubmit\" class=\"btn btn-primary\"></input>" +
+									"</div>"
 								"<form>" +
 							"</div>";
 
-		$('#newLink').on('click', () => {
+		$('body').on('click', '#newLink', () => {
 			if(!($('#newLinkForm').length)){
+				$('#linkSection').empty()
 				$('#linkSection').prepend(formTemplate)
+				$('html, body').animate({
+			    scrollTop: $("#newLinkFormDiv").offset().top
+			}, 1000);
 			}
 		})
 	}
@@ -203,6 +221,7 @@ const DATABASE_URL = 'http://localhost:3030'
 
 	function postJournalEntry(){
 		$("#linkSection").on('click', '#newLinkFormSubmit', (event) => {
+			event.preventDefault()
 
 			let url =  (isUrl($('#linkUrl').val()) == true) ? $('#linkUrl').val() : "http://" + $('#linkUrl').val() //ensures link is a url otherwise it appends http:// at the beginning
 			let priority = $('#linkPriority').val()
@@ -218,14 +237,15 @@ const DATABASE_URL = 'http://localhost:3030'
 				url: DATABASE_URL + '/entry',
 				data: JSON.stringify(newLink),
 				contentType: 'application/json',
-				success: function(data){		//not showing a successful posting, even though it does in postman and in tests
+				success: function(data){
 					alert('successfully posted')
 					window.location.reload(true)
 				},
-
+				error: function (request, status, error) { console.log(request); console.log(status); console.log(error) }
 			})
 		})
 	}
+
 
 // *********************************** //
 
@@ -234,6 +254,7 @@ const DATABASE_URL = 'http://localhost:3030'
 	function addUpdateEntriesForm(){
 		$("#linkSection").on('click', ".edit", function(){
 			
+			console.log('yolo')
 			
 				//grabs link information to add as placeholder in 
 				//form to make editing easier for user
