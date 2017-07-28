@@ -9,6 +9,8 @@ const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 const {passport, authorize} = require('./passportModule')
 
+const schedule = require('node-schedule')
+
 
 	//scraps webpage for title
 const request = require('request')
@@ -242,5 +244,29 @@ entryRouter.delete('/journal/:journalId', (req, res) => {
 			res.status(204).end()
 		})
 })
+
+	//schedules delete to run on all expired entries once a day at 11:59 PM
+let deleteExpiredPosts = schedule.scheduleJob('59 23 * * *', function(){
+	let currentDate = nowDate()
+
+	Entry
+		.find({expiry: {$lte: currentDate}})
+		.exec()
+		.then(entries => {
+			entries.forEach(entry => {
+				let id = entry.id
+				Entry
+					.findByIdAndRemove(id)
+					.exec()
+					.then(() => {
+						console.log(`${entry.title} deleted`)
+					})
+			})
+		})
+		.then(() => {
+			console.log('All expired entries have been deleted')
+		})
+})
+
 
 module.exports = entryRouter
