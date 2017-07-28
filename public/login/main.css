@@ -7,6 +7,12 @@
 		/*Log In Form*/
 	/***********************************/
 
+		#cancelLogin{
+			position: absolute;
+			right: 5px;
+			top: 5px;
+		}
+
 		#formContainer{
 			position: absolute;
 			top: 0;

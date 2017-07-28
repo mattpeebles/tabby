@@ -1,39 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Sign-Up</title>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Journal | Register</title>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+		<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<link rel="stylesheet" type="text/css" href="main.css">
+
 </head>
 <body>
 	<header>
 		
 	</header>
-	<section>
-		<div id="formContainer">
-			<form id="signUpForm">
-				<div class="form-group">
-					<label>First Name</label>
-					<input type="text" class="form-control" name="firstName" minlength="2" id="firstName" required>
+	<section class="outer">
+		<div class="middle">
+			<div class="container" id="formContainer">
+				<a href="/"><button type="cancel" id="cancelRegistration" class="pull-right btn btn-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></a>
+				<div id="register">
+					<h1>Register</h1>
 				</div>
-				<div class="form-group">
-					<label>Last Name</label>
-					<input type="text" class="form-control" name="lastName" id="lastName" required>
+				<form id="registerForm">
+					<div class="form-group has-feedback">
+						<label>First Name</label>
+						<input type="text" class="form-control" name="firstName" minlength="2" id="firstName" required>
+					</div>
+					<div class="form-group has-feedback">
+						<label>Last Name</label>
+						<input type="text" class="form-control" name="lastName" id="lastName" required>
+					</div>
+					<div class="form-group has-feedback">
+						<label>Email</label>
+						<input type="text" class="form-control" name="email" id="email" required>
+					</div>
+					<div class="form-group has-feedback">
+						<label>Password</label>
+						<input type="password" class="form-control" name="password" id="password" required>
+					</div>
+					<div class="form-group has-feedback">
+						<label>Confirm Password</label>
+						<input type="password" class="form-control" name="confirmPassword" id="confirmPassword" required>
+					</div>
+				    <div class="form-group row">
+				      <div class="offset-sm-2 col-sm-10" id="buttonContainer">
+				        <button type="submit" class="btn btn-primary" id="register">Register</button>
+				      </div>
+				    </div>
+				</form>
+				<div id="registerCall">
+					<a href="/login"><p>Already have an account? Log In</p></a>
 				</div>
-				<div class="form-group">
-					<label>Email</label>
-					<input type="text" class="form-control" name="email" id="email" required>
-				</div>
-				<div class="form-group">
-					<label>Password</label>
-					<input type="password" class="form-control" name="password" id="password" required>
-				</div>
-				<div class="form-group">
-					<label>Confirm Password</label>
-					<input type="password" class="form-control" name="confirmPassword" id="confirmPassword" required>
-				</div>
-					<button class="btn btn-default" id="signUp">Register</button>
-			</form>
+			</div>
 		</div>
 	</section>
+
 	<footer>
 		
 	</footer>
@@ -41,6 +67,8 @@
 
 		<!-- jquery -->
 	<script type="text/javascript" src="/resources/jquery.js"></script>
+
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 		<!-- jquery validator -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.js"></script>

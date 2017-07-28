@@ -31,6 +31,22 @@ userRouter.get('/me', authorize, (req, res) => {
 	res.json({user: req.user.userRepr()})
 })
 
+userRouter.post('/email', (req, res) => {
+	let {email} = req.body
+	return Users
+		.find({email})
+		.count()
+		.exec()
+		.then(count => {
+			if (count > 0){
+				return res.json({message: 'Email has already been used to create an account'})
+			}
+			else {
+				return res.json({message: 'Valid email'})
+			}
+		})
+})
+
 //this api hook allows a new user to be posted to the user collection in the database
 userRouter.post('/', (req, res) => {
 	
