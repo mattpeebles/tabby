@@ -5,15 +5,14 @@ function formatError(){
 	let elementArray = ['#firstName', '#lastName', '#email', '#password', '#confirmPassword']
 
 		elementArray.forEach(element => {
-			console.log(element + $(element).hasClass('error'))
 			if ($(element).hasClass('error')){
-					console.log('me')
 					let failureHtml =   
 						  `<span class="glyphicon glyphicon-remove form-control-feedback feedback error" aria-hidden="true"></span>` +
 						  `<span id="inputError2Status" class="sr-only feedback">(error)</span>`
 
 					let parent = $(element).parent()
 					$(element).removeClass('valid')
+					$(parent).children('.feedback').remove()
 					$(parent).removeClass('has-success').addClass('has-danger')
 					$(parent).append(failureHtml)  
 			}
@@ -70,7 +69,6 @@ function validateForm(){
 								$('#email-error').text(data.message)
 						}
 						else{
-							console.log('me')
 				    		let parent = $(label).parent()
 				    		$(parent).removeClass('has-danger').addClass('has-success')
 				    		$(parent).children('.feedback').remove()
@@ -82,7 +80,6 @@ function validateForm(){
     		}
 
     		else{
-    			console.log('yo')
 	    		let parent = $(label).parent()
 	    		$(parent).removeClass('has-danger').addClass('has-success')
 	    		$(parent).children('.feedback').remove()
@@ -100,8 +97,9 @@ function validateForm(){
 }
 
 function register(){
-	$("#register").on('click', (event) => {
-		event.preventDefault()
+	$("#registerButton").on('click', () => {
+
+		console.log('registering')
 		let user = {} 
 		
 			//serializes array into object
@@ -117,6 +115,8 @@ function register(){
    		 obj["user"] = user
    		 return obj;
 		}, {});
+
+		console.log(data)
 
 		$.ajax({
 			type: 'post',
@@ -134,6 +134,6 @@ function register(){
 
 $(() => {
 	validateForm()
-	register()
 	displayError()
+	register()
 })

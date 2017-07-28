@@ -67,3 +67,7 @@
 	#buttonContainer{
 		text-align: center;
 	}
+
+	.has-feedback label~.form-control-feedback.error{
+		color:red;
+	}
