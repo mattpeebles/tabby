@@ -160,7 +160,7 @@ const DATABASE_URL = 'http://localhost:3030'
 	
 	function addJournalEntryForm(){
 		let formTemplate = "<div id=\"newLinkFormDiv\">" +
-								"<h2 id=\"formTitle\">journal</h2>" +
+								"<h2 id=\"formTitle\">tabby</h2>" +
 								"<form id=\"newLinkForm\">" +
 									"<button type=\"cancel\" id=\"cancelNewForm\" class=\"pull-right btn btn-danger\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></button>" +
 									"<div class=\"form-group\">" +
