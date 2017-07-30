@@ -124,6 +124,7 @@ function register(){
 			data: JSON.stringify(data),
 			contentType: 'application/json', 
 			success: function(data){
+				alert('You have successfully registered. Welcome!')
 				window.location.href = data.redirect
 			}
 		})
