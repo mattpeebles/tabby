@@ -6,7 +6,17 @@ const DATABASE_URL = 'http://localhost:3030'
 	// Get journal entries
 // *********************************** //
 	function getJournalEntries(callback){
-		$.getJSON(DATABASE_URL + '/entry/entries', callback)
+		$.ajax({
+			type: 'get',
+			url: DATABASE_URL + '/entry/entries',
+			success: function(data){
+				callback(data)
+			},
+			error: function(err){
+				alert('please log in')
+				window.location.href = DATABASE_URL + '/login'
+			}
+		})
 	}
 
 	

@@ -32,7 +32,17 @@ const DATABASE_URL = 'http://localhost:3030'
 	// Get journal entries
 // *********************************** //
 	function getJournalEntries(callback){
-		$.getJSON(DATABASE_URL + '/entry/entries', callback)
+		$.ajax({
+			type: 'get',
+			url: DATABASE_URL + '/entry/entries',
+			success: function(data){
+				callback(data)
+			},
+			error: function(err){
+				alert('please log in')
+				window.location.href = DATABASE_URL + '/login'
+			}
+		})
 	}
 
 	
@@ -186,7 +196,7 @@ const DATABASE_URL = 'http://localhost:3030'
 	
 	function addJournalEntryForm(){
 		let formTemplate = "<div id=\"newLinkFormDiv\">" +
-								"<h2 id=\"formTitle\">journal</h2>" +
+								"<h2 id=\"formTitle\">tabby</h2>" +
 								"<form id=\"newLinkForm\">" +
 									"<button type=\"cancel\" id=\"cancelNewForm\" class=\"pull-right btn btn-danger\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></button>" +
 									"<div class=\"form-group\">" +
