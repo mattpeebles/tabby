@@ -171,13 +171,13 @@ userRouter.put('/:id', (req, res) => {
 						res.forEach(entry => {
 							let priority = entry.priority
 							let entryId = entry._id
-							let addDate = entry.addDate
+							let addDate = new Date(entry.addDate)
 							
 							let priorityExpiry = toUpdate.priorityExpiry[priority]
 							
 							let expiry = addDays(addDate, priorityExpiry)
 
-							toUpdate.expiry = expiry
+							toUpdate.expiry = new Date(expiry)
 
 							Entry
 								.findByIdAndUpdate(entryId, {$set: toUpdate}, {new: true})
