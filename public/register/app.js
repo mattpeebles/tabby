@@ -52,7 +52,7 @@ function validateForm(){
 
 				$.ajax({
 					type: 'post',
-					url: '/users/email',
+					url: window.location.href + '/users/email',
 					data: JSON.stringify(data),
 					contentType: 'application/json',
 					success: function(data){
