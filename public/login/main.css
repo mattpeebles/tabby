@@ -1,7 +1,7 @@
 /*Mobile Styling*/
 
 	body{
-		background-color: white;
+		background-color: lightgray;
 	}
 	
 		/*Log In Form*/
@@ -22,8 +22,8 @@
 			position: relative;
 			margin-left: auto;
 			margin-right: auto;
-			background-color: rgba(255,0,140,0.05);
-			border: 1px solid rgba(255,0,140, 0.2);
+			background-color: rgba(0,0,0,0.2);
+			border: 1px solid rgba(0,0,0, 0.2);
 			border-radius: 5px;
 			width: 90%;
 			padding-top: 5%;
@@ -33,6 +33,7 @@
 			position: absolute;
 			right: 5px;
 			top: 5px;
+
 		}
 
 
@@ -48,3 +49,69 @@
 		#registerCall{
 			text-align: center;
 		}
+
+
+@media screen and (min-device-width: 601px){
+	#formSection{
+
+		}
+
+		#middle{
+
+		}
+
+		#formContainer{
+			width: 60%;
+			padding-top: 1%;
+		}
+
+		#cancelLogin{
+
+		}
+
+		#title{
+			text-align: center;
+			margin-bottom: 5%;
+		}
+
+		#buttonContainer{
+
+		}
+
+		#registerCall{
+
+		}
+}
+
+@media screen 
+  and (min-device-width: 1200px) 
+  and (max-device-width: 1600px) 
+  and (-webkit-min-device-pixel-ratio: 1) {
+		#formSection{
+	
+		}
+
+		#middle{
+
+		}
+
+		#formContainer{
+
+		}
+
+		#cancelLogin{
+
+		}
+
+		#title{
+
+		}
+
+		#buttonContainer{
+
+		}
+
+		#registerCall{
+
+		}
+}

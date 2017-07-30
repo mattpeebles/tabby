@@ -20,8 +20,10 @@ function signIn(){
 				window.location.href = windowURL + data.redirect //redirects browser to user journal entries
 			},
 			error: function(err){
-				location.reload() //TODO: Add alert that password or email was incorrect
-			}
+				$('#password').val('').focus()
+				$('.alert').removeClass('hidden')
+				setTimeout(() => $('.alert').slideUp(), 5000)
+			}	
 		})
 	})
 }
