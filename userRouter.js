@@ -31,9 +31,24 @@ userRouter.get('/me', authorize, (req, res) => {
 	res.json({user: req.user.userRepr()})
 })
 
+userRouter.post('/email', (req, res) => {
+	let {email} = req.body
+	return Users
+		.find({email})
+		.count()
+		.exec()
+		.then(count => {
+			if (count > 0){
+				return res.json({message: 'Email has already been used to create an account'})
+			}
+			else {
+				return res.json({message: 'Valid email'})
+			}
+		})
+})
+
 //this api hook allows a new user to be posted to the user collection in the database
 userRouter.post('/', (req, res) => {
-	
 	//control logic to ensure request body exists, possess a non-empty string for email and password
 	if (!req.body){
 		return res.status(400).json({message: 'No request body'})
@@ -92,7 +107,7 @@ userRouter.post('/', (req, res) => {
 				})
 		})
 		.then(user => {
-			return res.status(201).json({redirect: '/login/login-index.html', user: user.userRepr()})
+			return res.status(201).json({redirect: '/login/index.html', user: user.userRepr()})
 		})
 		.catch(err => {
 			res.status(500).json({message: 'Internal server error'})
@@ -192,7 +207,7 @@ userRouter.put('/:id', (req, res) => {
 
 
 //delete hook that deletes user
-userRouter.delete('/:id', (req, res) => {
+userRouter.delete('/:id', authorize, (req, res) => {
 	Users
 		.findById(req.params.id)
 		.exec()
@@ -209,6 +224,7 @@ userRouter.delete('/:id', (req, res) => {
 		.then(() => {
 			Users
 				.findByIdAndRemove(req.params.id)
+				.exec()
 		})
 		.then(() => {
 			console.log(`Deleted user ${req.params.id}`)

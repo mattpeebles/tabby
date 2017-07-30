@@ -46,7 +46,7 @@ app.post('/login', function handleLocalAuthentication(req, res, next) {
         // Manually establish the session...
         req.login(user, function(err) {
             if (err) return next(err);
-            res.send({redirect: '/journal/index.html'})
+            res.send({redirect: '/journal'})
         });
     })(req, res, next);
 });

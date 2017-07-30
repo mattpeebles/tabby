@@ -9,6 +9,21 @@ const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 const {passport, authorize} = require('./passportModule')
 
+const schedule = require('node-schedule')
+
+
+	//scraps webpage for title
+const request = require('request')
+const rp = require('request-promise-native')
+const cheerio = require('cheerio')
+const ImageResolver = require('image-resolver')
+const resolver = new ImageResolver();
+resolver.register(new ImageResolver.FileExtension());
+resolver.register(new ImageResolver.MimeType());
+resolver.register(new ImageResolver.Opengraph());
+resolver.register(new ImageResolver.Webpage());
+
+
 entryRouter.use(jsonParser)
 entryRouter.use(require('cookie-parser')())
 entryRouter.use(require('express-session')({secret: 'keyboard cat', resave: true, saveUninitialized: true, cookie: { secure : false, maxAge : (4 * 60 * 60 * 1000)} }))
@@ -58,11 +73,20 @@ entryRouter.get('/entries', authorize, (req, res) => {
 		})
 })
 
+
+
 entryRouter.post('/', authorize, (req, res) => {
-	const requiredFields = ['title', 'link', 'priority'];
+	const requiredFields = ['link', 'priority'];
 	let priorityExpiryObject = {}
 	let priority = req.body.priority
 	let addDate = nowDate()
+	let expiry;
+	let	options = {
+		    uri: req.body.link,
+		    transform: function (body) {
+		        return cheerio.load(body);
+		    }
+		}
 	requiredFields.forEach((field) => {
 		if (!(field in req.body)) {
 			const message = `Missing ${field} in request body`;
@@ -81,20 +105,57 @@ entryRouter.post('/', authorize, (req, res) => {
 				return expiry
 			})
 			.then(expiry => {
-				Entry
-							.create({
-								title: req.body.title,
-								link: req.body.link,
-								journalId: req.user.journalId,
-								priority: req.body.priority,
-								addDate: addDate,
-								expiry: expiry
+				if (req.body.title){
+					Entry
+					.create({
+						title: req.body.title,
+						link: req.body.link,
+						journalId: req.user.journalId,
+						priority: req.body.priority,
+						addDate: addDate,
+						expiry: expiry
+					})
+					.then(entry => res.status(201).json(entry.entryRepr()))				
+				}
+				else{
+						//scrapes title from url
+					rp(options)
+						.then(($) => {
+							let pageTitle = $('head title').html()
+
+							title = pageTitle.split("-")[0].split('|')[0]
+							
+							if (title == null){
+								linkArray = (url).split('/')
+								title = linkArray[linkArray.length - 1]
+							}
+							return title
+						})
+						.then(title => {
+
+							//scrapes image from url
+							resolver.resolve(req.body.link, (result)=>{
+								let image = result.image
+								
+								Entry
+									.create({
+										title: title,
+										link: req.body.link,
+										image: image,
+										journalId: req.user.journalId,
+										priority: req.body.priority,
+										addDate: addDate,
+										expiry: expiry
+									})
+									.then(entry => res.status(201).json(entry.entryRepr()))
+									.catch(err => {
+										console.error(err)
+										return res.status(400).json({message: 'Internal server error'})
+									})
+								
 							})
-							.then(entry => res.status(201).json(entry.entryRepr()))
-							.catch(err => {
-								console.error(err)
-								return res.status(400).json({message: 'Internal server error'})
-							})
+						})
+					}
 			})
 })
 
@@ -109,7 +170,7 @@ entryRouter.put('/:entryId', (req, res) => {
 	}
 
 	let toUpdate = {}
-	const updateableFields = ['title', 'link', "priority"]
+	const updateableFields = ['link', 'priority']
 	let addDate;
 	
 	updateableFields.forEach(field => {
@@ -157,9 +218,9 @@ entryRouter.put('/:entryId', (req, res) => {
 							.then(updateEntry => res.status(201).json(updateEntry.entryRepr()))
 							.catch(err => res.status(500).json({message: 'Internal server error'}))
 					})
-			
-			})
-	}
+				
+				})
+		}
 })
 
 
@@ -183,5 +244,29 @@ entryRouter.delete('/journal/:journalId', (req, res) => {
 			res.status(204).end()
 		})
 })
+
+	//schedules delete to run on all expired entries once a day at 11:59 PM
+let deleteExpiredPosts = schedule.scheduleJob('59 23 * * *', function(){
+	let currentDate = nowDate()
+
+	Entry
+		.find({expiry: {$lte: currentDate}})
+		.exec()
+		.then(entries => {
+			entries.forEach(entry => {
+				let id = entry.id
+				Entry
+					.findByIdAndRemove(id)
+					.exec()
+					.then(() => {
+						console.log(`${entry.title} deleted`)
+					})
+			})
+		})
+		.then(() => {
+			console.log('All expired entries have been deleted')
+		})
+})
+
 
 module.exports = entryRouter

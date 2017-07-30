@@ -388,20 +388,73 @@ describe('Users API resource', () => {
 
 	describe('DELETE endpoint', ()=> {
 		it('should delete user and associated journal on DELETE', () => {
-			let journalId;
-			
-			return Users
-					.findOne()
-					.exec()
-					.then((res) => {
-						let deleteUserId = res.id
-						journalId = res.journalId
-						return chai.request(app)
-							.delete(`/users/${deleteUserId}`)
+				let entryData =     [{
+								      "journalId": "inputFantasticback up",
+								      "title": "changed title",
+								      "link": "www.google.com",
+								      "priority": "medium",
+								      "addDate": "2017-07-16T18:34:44.565Z",
+								      "expiry": "2017-07-16T17:26:49.000Z"
+								    },
+								    {
+								      "journalId": "inputFantasticback up",
+								      "title": "test title",
+								      "link": "www.google.com",
+								      "priority": "medium",
+								      "addDate": "2017-07-16T17:26:49.746Z",
+								      "expiry": "2017-07-16T17:26:49.000Z"
+								    },
+								    {
+								      "journalId": "inputFantasticback up",
+								      "title": "weef title",
+								      "link": "www.google.com",
+								      "priority": "medium",
+								      "addDate": "2017-07-16T17:27:27.644Z",
+								      "expiry": "2017-07-16T17:27:27.000Z"
+								    }]
+
+				let userData = { "user": { 
+											"firstName": "Harry",
+											"lastName": "Potter"
+										},
+										"joinDate": "Fri Jul 14 2017 15:00:22 GMT-0700 (PDT)",
+										"email": "testemail@test.com",
+										"password": "yolo",
+										"journalId": "inputFantasticback up", 
+										"priorityExpiry": {"high": 2, "medium": 4, "low": 7}
+								} 
+				
+				let signIn = {email: userData.email,
+							  password: userData.password
+							}
+
+				let res;
+				let Cookies;
+
+				return chai.request(app)
+					.post('/users')
+					.send(userData)
+					.then(res => {
+							return Entry.insertMany(entryData)
 					})
-					.then((res) => {
-						res.should.have.status(204)
+					.then(res => {
+						let agent = chai.request.agent(app)
+
+
+						return agent.post('/login')
+							.send(signIn)
+							.then((res) => {
+								return agent.get(`/users/me`)
+									.then(res => {
+										let userId = res.body.user.id
+										return agent.delete(`/users/${userId}`)
+											.then(res => {
+												res.should.have.status(204)
+											})
+									})
+							})
 					})
+					
 		})
 	})
 })

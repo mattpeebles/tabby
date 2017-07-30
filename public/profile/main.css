@@ -1,0 +1,64 @@
+#userSection{
+	position: relative;
+	padding: 2%;
+	height: 90%;
+	width: 100%;
+}
+
+#profileContainer{
+	border-top: 2px solid green;
+	border-left: 2px solid green;
+	border-right: 2px solid green;
+	padding: %;
+	width: 100%;
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+
+}
+
+#profileImageContainer{
+	border: 1px dotted blue;
+	padding: 1%;
+}
+
+#profileImage{
+
+}
+
+#profileImage > img{
+	width: 100%;
+	height: 100%;
+}
+
+
+#userInfoContainer{
+	border: 1px solid yellow;
+}
+
+#expiryContainer{
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	border-bottom: 2px solid green;
+	border-left: 2px solid green;
+	border-right: 2px solid green;
+	width: 100%;
+}
+
+#expiryDiv{
+	width: 95%;
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#highContainer, #medContainer, #lowContainer{
+	border: 1px solid orange;
+	height: 100%;
+	width: auto;
+}
+
+.priority{
+}

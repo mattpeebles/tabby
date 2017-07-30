@@ -32,52 +32,156 @@ const DATABASE_URL = 'http://localhost:3030'
 	// Get journal entries
 // *********************************** //
 	function getJournalEntries(callback){
-		$.getJSON(DATABASE_URL + '/entry/entries', callback)
+		$.ajax({
+			type: 'get',
+			url: DATABASE_URL + '/entry/entries',
+			success: function(data){
+				callback(data)
+			},
+			error: function(err){
+				alert('please log in')
+				window.location.href = DATABASE_URL + '/login'
+			}
+		})
 	}
 
 	
 		//displays journal entries in correct location on DOM
 		//depending on priority
 	function displayJournalEntries(data){
-		
 			//if user has no entries in journal, it renders
 			//a message saying such
 		if (data.message){
 			$('#linkSection').empty()
-			let messageHTMl = '<div class=\'postDiv\'>' +
-									'<p>' + data.message + '</p>' +
-								'</div>';
+			let messageHTMl = 	'<div id=\"noEntryContainer\">' +
+									'<div id=\'emptyMessage\'>' +
+										'<p>' + data.message + '</p>' +
+									'</div>' +
+									'<div id="linkButtonContainer">' +
+										'<button type=\"button\" class=\"btn btn-default\" id=\"newLink\">Add An Entry</button>' +
+									'</div>' +
+								'</div>'
+
 
 			$('#linkSection').append(messageHTMl)
 		}
+		else {
 
-		$('.postDiv').remove()
+			$('.postDiv').remove()
 
-		for (index in data.entries) {
-			let entry = data.entries[index]
-			let entryHTML = '<div class=\"postDiv\" id=\"' + entry.entryId + '\">' +
-								'<p class=\"linkTitle\" value=\"' + entry.priority + '\"><a class=\"url\" href=\"' + entry.link + '\">' + entry.title + '</a></p>' +
-								`<p class=\'expiryDate\'>${entry.expiry}</p>` +
-								'<div class=\"editDiv\">' +
-									'<button class=\"edit udButton hidden\">Edit</button>' +
-								'</div>' +
-								'<div class=\"deleteDiv\">' + 
-									'<button class=\"delete udButton hidden\">Delete</button>' + 
-								'</div>' +
-							'</div>'
+			let highCounter = 0
+			let mediumCounter = 0
+			let lowCounter = 0
+
+			let highArray = [],
+				mediumArray = [],
+				lowArray = []
+
+			let highHtml = '<div class=\"row\">'
+			let mediumHtml = '<div class=\"row\">'
+			let lowHtml = '<div class=\"row\">'
 
 
-			switch(entry.priority){
-				case "high": 
-					$('#highPriority').append(entryHTML)
-					break;
-				case "medium": 
-					$('#medPriority').append(entryHTML)
-					break;
-				case "low":
-					$('#lowPriority').append(entryHTML)
-					break;
+			for (index in data.entries) {
+				let entry = data.entries[index]
+				let expiryDate = countdown(new Date(Date.now()), new Date(entry.expiry), countdown.DAYS).toString()
+
+				let entryHtml = `<div class='postContainer col-xs-12 col-sm-6 col-lg-4'>` + 
+									'<div class=\"postDiv\" id=\"' + entry.entryId + '\">' +
+										'<p class=\"linkTitle\" value=\"' + entry.priority + '\">' + entry.title + '</p>' +
+										`<a class="url" href='${entry.link}'><span class='linkSpan'></span></a>` +
+										`<div class="postImage">` +
+											`<img src='${entry.image}'></img>` +
+										`</div>` +
+										`<div class="infoRow row">` +
+											`<div class="col-xs-6">` +
+												`<p class='pull-left expiryDate'>Expires in ${expiryDate}</p>` + 
+											`</div>` +
+											`<div class='manipGroup btn-group col-xs-6' role='group' aria-label='...'>` +
+													'<span class=\"delete pull-right glyphicon glyphicon-trash\" aria-hidden=\"true\"></span>' + 
+													'<span class=\"edit pull-right glyphicon glyphicon-edit\" aria-hidden=\"true\"></span>' +
+											`</div>` +
+										'</div>' +
+									'</div>' +
+								'</div>'
+
+
+				switch(entry.priority){
+					case "high": 
+						highArray.push(entryHtml)
+
+						break;
+					case "medium": 
+						mediumArray.push(entryHtml)
+
+						break;
+					case "low":
+						lowArray.push(entryHtml)
+
+						break;
+				}
 			}
+
+			for (index in highArray){
+					//finishes the div if there's less than three in the the row
+				if (index == highArray.length - 1){
+					highHtml += highArray[index] + "</div>"
+					$('#highPriority').append(highHtml)
+				}
+				else if(highCounter < 3){
+					highHtml += highArray[index]
+					highCounter++
+				}
+				else if(highCounter == 3){
+					highHtml += "</div>"
+					$('#highPriority').append(highHtml)
+
+					highHtml = '<div class=\"row\">'
+					highHtml += highArray[index]
+					highCounter = 2 //this is two because i've pushed an element right before.	
+				}
+			}
+
+			for (index in mediumArray){
+					//finishes the div if there's less than three in the the row
+				if (index == mediumArray.length - 1){
+					mediumHtml += mediumArray[index] + "</div>"
+					$('#medPriority').append(mediumHtml)
+				}
+				else if(mediumCounter < 3){
+					mediumHtml += mediumArray[index]
+					mediumCounter++
+				}
+				else if(mediumCounter == 3){
+					mediumHtml += "</div>"
+					$('#medPriority').append(mediumHtml)
+
+					mediumHtml = '<div class=\"row\">'
+					mediumHtml += mediumArray[index]
+					mediumCounter = 1 //this is two because i've pushed an element right before.	
+				}
+			}
+
+			for (index in lowArray){
+					//finishes the div if there's less than three in the the row
+				if (index == lowArray.length - 1){
+					lowHtml += lowArray[index] + "</div>"
+					$('#lowPriority').append(lowHtml)
+				}
+				else if(lowCounter < 3){
+					lowHtml += lowArray[index]
+					lowCounter++
+				}
+				else if(lowCounter == 3){
+					lowHtml += "</div>"
+					$('#lowPriority').append(lowHtml)
+
+					lowHtml = '<div class=\"row\">'
+					lowHtml += lowArray[index]
+					lowCounter = 2 //this is two because i've pushed an element right before.	
+				}
+			}
+
 		}
 	}
 
@@ -92,24 +196,34 @@ const DATABASE_URL = 'http://localhost:3030'
 	
 	function addJournalEntryForm(){
 		let formTemplate = "<div id=\"newLinkFormDiv\">" +
+								"<h2 id=\"formTitle\">tabby</h2>" +
 								"<form id=\"newLinkForm\">" +
-									"<label>Title</label>" +
-									"<input type=\"text\" name=\"title\" placeholder=\"Title\" id=\"linkTitle\"></input>" +
-									"<label>Link</label>" +
-									"<input type=\"text\" name=\"link\" placeholder=\"www.google.com\" id=\"linkUrl\"></input>" +
-									"<label>Priority</label>" +
-									"<select name=\"priority\" id=\"linkPriority\">" +
-										"<option value=\"high\">High</option>" +
-										"<option value=\"medium\" selected>Medium</option>" +
-										"<option value=\"low\">Low</option>" +
-									"<input type=\"submit\" name=\"submit\" id=\"newLinkFormSubmit\"></input>" +
-									"<button type=\"cancel\">Cancel</button>" +
+									"<button type=\"cancel\" id=\"cancelNewForm\" class=\"pull-right btn btn-danger\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></button>" +
+									"<div class=\"form-group\">" +
+										"<label>Link</label>" +
+										"<input type=\"text\" class=\"form-control\" name=\"link\" placeholder=\"www.google.com\" id=\"linkUrl\"></input>" +
+									"</div>" +
+									"<div class=\"form-group\">" +
+										"<label for=\"linkPriority\">Priority</label>" +
+										"<select class=\"form-control\" name=\"priority\" id=\"linkPriority\">" +
+											"<option value=\"high\">High</option>" +
+											"<option value=\"medium\" selected>Medium</option>" +
+											"<option value=\"low\">Low</option>" +
+										"</select>" +
+									"</div>" +
+									"<div class=\"form-group\" id=\"submitDiv\">" +
+										"<input type=\"submit\" name=\"submit\" id=\"newLinkFormSubmit\" class=\"btn btn-primary\"></input>" +
+									"</div>"
 								"<form>" +
 							"</div>";
 
-		$('#newLink').on('click', () => {
+		$('body').on('click', '#newLink', () => {
 			if(!($('#newLinkForm').length)){
+				$('#linkSection').empty()
 				$('#linkSection').prepend(formTemplate)
+				$('html, body').animate({
+			    scrollTop: $("#newLinkFormDiv").offset().top
+			}, 1000);
 			}
 		})
 	}
@@ -117,21 +231,13 @@ const DATABASE_URL = 'http://localhost:3030'
 
 	function postJournalEntry(){
 		$("#linkSection").on('click', '#newLinkFormSubmit', (event) => {
+			event.preventDefault()
 
-			let title = $('#linkTitle').val()
 			let url =  (isUrl($('#linkUrl').val()) == true) ? $('#linkUrl').val() : "http://" + $('#linkUrl').val() //ensures link is a url otherwise it appends http:// at the beginning
 			let priority = $('#linkPriority').val()
 
-				//ensures user enters a title that is
-				//not just a blank space
-			if (title.search(/[a-zA-Z0-9]/g) == -1){
-				alert('please enter a title for your entry')
-				$('#linkTitle').focus()
-				return 
-			}
 
 			let newLink = {
-				'title': title,
 				'priority': priority,
 				'link': url
 			}
@@ -141,13 +247,15 @@ const DATABASE_URL = 'http://localhost:3030'
 				url: DATABASE_URL + '/entry',
 				data: JSON.stringify(newLink),
 				contentType: 'application/json',
-				success: function(){
-					location.reload()
-				}
+				success: function(data){
+					alert('successfully posted')
+					window.location.reload(true)
+				},
+				error: function (request, status, error) { console.log(request); console.log(status); console.log(error) }
 			})
-
 		})
 	}
+
 
 // *********************************** //
 
@@ -156,21 +264,16 @@ const DATABASE_URL = 'http://localhost:3030'
 	function addUpdateEntriesForm(){
 		$("#linkSection").on('click', ".edit", function(){
 			
+			console.log('yolo')
 			
 				//grabs link information to add as placeholder in 
 				//form to make editing easier for user
-			let parentDiv = $(this).parent().parent() //targets postDiv
-			let linkURL = $(parentDiv).children('.linkTitle').children('.url').attr('href') //grabs the url of link
-			let linkTitle = $(parentDiv).children('.linkTitle').text() //grabs title of link
+			let parentDiv = $(this).parent().parent().parent() //targets postDiv
 			let linkPriority = $(parentDiv).children('.linkTitle').attr('value') //grabs priority of link
 			let linkID = $(parentDiv).attr('id') //grabs id of link
 
 			let formTemplate = "<div class=\"editForm\" id=\"editLinkFormDiv-" + linkID + "\">" +
 						"<form id=\"editLinkForm\">" +
-							"<label>Title</label>" +
-							"<input type=\"text\" name=\"title\" placeholder=\"Title\" id=\"linkTitle\" value=\"" + linkTitle + "\"></input>" +
-							"<label>Link</label>" +
-							"<input type=\"text\" name=\"link\" placeholder=\"www.google.com\" id=\"linkUrl\" value=\"" + linkURL + "\"></input>" +
 							"<label>Priority</label>" +
 							"<select name=\"priority\" id=\"linkPriority\">" +
 								"<option id=\"high\" value=\"high\">High</option>" +
@@ -189,7 +292,7 @@ const DATABASE_URL = 'http://localhost:3030'
 					//removes any other edit forms if one already exists
 				$('#linkSection').children().children().children(".editForm").remove()
 				
-				$(parentDiv).prepend(formTemplate)
+				$(parentDiv).append(formTemplate)
 				
 				//this custom sets the selected option depending on the user's previous choice
 				let priorityFormOption = formParentDiv + ' > #editLinkForm > #linkPriority > ' + "#" + linkPriority
@@ -221,6 +324,7 @@ const DATABASE_URL = 'http://localhost:3030'
 				data: JSON.stringify(editEntry),
 				contentType: 'application/json',
 				success: function(){
+					getAndDisplayJournalEntries()
 					location.reload()
 				}
 			})
@@ -232,17 +336,19 @@ const DATABASE_URL = 'http://localhost:3030'
 // *********************************** //
 	function deleteEntry(){
 		$('#linkSection').on('click', '.delete', function(){
-			let parentDiv = $(this).parent().parent()
+			let parentDiv = $(this).parent().parent().parent() //targets postDiv
 			let entryId = $(parentDiv).attr('id')
+			let entryTitle = $(parentDiv).children('.linkTitle').text()
 
-
-			$.ajax({
-				type: 'delete',
-				url: DATABASE_URL + "/entry/" + entryId,
-				success: function(){
-					location.reload()
-				}
-			})
+			if(confirm(`Are you sure you want to delete ${entryTitle}?`)){
+					$.ajax({
+						type: 'delete',
+						url: DATABASE_URL + "/entry/" + entryId,
+						success: function(){
+							getAndDisplayJournalEntries()
+						}
+					})
+			}
 		})
 	}
 

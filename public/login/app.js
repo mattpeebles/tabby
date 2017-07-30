@@ -19,6 +19,9 @@ function signIn(){
 			contentType: 'application/json',
 			success: function(data){
 				window.location.href = data.redirect //redirects browser to user journal entries
+			},
+			error: function(err){
+				location.reload()
 			}
 		})
 	})

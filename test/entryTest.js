@@ -390,7 +390,6 @@ function tearDownDb(){
 		
 		it('should update entry on PUT', () => {
 			const updateEntry = {
-				"title": generateTitle(),
 				"link": generateLink(),
 			}
 
@@ -409,14 +408,12 @@ function tearDownDb(){
 						return Entry.findById(updateEntry.entryId).exec()
 					})
 					.then(entry => {
-						entry.title.should.be.equal(updateEntry.title)
 						entry.link.should.be.equal(updateEntry.link)
 					})
 		})
 
 		it('should update expiry when priority is updated', () => {
 			let updateEntry = {
-				"title": generateTitle(),
 				"link": generateLink(),
 				"priority": generatePriority()
 			}
@@ -437,7 +434,6 @@ function tearDownDb(){
 						return Entry.findById(updateEntry.entryId).exec()
 					})
 					.then(entry => {
-						entry.title.should.be.equal(updateEntry.title)
 						entry.link.should.be.equal(updateEntry.link)
 						entry.priority.should.be.equal(updateEntry.priority)
 					})
