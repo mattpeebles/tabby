@@ -1,0 +1,80 @@
+.navbar{
+	margin-bottom: 0;
+}
+
+#header{
+	height: 65vh;
+	position: relative;
+}
+
+#headerOuter{
+	display: table;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	background-image: url('/resources/cat-hero.jpg');
+
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	position: 
+}
+
+#headerMiddle{
+	display: table-cell;
+	vertical-align: middle;
+}
+
+#headerInner{
+	background-color: rgba(239, 245, 255, 0.5);
+}
+
+#title{
+	text-align: center;
+}
+
+#subtitle{
+	text-align: center;
+}
+
+#ctaHero{
+	text-align: center;
+}
+
+#summary{
+	border: 1px solid black;
+	font-size: 26px;
+	margin-top: 2%;
+	text-align: center;
+}
+
+#moreInfoContainer{
+	position: relative;
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.moreInfo{
+	border: 1px solid black;
+	margin-top: 2%;
+	text-align: center;
+}
+
+.explanationImage{
+	margin-top: 2%;
+}
+
+.material-icons{ 
+	font-size: 48px;
+	color: red;
+}
+
+.explanationTitle{
+	text-align: center;
+	font-size: 22px;
+}
+
+.explanation{
+	font-size: 20px;
+}
