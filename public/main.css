@@ -1,9 +1,29 @@
+.button{
+	height: 50px;
+	background: none;
+	color: black;
+}
+
+.button:active{
+	background: gray;
+	color: white;
+}
+
 .navbar{
 	margin-bottom: 0;
 }
 
+#navLinks{
+	text-align: center;
+}
+
+#githubIcon > img{
+	height: 30px;
+	width: 30px;
+}
+
 #header{
-	height: 65vh;
+	height: 70vh;
 	position: relative;
 }
 
@@ -12,12 +32,7 @@
 	position: absolute;
 	height: 100%;
 	width: 100%;
-	background-image: url('/resources/cat-hero.jpg');
-
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-	position: 
+	background-color: gray;
 }
 
 #headerMiddle{
@@ -37,15 +52,78 @@
 	text-align: center;
 }
 
-#ctaHero{
+#summary{
+	font-size: 26px;
+	margin-top: 10%;
 	text-align: center;
 }
 
-#summary{
-	border: 1px solid black;
-	font-size: 26px;
-	margin-top: 2%;
+#sumFirstLine{
+	margin-bottom: 10%;
+}
+
+#ctaContainer{
 	text-align: center;
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+}
+
+#cta{
+	position: relative;
+	margin-right: auto;
+	margin-left: auto;
+	border: 1px solid black;
+	width: 90%;
+	height: 35vh;
+	margin-top: 10%;
+}
+
+#registerContainer{
+	position: absolute;
+	width: 100%;
+	top: 10%;
+}
+
+#register{
+	width: 30%;
+	border: 1px solid black;
+}
+
+#divider{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+	width: 60%;
+   	border: 0;
+    height: 1px;
+    background: #333;
+    background-image: linear-gradient(to right, #ccc, #333, #ccc);
+}
+
+#loginContainer{
+	position: absolute;
+	width: 100%;
+	bottom: 10%;
+}
+
+#login{
+	width: 30%;
+	border: 1px solid black;
+}
+
+#works{
+	width: 95%
+	margin-right: auto;
+	margin-left: auto;
+	position: relative;
+	text-align: center;
+	margin-top: 10%;
+	margin-bottom: 3%;
 }
 
 #moreInfoContainer{
@@ -53,11 +131,16 @@
 	width: 90%;
 	margin-left: auto;
 	margin-right: auto;
+	height: auto;
+}
+
+.infoSection{
+
 }
 
 .moreInfo{
 	border: 1px solid black;
-	margin-top: 2%;
+	margin-bottom: 15%;
 	text-align: center;
 }
 
@@ -67,7 +150,7 @@
 
 .material-icons{ 
 	font-size: 48px;
-	color: red;
+	color: gray;
 }
 
 .explanationTitle{
@@ -77,4 +160,223 @@
 
 .explanation{
 	font-size: 20px;
+}
+
+
+@media screen and (min-device-width: 601px){
+	#navLinks{
+
+	}
+
+
+	#header{
+
+	}
+
+	#headerOuter{
+
+	}
+
+	#headerMiddle{
+
+	}
+
+	#headerInner{
+
+	}
+
+	#title{
+
+	}
+
+	#subtitle{
+
+	}
+
+	#summary{
+		margin-top: 3%;
+	}
+
+	#sumFirstLine{
+		margin-bottom: 5%;
+	}
+
+	#sumSecondLine{
+		font-size: 18px;
+	}
+	
+	#ctaContainer{
+
+	}
+
+	#cta{
+		width: 65%;
+		height: 65vh;
+		margin-top: 5%;
+	}
+
+	#registerContainer{
+
+	}
+
+	#register{
+
+	}
+
+	#divider{
+
+	}
+
+	#loginContainer{
+
+	}
+
+	#login{
+
+	}
+
+	#works{
+		margin-top: 5%;
+		margin-bottom: 2%;
+	}
+
+	#moreInfoContainer{
+		position: relative;
+		width: 65%;
+		margin-left: auto;
+		margin-right: auto;
+		height: auto;
+	}
+
+	.moreInfo{
+		border: 1px solid black;
+		margin-bottom: 5%;
+		text-align: center;
+	}
+
+	.explanationImage{
+		margin-top: 2%;
+	}
+
+	.material-icons{ 
+		font-size: 48px;
+		color: gray;
+	}
+
+	.explanationTitle{
+		text-align: center;
+		font-size: 22px;
+	}
+
+	.explanation{
+		font-size: 20px;
+	}
+}
+
+
+@media screen 
+  and (min-device-width: 1200px) 
+  and (max-device-width: 1600px) 
+  and (-webkit-min-device-pixel-ratio: 1) {
+	
+	#navRegister{
+		text-align: right;
+	}
+
+	#header{
+
+	}
+
+	#headerOuter{
+
+	}
+
+	#headerMiddle{
+
+	}
+
+	#headerInner{
+	}
+
+	#title{
+
+	}
+
+	#subtitle{
+	}
+
+	#summary{
+		margin-top: 5%;
+	}
+
+	#sumFirstLine{
+		margin-bottom: 5%;
+	}
+
+	#ctaContainer{
+		width: 100%;
+	}
+
+	#cta{
+		margin-top: 5%;
+		height: 45vh;
+	}
+
+	#registerContainer{
+
+	}
+
+	#register{
+
+	}
+
+	#divider{
+
+	}
+
+	#loginContainer{
+
+	}
+
+	#login{
+
+	}
+
+	#works{
+		margin-top: 5%;
+		margin-bottom: 2%;
+	}
+
+	#moreInfoContainer{
+		width: 100%;
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 3%;
+	}
+
+	.infoSection{
+		border: 1px solid black;
+	}
+
+	.moreInfo{
+		border: none;
+		padding: 10px;
+	}
+
+	.explanationImage{
+
+	}
+
+	.material-icons{ 
+
+	}
+
+	.explanationTitle{
+
+	}
+
+	.explanation{
+
+	}
 }

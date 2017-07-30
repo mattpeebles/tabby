@@ -5,14 +5,15 @@
 	<meta type="description" content="A web app for storing links you want to look at later">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>Journal</title>
+	<title>Tabby | Home</title>
 
 		<!-- Bootstrap -->
-		<!-- Latest compiled and minified CSS -->
+	
+	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-		<!-- Optional theme -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"></head>
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
@@ -23,10 +24,21 @@
 	<nav class="navbar navbar-default">
 	  	<div class="container-fluid">
 			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#loginRegister" aria-expanded="false">
+			        <span class="sr-only">Toggle navigation</span>
+			        <span class="icon-bar"></span>
+			        <span class="icon-bar"></span>
+			        <span class="icon-bar"></span>
+			      </button>
 		  		<a class="navbar-brand" href="#">Tabby</a>
-		  		<a href="/register" role="button" class="btn btn-default navbar-btn navbar-right pull-right" id="navRegister">Register</a>
-		  		<a href="/login" role="button" class="btn btn-default navbar-btn navbar-right pull-right" id="navLogin">Login</a>
 		    </div>
+
+		    <div class="collapse navbar-collapse navbar-right" id="loginRegister">
+		    	<ul class="nav navbar-nav" id="navLinks">
+	               <li><a href="/register" id="navRegister">Register</a></li>
+	               <li><a href="/login" id="navLogin">Login</a></li>
+	           </ul>
+	        </div>
 	 	</div>
 	 </nav>
 
@@ -36,14 +48,7 @@
 			 	<div id="headerMiddle">
 				 	<div id="headerInner">
 					 	<div id="title">
-					 		<h1>tabby</h1>
-					 	</div>
-					 	<div id="subtitle">
-					 		<h2>keeping tab on your tabs</h2>
-					 	</div>
-					 	<div id="ctaHero">
-					 		<a href="/register" role="button" class="btn btn-default" id="register">Register</a>
-			  				<a href="/login" role="button" class="btn btn-default" id="login">Login</a>
+					 		<h1>Introducing Tabby</h1>
 					 	</div>
 					</div>
 				 </div>
@@ -53,50 +58,69 @@
 		 <div class="container">
 		 	<div class="row" id="summaryContainer">
 			 	<div class="col-sm-12" id="summary">
-			 		<p>Tired of losing interesting ideas in a sea of tabs? </p>
-			 		<p>So are we.</p>
-			 		<p>Introducing Tabby.</p>
-			 		<p>Tabby will help you prioritize your tabs and be motivated to read them, so you never lose an interesting thought again.</p>
+			 		<p id="sumFirstLine">Keeping tab on your tabs</p>
+			 		<p id="sumSecondLine">Tabby will help you prioritize your tabs and be motivated to read them, so you never lose an interesting thought again.</p>
 			 	</div>
+			</div>
+			<div id="ctaContainer">
+		 		<div id='cta'>
+			 		<div id='registerContainer'>
+			 			<a href="/register" role="button"><button id="register" class="button">Register</button></a>		
+			 		</div>
+			 		<hr id='divider'>
+	  				<div id="loginContainer">
+	  					<a href="/login" role="button"><button class="button" id="login">Login</button></a>
+	  				</div>
+	  			</div>
+		 	</div>
+
+			<div id="works">
+				<h3>How it works</h3>
 			</div>
 			<div class="row" id="moreInfoContainer">
 				<div class="col-sm-12 col-md-4">
-					<div class="row moreInfo">
-						<div class="col-sm-12 explanationImage">
-							<i class="material-icons">gavel</i>
-						</div>
-						<div class="col-sm-12 explanationTitle">
-							<p>Prioritize</p>
-						</div>
-						<div class="col-sm-12 explanation">
-				 			<p>Choose the level of importance you give to a tab <br><br> Gotta read it <br> Wanna read it <br> Mildly interesting<br></p>
-				 		</div>
+					<div class="infoSection">
+						<div class="row moreInfo">
+							<div class="col-sm-12 explanationImage">
+								<i class="material-icons">gavel</i>
+							</div>
+							<div class="col-sm-12 explanationTitle">
+								<p>Prioritize</p>
+							</div>
+							<div class="col-sm-12 explanation">
+					 			<p>Choose the level of importance you give to a tab <br><br> Gotta read it <br> Wanna read it <br> Mildly interesting<br></p>
+					 		</div>
+					 	</div>
 				 	</div>
 				</div>
 				<div class="col-sm-12 col-md-4">
-					<div class="row moreInfo">
-						<div class="col-sm-12 explanationImage">
-							<i class="material-icons">favorite</i>
-						</div>
-						<div class="col-sm-12 explanationTitle">
-							<p>Store it</p>
-						</div>
-						<div class="col-sm-12 explanation">
-			 				<p>After prioritizing, Tabby will store the tab for you. The more you want to read it, the less time Tabby will save it, motivating you to get to it before it goes away.</p>
-			 			</div>
+					<div class="infoSection">
+						<div class="row moreInfo">
+							<div class="col-sm-12 explanationImage">
+								<i class="material-icons">favorite</i>
+							</div>
+							<div class="col-sm-12 explanationTitle">
+								<p>Store it</p>
+							</div>
+							<div class="col-sm-12 explanation">
+				 				<p>After prioritizing, Tabby will store the tab for you. The more you want to read it, the less time Tabby will save it, motivating you to get to it before it goes away.</p>
+				 			</div>
+				 		</div>
 			 		</div>
 				</div>
 				<div class="col-sm-12 col-md-4">
-			 		<div class="row moreInfo">
-				 		<div class="col-sm-12 explanationImage">
-							<i class="material-icons">devices</i>
-				 		</div>
-				 		<div class="col-sm-12 explanationTitle">	
-				 			<p>Get it</p>
-						</div>
-						<div class="col-sm-12 explanation">
-				 			<p>Tabby regularly cleans house by removing tabs after they expire. After deletion, Tabby will send you an email with only your highest priority tabs, so that you never lose sight of them.</p>
-				 		</div>
+			 		<div class="infoSection">
+				 		<div class="row moreInfo">
+					 		<div class="col-sm-12 explanationImage">
+								<i class="material-icons">devices</i>
+					 		</div>
+					 		<div class="col-sm-12 explanationTitle">	
+					 			<p>Get it</p>
+							</div>
+							<div class="col-sm-12 explanation">
+					 			<p>Tabby regularly cleans house by removing tabs after they expire. After deletion, Tabby will send you an email with only your highest priority tabs, so that you never lose sight of them.</p>
+					 		</div>
+					 	</div>
 				 	</div>
 				</div>
 			</div>
@@ -104,8 +128,19 @@
 		 </div>
 	 </section>
 
+	<footer>
+		<nav class="navbar navbar-default navbar-bottom">
+  			<div class="container">
+  				<a class="navbar-brand" href="#">Matt Peebles</a>
+  				<a href="https://github.com/mattpeebles" role="button" class=" navbar-btn navbar-right pull-right" id="githubIcon"><img src="resources/images/github.png"></a>
+  			</div>
+</nav>
+	</footer>
+
 </body>
 	<script type="text/javascript" src="/resources/jquery.js"></script>
+
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 	<script type="text/javascript" src="./app.js"></script>
 </html>
