@@ -52,7 +52,7 @@ function validateForm(){
 
 				$.ajax({
 					type: 'post',
-					url: window.location.href + '/users/email',
+					url: 'https://cryptic-basin-53606.herokuapp.com/users/email',
 					data: JSON.stringify(data),
 					contentType: 'application/json',
 					success: function(data){
