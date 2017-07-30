@@ -350,7 +350,6 @@ describe('Users API resource', () => {
 							.put(`/users/${updateUser.id}`)
 							.send(updateUser)
 							.then(res => {
-								let journalId = res.body.journalId
 									return Entry
 										.find({journalId: journalId})
 										.exec()
@@ -375,7 +374,7 @@ describe('Users API resource', () => {
 													case 'medium': 
 														(dateDiff).should.equal(medium) 
 														break;
-													case 'low': 
+													case 'low':
 														(dateDiff).should.equal(low) 
 														break;
 												}
