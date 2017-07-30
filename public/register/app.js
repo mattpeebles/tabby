@@ -1,6 +1,3 @@
-const DATABASE_URL = 'http://localhost:3030/users'
-
-
 function formatError(){
 	let elementArray = ['#firstName', '#lastName', '#email', '#password', '#confirmPassword']
 
@@ -55,12 +52,11 @@ function validateForm(){
 
 				$.ajax({
 					type: 'post',
-					url: DATABASE_URL + '/email',
+					url: '/users/email',
 					data: JSON.stringify(data),
 					contentType: 'application/json',
 					success: function(data){
 						if (data.message === 'Email has already been used to create an account'){
-							   console.log('me')
 							   let parent = $('#email').parent()
 			    				$(parent).removeClass('has-success')
 			    				$(parent).children('.feedback').remove()
@@ -120,7 +116,7 @@ function register(){
 
 		$.ajax({
 			type: 'post',
-			url: DATABASE_URL,
+			url: '/users',
 			data: JSON.stringify(data),
 			contentType: 'application/json', 
 			success: function(data){

@@ -1,6 +1,3 @@
-const DATABASE_URL = 'http://localhost:3030'
-
-
 function signIn(){
 	$('#logIn').on('click', (event) => {
 		event.preventDefault()
@@ -14,14 +11,14 @@ function signIn(){
 
 		$.ajax({
 			type: 'POST',
-			url: DATABASE_URL + '/login',
+			url: '/login',
 			data: JSON.stringify(data),
 			contentType: 'application/json',
 			success: function(data){
 				window.location.href = data.redirect //redirects browser to user journal entries
 			},
 			error: function(err){
-				location.reload()
+				location.reload() //TODO: Add alert that password or email was incorrect
 			}
 		})
 	})

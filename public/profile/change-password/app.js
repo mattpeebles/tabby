@@ -1,6 +1,3 @@
-const DATABASE_URL = 'http://localhost:3030'
-
-
 function formatError(){
 	let elementArray = ['#confirmNewPassword']
 
@@ -69,7 +66,7 @@ function changePassword(){
 
 		$.ajax({
 			type: 'get',
-			url: DATABASE_URL + '/users/me',
+			url: '/users/me',
 			success: function(data){
 				let email = data.user.email
 
@@ -87,19 +84,19 @@ function changePassword(){
 
 				$.ajax({
 					type: 'get',
-					url: DATABASE_URL + '/logout',
+					url: '/logout',
 					success: function(){
 
 						$.ajax({
 							type: 'post',
-							url: DATABASE_URL + '/login',
+							url: '/login',
 							data: JSON.stringify(loginData),
 							contentType: 'application/json',
 							success: function(data){
 
 								$.ajax({
 									type: 'put',
-									url: `${DATABASE_URL}/users/${id}`,
+									url: `/users/${id}`,
 									data: JSON.stringify(newPasswordData),
 									contentType: 'application/json',
 									success: function(data){
@@ -110,7 +107,7 @@ function changePassword(){
 							},
 							error: function(err){
 								alert('You entered the wrong password. Please log in')
-								window.location.href = DATABASE_URL + '/login'
+								window.location.href = '/login'
 							}
 						})
 					}

@@ -39,8 +39,6 @@ RandomCat.prototype.get = function (options) {
 module.exports = (new RandomCat());
 },{}],2:[function(require,module,exports){
 const randomCat = require('random-cat')
-const DATABASE_URL = "http://localhost:3030"
-
 
 
 	// Static Display User Data
@@ -49,13 +47,13 @@ const DATABASE_URL = "http://localhost:3030"
 	function getUserData(callback){
 		$.ajax({
 			type: 'get',
-			url: DATABASE_URL + '/users/me',
+			url: '/users/me',
 			success: function(data){
 				callback(data)
 			},
 			error: function(err){
 				alert('please log in')
-				window.location.href = DATABASE_URL + '/login'
+				window.location.href = '/login'
 			}
 		})
 	}
@@ -87,13 +85,11 @@ const DATABASE_URL = "http://localhost:3030"
 	// Signout
 // *********************************** //
 	function signout(){
-		console.log('yo')
 		$('#logOutButton').click((event) => {
-			console.log('hello')
 			if(confirm('Log out?')){
 				$.ajax({
 					type: 'get',
-					url: 'http://localhost:3030/logout',
+					url: '/logout',
 					success: function(data) {
 						alert(data.message)
 						window.location.href = data.redirect

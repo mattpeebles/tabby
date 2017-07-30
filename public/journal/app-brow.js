@@ -26,21 +26,18 @@ function isUrl(string){
 },{}],2:[function(require,module,exports){
 const isUrl = require('is-url') //validates url
 
-const DATABASE_URL = 'http://localhost:3030'
-
-
 	// Get journal entries
 // *********************************** //
 	function getJournalEntries(callback){
 		$.ajax({
 			type: 'get',
-			url: DATABASE_URL + '/entry/entries',
+			url: '/entry/entries',
 			success: function(data){
 				callback(data)
 			},
 			error: function(err){
 				alert('please log in')
-				window.location.href = DATABASE_URL + '/login'
+				window.location.href = '/login'
 			}
 		})
 	}
@@ -84,7 +81,12 @@ const DATABASE_URL = 'http://localhost:3030'
 
 			for (index in data.entries) {
 				let entry = data.entries[index]
-				let expiryDate = countdown(new Date(Date.now()), new Date(entry.expiry), countdown.DAYS).toString()
+				let expiryDateFormat = countdown(new Date(Date.now()), new Date(entry.expiry), countdown.DAYS).toString()
+				let expiryDate = (expiryDateFormat == '') ? "Expires in " + countdown(new Date(Date.now()), new Date(entry.expiry), countdown.HOURS).toString() : "Expires in " + expiryDateFormat
+				
+				if(Date.parse(new Date(entry.expiry))-Date.parse(new Date())<0){
+					   expiryDate = 'Expires tonight'
+				}
 
 				let entryHtml = `<div class='postContainer col-xs-12 col-sm-6 col-lg-4'>` + 
 									'<div class=\"postDiv\" id=\"' + entry.entryId + '\">' +
@@ -95,7 +97,7 @@ const DATABASE_URL = 'http://localhost:3030'
 										`</div>` +
 										`<div class="infoRow row">` +
 											`<div class="col-xs-6">` +
-												`<p class='pull-left expiryDate'>Expires in ${expiryDate}</p>` + 
+												`<p class='pull-left expiryDate'>${expiryDate}</p>` + 
 											`</div>` +
 											`<div class='manipGroup btn-group col-xs-6' role='group' aria-label='...'>` +
 													'<span class=\"delete pull-right glyphicon glyphicon-trash\" aria-hidden=\"true\"></span>' + 
@@ -244,7 +246,7 @@ const DATABASE_URL = 'http://localhost:3030'
 
 			$.ajax({
 				type: 'POST',
-				url: DATABASE_URL + '/entry',
+				url: '/entry',
 				data: JSON.stringify(newLink),
 				contentType: 'application/json',
 				success: function(data){
@@ -305,7 +307,7 @@ const DATABASE_URL = 'http://localhost:3030'
 
 	function updateEntryInDatabase(){
 		$('#editLinkFormSubmit').on('click', function(event){
-			
+			event.preventDefault()
 			
 				// edit form has id of editLinkFormDiv-id,
 				//splits the id on hyphen and returns database id
@@ -320,7 +322,7 @@ const DATABASE_URL = 'http://localhost:3030'
 
 			$.ajax({
 				type: 'put',
-				url: DATABASE_URL + '/entry/' + id,
+				url: '/entry/' + id,
 				data: JSON.stringify(editEntry),
 				contentType: 'application/json',
 				success: function(){
@@ -343,7 +345,7 @@ const DATABASE_URL = 'http://localhost:3030'
 			if(confirm(`Are you sure you want to delete ${entryTitle}?`)){
 					$.ajax({
 						type: 'delete',
-						url: DATABASE_URL + "/entry/" + entryId,
+						url: "/entry/" + entryId,
 						success: function(){
 							getAndDisplayJournalEntries()
 						}
@@ -364,7 +366,7 @@ const DATABASE_URL = 'http://localhost:3030'
 			if(confirm('Log out?')){
 				$.ajax({
 					type: 'get',
-					url: DATABASE_URL + '/logout',
+					url: '../logout',
 					success: function(data) {
 						alert(data.message)
 						window.location.href = data.redirect
