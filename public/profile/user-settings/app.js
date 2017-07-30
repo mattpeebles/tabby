@@ -1,7 +1,10 @@
+const url = window.location.origin
+
+
 function getUserData(callback){
 	$.ajax({
 		type: 'get',
-		url: '/users/me',
+		url: url + '/users/me',
 		success: function(data){
 			callback(data)
 		},
@@ -199,7 +202,7 @@ function getAndEditUserData(){
 				
 				$.ajax({
 					type: 'put',
-					url: '/users/' + data.user.id,
+					url: url + '/users/' + data.user.id,
 					data: JSON.stringify(userData),
 					contentType: 'application/json',
 					success: function(){

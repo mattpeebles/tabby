@@ -1,3 +1,6 @@
+const url = window.location.origin
+
+
 function format(){
 	let elementArray = ['#currentEmail', '#currentPassword', '#newEmail', '#newPassword']
 
@@ -58,7 +61,7 @@ function validateForm(){
 
 				$.ajax({
 					type: 'post',
-					url: '/users/email',
+					url: url + '/users/email',
 					data: JSON.stringify(data),
 					contentType: 'application/json',
 					success: function(data){
@@ -108,7 +111,7 @@ function changeEmail(){
 
 		$.ajax({
 			type: 'get',
-			url: '/users/me',
+			url: url + '/users/me',
 			success: function(data){
 				loginData = {
 					email: currentEmail,
@@ -124,19 +127,19 @@ function changeEmail(){
 
 				$.ajax({
 					type: 'get',
-					url: '/logout',
+					url: url + '/logout',
 					success: function(){
 
 						$.ajax({
 							type: 'post',
-							url: '/login',
+							url: url + '/login',
 							data: JSON.stringify(loginData),
 							contentType: 'application/json',
 							success: function(data){
 
 								$.ajax({
 									type: 'put',
-									url: `/users/${id}`,
+									url: url + `/users/${id}`,
 									data: JSON.stringify(newEmailData),
 									contentType: 'application/json',
 									success: function(data){

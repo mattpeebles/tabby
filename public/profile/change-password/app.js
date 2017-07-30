@@ -1,3 +1,5 @@
+const url = window.location.origin
+
 function formatError(){
 	let elementArray = ['#confirmNewPassword']
 
@@ -66,7 +68,7 @@ function changePassword(){
 
 		$.ajax({
 			type: 'get',
-			url: '/users/me',
+			url: url + '/users/me',
 			success: function(data){
 				let email = data.user.email
 
@@ -84,19 +86,19 @@ function changePassword(){
 
 				$.ajax({
 					type: 'get',
-					url: '/logout',
+					url: url + '/logout',
 					success: function(){
 
 						$.ajax({
 							type: 'post',
-							url: '/login',
+							url: url + '/login',
 							data: JSON.stringify(loginData),
 							contentType: 'application/json',
 							success: function(data){
 
 								$.ajax({
 									type: 'put',
-									url: `/users/${id}`,
+									url: url + `/users/${id}`,
 									data: JSON.stringify(newPasswordData),
 									contentType: 'application/json',
 									success: function(data){

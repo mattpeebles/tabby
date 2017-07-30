@@ -1,3 +1,5 @@
+const url = window.location.origin
+
 function signIn(){
 	$('#logIn').on('click', (event) => {
 		event.preventDefault()
@@ -11,7 +13,7 @@ function signIn(){
 
 		$.ajax({
 			type: 'POST',
-			url: '/login',
+			url: url + '/login',
 			data: JSON.stringify(data),
 			contentType: 'application/json',
 			success: function(data){

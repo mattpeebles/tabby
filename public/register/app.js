@@ -1,3 +1,5 @@
+const url = window.location.origin
+
 function formatError(){
 	let elementArray = ['#firstName', '#lastName', '#email', '#password', '#confirmPassword']
 
@@ -52,7 +54,7 @@ function validateForm(){
 
 				$.ajax({
 					type: 'post',
-					url: 'https://cryptic-basin-53606.herokuapp.com/users/email',
+					url: url + '/users/email',
 					data: JSON.stringify(data),
 					contentType: 'application/json',
 					success: function(data){
@@ -116,7 +118,7 @@ function register(){
 
 		$.ajax({
 			type: 'post',
-			url: '/users',
+			url: url + '/users',
 			data: JSON.stringify(data),
 			contentType: 'application/json', 
 			success: function(data){

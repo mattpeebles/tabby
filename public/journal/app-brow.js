@@ -25,6 +25,7 @@ function isUrl(string){
 
 },{}],2:[function(require,module,exports){
 const isUrl = require('is-url') //validates url
+const url = window.location.origin
 
 	// Get journal entries
 // *********************************** //
@@ -246,7 +247,7 @@ const isUrl = require('is-url') //validates url
 
 			$.ajax({
 				type: 'POST',
-				url: '/entry',
+				url: url + '/entry',
 				data: JSON.stringify(newLink),
 				contentType: 'application/json',
 				success: function(data){
@@ -345,7 +346,7 @@ const isUrl = require('is-url') //validates url
 			if(confirm(`Are you sure you want to delete ${entryTitle}?`)){
 					$.ajax({
 						type: 'delete',
-						url: "/entry/" + entryId,
+						url: url + "/entry/" + entryId,
 						success: function(){
 							getAndDisplayJournalEntries()
 						}
@@ -366,7 +367,7 @@ const isUrl = require('is-url') //validates url
 			if(confirm('Log out?')){
 				$.ajax({
 					type: 'get',
-					url: '../logout',
+					url: url + '/logout',
 					success: function(data) {
 						alert(data.message)
 						window.location.href = data.redirect
