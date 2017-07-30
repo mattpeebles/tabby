@@ -1,4 +1,4 @@
-const url = window.location.origin
+const windowURL = window.location.origin
 
 function formatError(){
 	let elementArray = ['#confirmNewPassword']
@@ -68,7 +68,7 @@ function changePassword(){
 
 		$.ajax({
 			type: 'get',
-			url: url + '/users/me',
+			url: windowURL + '/users/me',
 			success: function(data){
 				let email = data.user.email
 
@@ -86,30 +86,30 @@ function changePassword(){
 
 				$.ajax({
 					type: 'get',
-					url: url + '/logout',
+					url: windowURL + '/logout',
 					success: function(){
 
 						$.ajax({
 							type: 'post',
-							url: url + '/login',
+							url: windowURL + '/login',
 							data: JSON.stringify(loginData),
 							contentType: 'application/json',
 							success: function(data){
 
 								$.ajax({
 									type: 'put',
-									url: url + `/users/${id}`,
+									url: windowURL + `/users/${id}`,
 									data: JSON.stringify(newPasswordData),
 									contentType: 'application/json',
 									success: function(data){
 										alert('Password successfully changed')
-										window.location.href = '/profile'
+										window.location.href = windowURL + '/profile'
 									}
 								})
 							},
 							error: function(err){
 								alert('You entered the wrong password. Please log in')
-								window.location.href = '/login'
+								window.location.href = windowURL + '/login'
 							}
 						})
 					}

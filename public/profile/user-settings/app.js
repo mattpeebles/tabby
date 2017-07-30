@@ -1,15 +1,15 @@
-const url = window.location.origin
+const windowURL = window.location.origin
 
 
 function getUserData(callback){
 	$.ajax({
 		type: 'get',
-		url: url + '/users/me',
+		url: windowURL + '/users/me',
 		success: function(data){
 			callback(data)
 		},
 		error: function(err){
-			window.location.href = '/login'
+			window.location.href = windowURL + '/login'
 		}
 	})
 }
@@ -202,11 +202,11 @@ function getAndEditUserData(){
 				
 				$.ajax({
 					type: 'put',
-					url: url + '/users/' + data.user.id,
+					url: windowURL + '/users/' + data.user.id,
 					data: JSON.stringify(userData),
 					contentType: 'application/json',
 					success: function(){
-						window.location.href = '/profile'
+						window.location.href = windowURL + '/profile'
 					}
 				})
 			})

@@ -1,4 +1,4 @@
-const url = window.location.origin
+const windowURL = window.location.origin
 
 function signIn(){
 	$('#logIn').on('click', (event) => {
@@ -13,11 +13,11 @@ function signIn(){
 
 		$.ajax({
 			type: 'POST',
-			url: url + '/login',
+			url: windowURL + '/login',
 			data: JSON.stringify(data),
 			contentType: 'application/json',
 			success: function(data){
-				window.location.href = data.redirect //redirects browser to user journal entries
+				window.location.href = windowURL + data.redirect //redirects browser to user journal entries
 			},
 			error: function(err){
 				location.reload() //TODO: Add alert that password or email was incorrect

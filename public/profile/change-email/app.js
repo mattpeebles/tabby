@@ -1,4 +1,4 @@
-const url = window.location.origin
+const windowURL = window.location.origin
 
 
 function format(){
@@ -61,7 +61,7 @@ function validateForm(){
 
 				$.ajax({
 					type: 'post',
-					url: url + '/users/email',
+					url: windowURL + '/users/email',
 					data: JSON.stringify(data),
 					contentType: 'application/json',
 					success: function(data){
@@ -111,7 +111,7 @@ function changeEmail(){
 
 		$.ajax({
 			type: 'get',
-			url: url + '/users/me',
+			url: windowURL + '/users/me',
 			success: function(data){
 				loginData = {
 					email: currentEmail,
@@ -127,30 +127,30 @@ function changeEmail(){
 
 				$.ajax({
 					type: 'get',
-					url: url + '/logout',
+					url: windowURL + '/logout',
 					success: function(){
 
 						$.ajax({
 							type: 'post',
-							url: url + '/login',
+							url: windowURL + '/login',
 							data: JSON.stringify(loginData),
 							contentType: 'application/json',
 							success: function(data){
 
 								$.ajax({
 									type: 'put',
-									url: url + `/users/${id}`,
+									url: windowURL + `/users/${id}`,
 									data: JSON.stringify(newEmailData),
 									contentType: 'application/json',
 									success: function(data){
 										alert('Email successfully changed')
-										window.location.href = '/profile'
+										window.location.href = windowURL + '/profile'
 									}
 								})
 							},
 							error: function(err){
 								alert('You entered the wrong password. Please log in')
-								window.location.href = '/login'
+								window.location.href = windowURL + '/login'
 							}
 						})
 					}

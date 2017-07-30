@@ -1,4 +1,4 @@
-const url = window.location.origin
+const windowURL = window.location.origin
 
 function formatError(){
 	let elementArray = ['#firstName', '#lastName', '#email', '#password', '#confirmPassword']
@@ -54,7 +54,7 @@ function validateForm(){
 
 				$.ajax({
 					type: 'post',
-					url: url + '/users/email',
+					url: windowURL + '/users/email',
 					data: JSON.stringify(data),
 					contentType: 'application/json',
 					success: function(data){
@@ -118,12 +118,12 @@ function register(){
 
 		$.ajax({
 			type: 'post',
-			url: url + '/users',
+			url: windowURL + '/users',
 			data: JSON.stringify(data),
 			contentType: 'application/json', 
 			success: function(data){
 				alert('You have successfully registered. Welcome!')
-				window.location.href = data.redirect
+				window.location.href = windowURL + data.redirect
 			}
 		})
 

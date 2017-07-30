@@ -40,6 +40,7 @@ module.exports = (new RandomCat());
 },{}],2:[function(require,module,exports){
 const randomCat = require('random-cat')
 
+const windowURL = window.location.origin
 
 	// Static Display User Data
 // *********************************** //
@@ -47,13 +48,13 @@ const randomCat = require('random-cat')
 	function getUserData(callback){
 		$.ajax({
 			type: 'get',
-			url: '/users/me',
+			url: windowURL + '/users/me',
 			success: function(data){
 				callback(data)
 			},
 			error: function(err){
 				alert('please log in')
-				window.location.href = '/login'
+				window.location.href = windowURL + '/login'
 			}
 		})
 	}
@@ -89,10 +90,10 @@ const randomCat = require('random-cat')
 			if(confirm('Log out?')){
 				$.ajax({
 					type: 'get',
-					url: '/logout',
+					url: windowURL + '/logout',
 					success: function(data) {
 						alert(data.message)
-						window.location.href = data.redirect
+						window.location.href = windowURL + data.redirect
 					}
 				})
 			}

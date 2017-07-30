@@ -25,20 +25,20 @@ function isUrl(string){
 
 },{}],2:[function(require,module,exports){
 const isUrl = require('is-url') //validates url
-const url = window.location.origin
+const windowURL = window.location.origin
 
 	// Get journal entries
 // *********************************** //
 	function getJournalEntries(callback){
 		$.ajax({
 			type: 'get',
-			url: '/entry/entries',
+			url: windowURL + '/entry/entries',
 			success: function(data){
 				callback(data)
 			},
 			error: function(err){
 				alert('please log in')
-				window.location.href = '/login'
+				window.location.href = windowURL + '/login'
 			}
 		})
 	}
@@ -247,7 +247,7 @@ const url = window.location.origin
 
 			$.ajax({
 				type: 'POST',
-				url: url + '/entry',
+				url: windowURL + '/entry',
 				data: JSON.stringify(newLink),
 				contentType: 'application/json',
 				success: function(data){
@@ -323,7 +323,7 @@ const url = window.location.origin
 
 			$.ajax({
 				type: 'put',
-				url: '/entry/' + id,
+				url: windowURL + '/entry/' + id,
 				data: JSON.stringify(editEntry),
 				contentType: 'application/json',
 				success: function(){
@@ -346,7 +346,7 @@ const url = window.location.origin
 			if(confirm(`Are you sure you want to delete ${entryTitle}?`)){
 					$.ajax({
 						type: 'delete',
-						url: url + "/entry/" + entryId,
+						url: windowURL + "/entry/" + entryId,
 						success: function(){
 							getAndDisplayJournalEntries()
 						}
@@ -367,10 +367,10 @@ const url = window.location.origin
 			if(confirm('Log out?')){
 				$.ajax({
 					type: 'get',
-					url: url + '/logout',
+					url: windowURL + '/logout',
 					success: function(data) {
 						alert(data.message)
-						window.location.href = data.redirect
+						window.location.href = windowURL + data.redirect
 					}
 				})
 			}
