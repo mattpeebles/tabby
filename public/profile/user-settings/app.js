@@ -159,7 +159,6 @@ function getAndEditUserData(){
 				//serializes object to database standard if input has a string
 			let userData = $('#editUserForm').serializeArray().reduce((obj, item) => {
 		   		 if((item.name === "firstName" || item.name === "lastName") && item.value !== ""){
-		   		 	if (item.value == '')
 		   		 	user[item.name] = item.value
 		   		 }
 		   		 else if((item.name === 'high' || item.name === 'medium' || item.name === 'low') && item.value !== ""){
@@ -182,20 +181,22 @@ function getAndEditUserData(){
 		   		 return obj;
 				}, {});
 
-					//if user changes only one priority, this ensures the object is filled with previous data when submitting
-				if (userData.priorityExpiry.high === undefined){
-					userData.priorityExpiry.high = parseInt($('#high').attr('placeholder'))
-				};
+				
+				if(userData.priorityExpiry !== undefined){
+						//if user changes only one priority, this ensures the object is filled with previous data when submitting
+					if (userData.priorityExpiry.high === undefined){
+						userData.priorityExpiry.high = parseInt($('#high').attr('placeholder'))
+					};
 
-				if (userData.priorityExpiry.medium === undefined){
-					userData.priorityExpiry.medium = parseInt($('#medium').attr('placeholder'))
-				};
+					if (userData.priorityExpiry.medium === undefined){
+						userData.priorityExpiry.medium = parseInt($('#medium').attr('placeholder'))
+					};
 
-				if (userData.priorityExpiry.low === undefined){
-					console.log('hi')
-					userData.priorityExpiry.low = parseInt($('#low').attr('placeholder'))
-				};
-
+					if (userData.priorityExpiry.low === undefined){
+						console.log('hi')
+						userData.priorityExpiry.low = parseInt($('#low').attr('placeholder'))
+					};
+				}
 
 			getUserData((data) => {
 				userData.id = data.user.id
