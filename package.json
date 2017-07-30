@@ -17,6 +17,7 @@
     "cookie-session": "^2.0.0-beta.2",
     "express": "^4.15.3",
     "express-session": "^1.15.4",
+    "faker": "^4.1.0",
     "image-resolver": "^0.5.4",
     "is-url": "^1.2.2",
     "mongoose": "^4.11.1",
@@ -34,7 +35,6 @@
     "btoa": "^1.1.2",
     "chai": "^4.1.0",
     "chai-http": "^3.0.0",
-    "faker": "^4.1.0",
     "mocha": "^3.4.2"
   }
 }
