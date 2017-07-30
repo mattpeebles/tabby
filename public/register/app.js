@@ -97,13 +97,14 @@ function validateForm(){
 function register(){
 	$("#registerButton").on('click', () => {
 
-		console.log('registering')
+		event.preventDefault()
+
 		let user = {} 
 		
 			//serializes array into object
 			//adds firstName and lastName keys to user object
 			//to meet database expectations for user field
-		let data = $('#registerForm').serializeArray().reduce((obj, item) => {
+		let userData = $('#registerForm').serializeArray().reduce((obj, item) => {
    		 if(item.name === "firstName" || item.name === "lastName"){
    		 	user[item.name] = item.value
    		 }
@@ -114,16 +115,30 @@ function register(){
    		 return obj;
 		}, {});
 
-		console.log(data)
 
 		$.ajax({
 			type: 'post',
 			url: windowURL + '/users',
-			data: JSON.stringify(data),
+			data: JSON.stringify(userData),
 			contentType: 'application/json', 
 			success: function(data){
-				alert('You have successfully registered. Welcome!')
-				window.location.href = windowURL + data.redirect
+				
+				let signInData = {
+					email: userData.email,
+					password: userData.password
+				}
+
+				$.ajax({
+					type: 'post',
+					url: windowURL + '/login',
+					data: JSON.stringify(signInData),
+					contentType: 'application/json',
+					success: function(data){
+						window.location.href = windowURL + data.redirect
+					}
+				})
+
+
 			}
 		})
 
