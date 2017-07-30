@@ -186,11 +186,14 @@ entryRouter.put('/:entryId', (req, res) => {
 	}
 
 	else {
+		let addDate;
+
 		Entry
 			.findById(req.body.entryId)
 			.exec()
 			.then(res => {
 				let journalId = res.journalId
+				addDate = new Date(res.addDate)
 				return journalId
 			})
 			.then(journalId => {
@@ -207,12 +210,11 @@ entryRouter.put('/:entryId', (req, res) => {
 						return priorityExpiry
 					})
 					.then(priorityExpiry => {
-						addDate = nowDate()
 						expiry = addDays(addDate, priorityExpiry)
 						return expiry 
 					})
 					.then(expiry => {
-						toUpdate.expiry = expiry
+						toUpdate.expiry = new Date(expiry)
 						Entry
 							.findByIdAndUpdate(req.params.entryId, {$set: toUpdate}, {new: true})
 							.then(updateEntry => res.status(201).json(updateEntry.entryRepr()))
