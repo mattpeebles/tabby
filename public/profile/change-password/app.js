@@ -1,4 +1,4 @@
-const DATABASE_URL = 'http://localhost:3030/users'
+const DATABASE_URL = 'http://localhost:3030'
 
 
 function formatError(){
@@ -59,23 +59,62 @@ function validateForm(){
 	})	         
 }
 
-function register(){
-	$("#submit").on('click', () => {
-		console.log('registering')
-		
-		let user = {} 
-		
+function changePassword(){
+	$("#submitButton").on('click', (event) => {
+		event.preventDefault()
 		let currentPassword = $('#currentPassword').val()
-
-		console.log(data)
+		let loginData;
+		let newPasswordData;
+		let id;
 
 		$.ajax({
-			type: 'post',
-			url: DATABASE_URL,
-			data: JSON.stringify(data),
-			contentType: 'application/json', 
+			type: 'get',
+			url: DATABASE_URL + '/users/me',
 			success: function(data){
-				window.location.href = data.redirect
+				let email = data.user.email
+
+				loginData = {
+					email: email,
+					password: currentPassword
+				}
+
+				id = data.user.id;
+
+				newPasswordData = {
+					id: id, 
+					password: $('#newPassword').val()
+				}
+
+				$.ajax({
+					type: 'get',
+					url: DATABASE_URL + '/logout',
+					success: function(){
+
+						$.ajax({
+							type: 'post',
+							url: DATABASE_URL + '/login',
+							data: JSON.stringify(loginData),
+							contentType: 'application/json',
+							success: function(data){
+
+								$.ajax({
+									type: 'put',
+									url: `${DATABASE_URL}/users/${id}`,
+									data: JSON.stringify(newPasswordData),
+									contentType: 'application/json',
+									success: function(data){
+										alert('Password successfully changed')
+										window.location.href = '/profile'
+									}
+								})
+							},
+							error: function(err){
+								alert('You entered the wrong password. Please log in')
+								window.location.href = DATABASE_URL + '/login'
+							}
+						})
+					}
+				})
 			}
 		})
 
@@ -86,5 +125,5 @@ function register(){
 $(() => {
 	validateForm()
 	displayError()
-
+	changePassword()
 })
