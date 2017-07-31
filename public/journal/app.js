@@ -1,3 +1,4 @@
+// const isUrl = require('is-url') //validates url
 const windowURL = window.location.origin
 
 	
@@ -36,10 +37,10 @@ function equalHeight () {
 			$('#linkSection').empty()
 			let messageHTMl = 	'<div id=\"noEntryContainer\">' +
 									'<div id=\'emptyMessage\'>' +
-										'<p>' + data.message + '</p>' +
+										'<p>Tabby has a clean house</p>' +
 									'</div>' +
 									'<div id="linkButtonContainer">' +
-										'<button type=\"button\" class=\"btn btn-default\" id=\"newLink\">Add An Entry</button>' +
+										'<button type=\"button\" class=\"btn btn-default btn-lg\" id=\"newLink\">Add An Entry</button>' +
 									'</div>' +
 								'</div>'
 
@@ -181,6 +182,31 @@ function equalHeight () {
 	// Post journal entries
 // *********************************** //
 	
+	function formatError(){
+		let elementArray = ['#linkUrl']
+
+			elementArray.forEach(element => {
+				if ($(element).hasClass('error')){
+						let failureHtml =   
+							  `<span class="glyphicon glyphicon-remove form-control-feedback feedback error" aria-hidden="true"></span>` +
+							  `<span id="inputError2Status" class="sr-only feedback">(error)</span>`
+
+						let parent = $(element).parent()
+						$(element).removeClass('valid')
+						$(parent).children('.feedback').remove()
+						$(parent).removeClass('has-success').addClass('has-danger')
+						$(parent).append(failureHtml)  
+				}
+			}) 
+	}
+
+	function displayError(){
+		$('input').on('keydown', () => {
+			setTimeout(formatError, 100)
+		})
+	}
+
+
 	function validateForm(){
 	$('#newLinkForm').validate({
 		rules: {
@@ -205,7 +231,7 @@ function equalHeight () {
 		},
 		// changes error messages
 		messages: {
-			newLink: "Please enter a valid url",
+			newLink: "Please enter a valid url - requires http://",
 		}
 	})	         
 }
@@ -245,8 +271,10 @@ function equalHeight () {
 				data: JSON.stringify(newLink),
 				contentType: 'application/json',
 				success: function(data){
-					alert('successfully posted')
-					window.location.reload(true)
+					$('#newLinkFormDiv').empty().append(`<div id="approveDiv"><i class="material-icons">check_circle</i></div>`)
+					setTimeout(() => $('#newLinkFormDiv').animate({width: '-=400px'}), 1000)
+					setTimeout(() => $('#newLinkFormDiv').addClass('hidden'), 1250)
+					setTimeout(() => window.location.reload(true), 1250)
 				},
 				error: function (request, status, error) { console.log(request); console.log(status); console.log(error) }
 			})
@@ -260,9 +288,7 @@ function equalHeight () {
 // *********************************** //
 	function addUpdateEntriesForm(){
 		$("#linkSection").on('click', ".edit", function(){
-			
-			console.log('yolo')
-			
+						
 				//grabs link information to add as placeholder in 
 				//form to make editing easier for user
 			let parentDiv = $(this).parent().parent().parent() //targets postDiv
@@ -358,16 +384,13 @@ function equalHeight () {
 // *********************************** //
 	function signout(){
 		$('#logOut').click((event) => {
-			if(confirm('Log out?')){
-				$.ajax({
-					type: 'get',
-					url: windowURL + '/logout',
-					success: function(data) {
-						alert(data.message)
-						window.location.href = windowURL + data.redirect
-					}
-				})
-			}
+			$.ajax({
+				type: 'get',
+				url: windowURL + '/logout',
+				success: function(data) {
+					window.location.href = windowURL + data.redirect
+				}
+			})
 		})
 	}
 
@@ -402,5 +425,6 @@ $(() => {
 	addUpdateEntriesForm()
 	deleteEntryFromDataBase()
 	signout()
-	displayPopover()
+	displayError()
+	// displayPopover()
 })

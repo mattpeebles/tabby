@@ -1,5 +1,6 @@
 body{
 	background-color: #f4f4f6;
+	height: 100vh;
 }
 
 #githubIcon > img{
@@ -7,6 +8,23 @@ body{
 	width: 30px;
 }
 
+input.error{
+	border: 1px solid red;
+}
+
+input.error:focus{
+	border:1px solid red;
+	box-shadow: 0 0 5px red;
+}
+
+input.valid{
+	border: 1px solid green;
+}
+
+input.valid:focus{
+	border:1px solid green;
+	box-shadow: 0 0 5px green;
+}
 
 /*Mobile Styling*/
 
@@ -17,7 +35,7 @@ body{
 	}
 
 	#userInfo{
-		font-size: 16px;
+
 	}
 
 	#navLinks{
@@ -144,6 +162,7 @@ body{
 			right: 0;
 			top: 0;
 			background-color: white;
+			z-index: 3;
 		}
 
 		#newLinkForm{
@@ -163,6 +182,17 @@ body{
 			top: 3%;
 			right: 5%;
 		}
+
+		#approveDiv{
+			z-index: 4;
+			text-align: center;
+			margin-top: 20%;
+		}
+
+		#approveDiv > i {
+			z-index: 4;
+			font-size: 75px;
+		}
 	/***********************************/
 
 
@@ -170,6 +200,12 @@ body{
 	/***********************************/			
 			#noEntryContainer{
 				text-align: center;
+				font-size: 24px;
+				margin-top: 20%;
+			}
+
+			#emptyMessage {
+				margin-bottom: 10%;
 			}
 	/***********************************/
 
@@ -306,8 +342,13 @@ body{
 	/***********************************/			
 			#noEntryContainer{
 				text-align: center;
+				font-size: 24px;
+				margin-top: 10%;
 			}
-	/***********************************/
+
+			#emptyMessage {
+				margin-bottom: 10%;
+			}	/***********************************/
 
 /***********************************/
 
@@ -452,9 +493,15 @@ body{
 
 			/*styling when no entries exist*/
 		/***********************************/			
-				#noEntryContainer{
-					text-align: center;
-				}
+			#noEntryContainer{
+				text-align: center;
+				font-size: 24px;
+				margin-top: 10%;
+			}
+
+			#emptyMessage {
+				margin-bottom: 5%;
+			}
 		/***********************************/
 
 	/***********************************/
