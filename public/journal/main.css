@@ -1,3 +1,13 @@
+body{
+	background-color: #f4f4f6;
+}
+
+#githubIcon > img{
+	height: 30px;
+	width: 30px;
+}
+
+
 /*Mobile Styling*/
 
 	/*NavBar*/
@@ -6,13 +16,14 @@
 		margin-right: 2%;
 	}
 
-	#newLink{
-		margin-left: 2%;
+	#userInfo{
+		font-size: 16px;
 	}
 
-	#userInfo{
-		font-size: 18px;
+	#navLinks{
+		text-align: center;
 	}
+
 /***********************************/
 
 	/*Journal Page Styling*/
@@ -44,13 +55,165 @@
 		}
 
 		.postDiv{
-			border-top: 1px solid black;
 			text-align: center;
 			position: relative;
 			margin-left: auto;
 			margin-right: auto;
 			width: 100%;
+			background-color: white;
+			border-bottom: 1px solid grey;
+		}
 
+		.linkSpan{ /*provides clickable link over 90% of post */
+			position: absolute;
+			width: 100%;
+			height: 90%;
+			top: 0;
+			left: 0;
+			z-index: 1;
+		}
+
+		.linkSpan:hover{
+			cursor: pointer;
+			cursor: hand;
+		}
+
+		.linkTitle{
+			position: relative;
+			width: 90%;
+			overflow: hidden;
+			height: 60px;
+			color: black;
+			font-size: 22px;
+			text-align: left;
+			margin-left: 3%;
+			margin-bottom: 3%;
+		}
+
+
+		.postImage{ /*container for image*/
+			height: 200px;
+			overflow: hidden;
+		}
+
+		.postImage > img{
+			width: 100%;
+			height: 300px;
+
+		}
+
+		.infoRow{ /*contains manipGroup, and expiryDate*/
+			position: relative;
+			padding-top: 2%;
+		}
+
+		.manipGroup { /*contains edit and delete buttons*/
+			position: relative;
+			padding-right: 10%;
+			font-size: 20px;
+		}
+
+		.edit{
+			margin-right: 4%;
+		}
+
+		.expiryDate{
+			padding-left: 10%;
+			font-size: 16px;
+			font-style: italic;
+			padding-top: 2%;
+		}
+	/***********************************/
+
+
+		/*new link form stylings*/
+	/***********************************/
+		#formTitle{
+			position: absolute;
+			text-align: center;
+			left: 0;
+			right: 0;
+			top: 6%;
+		}
+
+		#newLinkFormDiv{
+			height: 100vh;
+			width: 0;
+			max-width: 300px;
+			position: absolute;
+			right: 0;
+			top: 0;
+			background-color: white;
+		}
+
+		#newLinkForm{
+			position: relative;
+			height: 85%;
+			padding-top: 30%;
+			padding-left: 5%;
+			padding-right: 5%;
+		}
+
+		#submitDiv{
+			text-align: center;
+		}
+
+		#cancelNewForm{
+			position: absolute;
+			top: 3%;
+			right: 5%;
+		}
+	/***********************************/
+
+
+		/*styling when no entries exist*/
+	/***********************************/			
+			#noEntryContainer{
+				text-align: center;
+			}
+	/***********************************/
+
+/***********************************/
+
+@media screen and (min-device-width: 601px){
+			/*styling for priority headers*/
+	/***********************************/
+		.priorityDiv{ 
+			margin-top: 0;
+			background-color: gray;
+			width: 80%;
+			margin-bottom: 1%;
+			position: relative;
+			margin-right: auto;
+			margin-left: auto;
+			border: 1px solid #ededf0;
+			border-bottom: 1px solid #dcdce0;
+		}
+
+		.priorityDiv > p { 
+			margin-bottom: 0;
+		}
+	/***********************************/
+		
+
+		/*Styles for entries*/
+	/***********************************/
+		.postContainer{
+			position: relative;
+			padding: 0;
+			margin-bottom: 2%;
+
+		}
+
+		.postDiv{
+			border: 1px solid black;
+			text-align: center;
+			position: relative;
+			margin-left: auto;
+			margin-right: auto;
+			width: 80%;
+			border: 1px solid #ededf0;
+			border-bottom: 1px solid #dcdce0;
 		}
 
 		.linkSpan{ /*provides clickable link over 90% of post */
@@ -118,37 +281,23 @@
 		/*new link form stylings*/
 	/***********************************/
 		#formTitle{
-			position: absolute;
-			text-align: center;
-			left: 0;
-			right: 0;
-			top: 6%;
+
 		}
 
 		#newLinkFormDiv{
-			height: 100vh;
-			width: 100%;
-			background-color: rgba(255,0,140,0.05);
-			position: relative;
-			margin-top: 0;
+
 		}
 
 		#newLinkForm{
-			position: relative;
-			height: 85%;
-			padding-top: 30%;
-			padding-left: 5%;
-			padding-right: 5%;
+
 		}
 
 		#submitDiv{
-			text-align: center;
+
 		}
 
 		#cancelNewForm{
-			position: absolute;
-			top: 3%;
-			right: 3%;
+
 		}
 	/***********************************/
 
@@ -163,76 +312,150 @@
 /***********************************/
 
 
+@media screen 
+  and (min-device-width: 1200px) 
+  and (max-device-width: 1600px) 
+  and (-webkit-min-device-pixel-ratio: 1) {
+				
+		#iconAdd{
+			font-size: 24px;
+		}
 
-@media screen and (min-width: 480px){
+		.popover{
+			width: 130px;
+			text-align: center;
+		}
 
-	.postContainer{
-		position: relative;
-	}
+				/*styling for priority headers*/
+		/***********************************/
+			.priorityDiv{ 
+				margin-top: 0;
+				background-color: lightgrey;
+				width: 95%;
+				margin-bottom: 1%;
+				border: 1px solid #ededf0;
+				border-bottom: 1px solid #dcdce0;
+			}
 
-	.postDiv{
-		border: 1px solid black;
-		text-align: center;
-		position: relative;
-		margin-left: auto;
-		margin-right: auto;
-		margin-bottom: 3%;
-		height: 450px;
-		overflow: hidden;
+			.priorityDiv > p { 
+				margin-bottom: 0;
+			}
+		/***********************************/
+			
 
-	}
+			/*Styles for entries*/
+		/***********************************/
+			.postContainer{
+				position: relative;
+				padding: 0;
+				margin-bottom: 2%;
+			}
 
-	.linkSpan{ /*provides clickable link over 90% of post */
-		position: absolute;
-		width: 100%;
-		height: 90%;
-		top: 0;
-		left: 0;
-		z-index: 1;
-	}
+			.postDiv{
+				text-align: center;
+				position: relative;
+				margin-left: auto;
+				margin-right: auto;
+				background-color: ghostwhite;
+				border: 1px solid #ededf0;
+				border-bottom: 1px solid #dcdce0;
+			}
 
-	.linkTitle{
-		position: relative;
-		width: 90%;
-		overflow: hidden;
-		color: black;
-		font-size: 4vh;
-		text-align: left;
-	}
+			.postDiv:hover > .linkTitle{
+				color:red;
+			}
 
-	.postImage{
-		height: 400px;
-		overflow: hidden;
-		position: relative;
-		overflow: hidden;
-	}
+			.linkSpan{ /*provides clickable link over 90% of post */
 
-	.postImage > img{
-		width: 100%;
-		height: 400px;
-		position: absolute;
-		left: 0;
-		top: 0;
+			}
 
-	}
+			.linkSpan:hover{
 
-	.infoRow{
-		position: absolute;
-		left: 0;
-		bottom: 0;
-		right: 0;
-		background: white;
-	}
+			}
 
-	.manipGroup {
-		position: relative;
-		padding-right: 5%;
-	}
+			.linkTitle{
 
+			}
 
 
-	.linkSpan:hover{
-		cursor: pointer;
-		cursor: hand;
-	}
+			.postImage{ /*container for image*/
+				height: 200px;
+				overflow: hidden;
+			}
+
+			.postImage > img{
+				width: 100%;
+				height: 300px;
+
+			}
+
+			.infoRow{ /*contains manipGroup, and expiryDate*/
+				position: relative;
+				padding-top: 2%;
+			}
+
+			.manipGroup { /*contains edit and delete buttons*/
+				position: relative;
+				padding-right: 10%;
+				font-size: 20px;
+				color: ghostwhite;
+				padding-top: 1%;
+				transition: .25s ease-in-out;
+			   -moz-transition: .25s ease-in-out;
+			   -webkit-transition: .25s ease-in-out
+			}
+
+			.postDiv:hover > .infoRow > .manipGroup{
+				color: grey;
+			}
+
+			.edit{
+				margin-right: 4%;
+			}
+
+			.edit:hover, .delete:hover{
+				color: red;
+			}
+
+			.expiryDate{
+				padding-left: 10%;
+				font-size: 16px;
+				font-style: italic;
+				padding-bottom: 2%;
+			}
+		/***********************************/
+
+
+			/*new link form stylings*/
+		/***********************************/
+		#formTitle{
+
+		}
+
+		#newLinkFormDiv{
+
+		}
+
+		#newLinkForm{
+
+		}
+
+		#submitDiv{
+
+		}
+
+		#cancelNewForm{
+
+		}
+		/***********************************/
+
+
+			/*styling when no entries exist*/
+		/***********************************/			
+				#noEntryContainer{
+					text-align: center;
+				}
+		/***********************************/
+
+	/***********************************/
 }
