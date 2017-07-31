@@ -135,7 +135,14 @@ entryRouter.post('/', authorize, (req, res) => {
 
 							//scrapes image from url
 							resolver.resolve(req.body.link, (result)=>{
-								let image = result.image
+								let image;
+
+								if (result == null){
+									image = '#'
+								}
+								else {
+									image = result.image
+								}
 								
 								Entry
 									.create({
