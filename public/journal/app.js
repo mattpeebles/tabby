@@ -1,5 +1,15 @@
-const isUrl = require('is-url') //validates url
 const windowURL = window.location.origin
+
+	
+function equalHeight () {
+    var heights = $(".postDiv").map(function() {
+        return $(this).height();
+    }).get(),
+
+    maxHeight = Math.max.apply(null, heights);
+
+    $(".postDiv").height(maxHeight);
+};
 
 	// Get journal entries
 // *********************************** //
@@ -11,7 +21,6 @@ const windowURL = window.location.origin
 				callback(data)
 			},
 			error: function(err){
-				alert('please log in')
 				window.location.href = windowURL + '/login'
 			}
 		})
@@ -160,6 +169,7 @@ const windowURL = window.location.origin
 			}
 
 		}
+		equalHeight()
 	}
 
 	function getAndDisplayJournalEntries(){
@@ -171,37 +181,46 @@ const windowURL = window.location.origin
 	// Post journal entries
 // *********************************** //
 	
-	function addJournalEntryForm(){
-		let formTemplate = "<div id=\"newLinkFormDiv\">" +
-								"<h2 id=\"formTitle\">tabby</h2>" +
-								"<form id=\"newLinkForm\">" +
-									"<button type=\"cancel\" id=\"cancelNewForm\" class=\"pull-right btn btn-danger\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></button>" +
-									"<div class=\"form-group\">" +
-										"<label>Link</label>" +
-										"<input type=\"text\" class=\"form-control\" name=\"link\" placeholder=\"www.google.com\" id=\"linkUrl\"></input>" +
-									"</div>" +
-									"<div class=\"form-group\">" +
-										"<label for=\"linkPriority\">Priority</label>" +
-										"<select class=\"form-control\" name=\"priority\" id=\"linkPriority\">" +
-											"<option value=\"high\">High</option>" +
-											"<option value=\"medium\" selected>Medium</option>" +
-											"<option value=\"low\">Low</option>" +
-										"</select>" +
-									"</div>" +
-									"<div class=\"form-group\" id=\"submitDiv\">" +
-										"<input type=\"submit\" name=\"submit\" id=\"newLinkFormSubmit\" class=\"btn btn-primary\"></input>" +
-									"</div>"
-								"<form>" +
-							"</div>";
-
-		$('body').on('click', '#newLink', () => {
-			if(!($('#newLinkForm').length)){
-				$('#linkSection').empty()
-				$('#linkSection').prepend(formTemplate)
-				$('html, body').animate({
-			    scrollTop: $("#newLinkFormDiv").offset().top
-			}, 1000);
+	function validateForm(){
+	$('#newLinkForm').validate({
+		rules: {
+			link: {
+				required: true,
+				url: true
 			}
+		},
+
+		// changes success messages
+		success: function(label){
+    		let successHtml =   
+	    		`<span class="glyphicon glyphicon-ok form-control-feedback feedback" aria-hidden="true"></span>` +
+	  			`<span id="inputSuccess2Status" class="sr-only feedback">(success)</span>`
+
+	    		let parent = $(label).parent()
+	    		$(parent).removeClass('has-danger').addClass('has-success')
+	    		$(parent).children('.feedback').remove()
+	    		$(parent).append(successHtml)
+	    		$(label).remove()
+       
+		},
+		// changes error messages
+		messages: {
+			newLink: "Please enter a valid url",
+		}
+	})	         
+}
+
+	function addJournalEntryForm(){
+		$('body').on('click', '#newLink', () => {
+				$('#newLinkFormDiv').removeClass('hidden')
+				$('#newLinkFormDiv').animate({width: '+=400px'})
+		})
+	}
+
+	function removeJournalEntryForm(){
+		$('#cancelNewForm').on('click', () => {
+			$('#newLinkFormDiv').animate({width: '-=400px'})
+			setTimeout(() => $('#newLinkFormDiv').addClass('hidden'), 250)
 		})
 	}
 
@@ -210,7 +229,8 @@ const windowURL = window.location.origin
 		$("#linkSection").on('click', '#newLinkFormSubmit', (event) => {
 			event.preventDefault()
 
-			let url =  (isUrl($('#linkUrl').val()) == true) ? $('#linkUrl').val() : "http://" + $('#linkUrl').val() //ensures link is a url otherwise it appends http:// at the beginning
+			// let url =  (isUrl($('#linkUrl').val()) == true) ? $('#linkUrl').val() : "http://" + $('#linkUrl').val() //ensures link is a url otherwise it appends http:// at the beginning
+			let url = $('#linkUrl').val()
 			let priority = $('#linkPriority').val()
 
 
@@ -354,6 +374,10 @@ const windowURL = window.location.origin
 // *********************************** //
 
 
+function displayPopover(){
+	$('#iconAdd').popover({content: "Add New Entry", trigger: "hover", placement: 'bottom', animation: true})
+}
+
 
 	//Add and remove edit features
 // *********************************** //
@@ -371,9 +395,12 @@ const windowURL = window.location.origin
 $(() => {
 	getAndDisplayJournalEntries()
 	addJournalEntryForm()
+	removeJournalEntryForm()
+	validateForm()
 	postJournalEntry()
 	addEditDeleteButtons()
 	addUpdateEntriesForm()
 	deleteEntryFromDataBase()
 	signout()
+	displayPopover()
 })
