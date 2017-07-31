@@ -369,13 +369,13 @@ describe('Users API resource', () => {
 
 												switch(entry.priority){
 													case 'high': 
-														(dateDiff).should.equal(high) 
+														(dateDiff).should.equal(high); 
 														break;
 													case 'medium': 
-														(dateDiff).should.equal(medium) 
+														(dateDiff).should.equal(medium);
 														break;
 													case 'low':
-														(dateDiff).should.equal(low) 
+														(dateDiff).should.equal(low); 
 														break;
 												}
 											})
