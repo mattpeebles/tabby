@@ -9,6 +9,14 @@ function equalHeight () {
 };
 
 
+function resize(){
+	$('window').resize(() => {
+		equalHeight()
+	})
+}
+
+
 $(() => {
 	equalHeight()
+	resize()
 })

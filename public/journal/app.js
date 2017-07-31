@@ -12,6 +12,13 @@ function equalHeight () {
     $(".postDiv").height(maxHeight);
 };
 
+function resize(){
+	$('window').resize(() => {
+		equalHeight()
+	})
+}
+
+
 	// Get journal entries
 // *********************************** //
 	function getJournalEntries(callback){
@@ -416,6 +423,7 @@ function displayPopover(){
 // *********************************** //
  
 $(() => {
+	resize()
 	getAndDisplayJournalEntries()
 	addJournalEntryForm()
 	removeJournalEntryForm()
