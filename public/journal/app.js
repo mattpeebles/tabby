@@ -16,6 +16,8 @@ function resize(){
 	$('window').resize(() => {
 		equalHeight()
 	})
+
+	$()
 }
 
 
@@ -262,7 +264,6 @@ function resize(){
 		$("#linkSection").on('click', '#newLinkFormSubmit', (event) => {
 			event.preventDefault()
 
-			// let url =  (isUrl($('#linkUrl').val()) == true) ? $('#linkUrl').val() : "http://" + $('#linkUrl').val() //ensures link is a url otherwise it appends http:// at the beginning
 			let url = $('#linkUrl').val()
 			let priority = $('#linkPriority').val()
 
@@ -304,11 +305,13 @@ function resize(){
 
 			let formTemplate = "<div class=\"editForm\" id=\"editLinkFormDiv-" + linkID + "\">" +
 						"<form id=\"editLinkForm\">" +
+							"<div class=\'form-group\'>" +
 							"<label>Priority</label>" +
-							"<select name=\"priority\" id=\"linkPriority\">" +
-								"<option id=\"high\" value=\"high\">High</option>" +
-								"<option id=\"medium\"value=\"medium\">Medium</option>" +
-								"<option id=\"low\" value=\"low\">Low</option>" +
+								"<select name=\"priority\" id=\"linkPriority\" class=\"form-control\">" +
+									"<option id=\"high\" value=\"high\">Gotta Read</option>" +
+									"<option id=\"medium\"value=\"medium\">Will Read</option>" +
+									"<option id=\"low\" value=\"low\">Interesting</option>" +
+							"</div>" +
 							"<input type=\"submit\" name=\"submit\" id=\"editLinkFormSubmit\"></input>" +
 							"<button type=\'cancel\' id=\'cancelEditForm\'>Cancel</button>"
 						"<form>" +
@@ -320,12 +323,12 @@ function resize(){
 			if (!($(parentDiv).children(formParentDiv).length)){
 				
 					//removes any other edit forms if one already exists
-				$('#linkSection').children().children().children(".editForm").remove()
+				$('#linkSection').children().children().children().children().children(".editForm").remove()
 				
 				$(parentDiv).append(formTemplate)
-				
 				//this custom sets the selected option depending on the user's previous choice
-				let priorityFormOption = formParentDiv + ' > #editLinkForm > #linkPriority > ' + "#" + linkPriority
+				let priorityFormOption = formParentDiv + ' > #editLinkForm > .form-group > #linkPriority > ' + "#" + linkPriority
+
 				$(priorityFormOption).attr("selected", 'selected')
 			}
 			
