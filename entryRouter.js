@@ -138,7 +138,7 @@ entryRouter.post('/', authorize, (req, res) => {
 								let image;
 
 								if (result == null){
-									image = '#'
+									image = '/resources/images/empty.jpg'
 								}
 								else {
 									image = result.image
