@@ -1,5 +1,3 @@
-const randomCat = require('random-cat')
-
 const windowURL = window.location.origin
 
 	// Static Display User Data
@@ -13,23 +11,18 @@ const windowURL = window.location.origin
 				callback(data)
 			},
 			error: function(err){
-				alert('please log in')
 				window.location.href = windowURL + '/login'
 			}
 		})
 	}
 
 	function displayUserData(data){
+	
+		let catNumber = Math.floor(Math.random() * (Math.floor(25)-Math.ceil(1) + 1)) + Math.ceil(1)
 		
-
-		let catPhoto = randomCat.get({
-			width: 300,
-			height: 300,
-
-		})
 		let formatDate = $.format.date(data.user.joinDate, "MMMM D, yyyy")
 
-		$('#profileImage').append(`<img src="${catPhoto}"></img>`)
+		$('#profileImage').append(`<img src="/resources/images/profileCat/cat-${catNumber}.jpg"></img>`)
 		$("#name").append(`<p>${data.user.user.firstName} ${data.user.user.lastName}</p>`)
 		$('#email').append(`<p>${data.user.email}</p>`)
 		$('#joinDate').append(`<p>Joined: ${formatDate}</p>`)
@@ -52,7 +45,6 @@ const windowURL = window.location.origin
 					type: 'get',
 					url: windowURL + '/logout',
 					success: function(data) {
-						alert(data.message)
 						window.location.href = windowURL + data.redirect
 					}
 				})

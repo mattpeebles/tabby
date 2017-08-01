@@ -26,7 +26,6 @@
     "passport": "^0.3.2",
     "passport-http": "^0.3.0",
     "passport-local": "^1.0.0",
-    "random-cat": "^1.0.1",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4",
     "valid-url": "^1.0.9"
