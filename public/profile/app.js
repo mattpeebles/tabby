@@ -32,7 +32,7 @@ const windowURL = window.location.origin
 		$('#profileImage').append(`<img src="${catPhoto}"></img>`)
 		$("#name").append(`<p>${data.user.user.firstName} ${data.user.user.lastName}</p>`)
 		$('#email').append(`<p>${data.user.email}</p>`)
-		$('#joinDate').append(`<p>${formatDate}</p>`)
+		$('#joinDate').append(`<p>Joined: ${formatDate}</p>`)
 		$('#highExpiry').append(`<p>${data.user.priorityExpiry.high} days</p>`)
 		$('#medExpiry').append(`<p>${data.user.priorityExpiry.medium} days</p>`)
 		$('#lowExpiry').append(`<p>${data.user.priorityExpiry.low} days</p>`)
