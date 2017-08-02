@@ -1,27 +1,32 @@
 const windowURL = window.location.origin
 
-function formatError(){
-	let elementArray = ['#confirmNewPassword']
+function format(){
+	let elementArray = ['#currentPassword', '#newPassword', '#confirmNewPassword']
 
 		elementArray.forEach(element => {
-			if ($(element).hasClass('error')){
-					console.log('test')
-					let failureHtml =   
-						  `<span class="glyphicon glyphicon-remove form-control-feedback feedback error" aria-hidden="true"></span>` +
-						  `<span id="inputError2Status" class="sr-only feedback">(error)</span>`
+			if ($(element).val() == ''){
+				let parent = $(element).parent()
+				$(element).removeClass('valid')
+				$(element).removeClass('error')
+				$(parent).children('.feedback').remove()
+				$(parent).removeClass('has-success')
+				$(parent).removeClass('has-danger')
 
+			}
+
+			else if ($(element).hasClass('error')){
 					let parent = $(element).parent()
 					$(element).removeClass('valid')
 					$(parent).children('.feedback').remove()
 					$(parent).removeClass('has-success').addClass('has-danger')
-					$(parent).append(failureHtml)  
 			}
 		}) 
+
 }
 
 function displayError(){
 	$('input').on('keydown', () => {
-		setTimeout(formatError, 100)
+		setTimeout(format, 100)
 	})
 }
 
@@ -29,7 +34,10 @@ function validateForm(){
 	$('#changePassword').validate({
 		rules: {
 			currentPassword: "required",
-			newPassword: "required",
+			newPassword: {
+				required: true,
+				minlength: 8
+			},
 			confirmNewPassword: {
 				equalTo: "#newPassword"
 			}
@@ -52,7 +60,7 @@ function validateForm(){
 		// changes error messages
 		messages: {
 			currentPassword: "Please enter your current password",
-			newPassword: "Please enter a new password",
+			newPassword: "Please enter a new password with 8 characters",
 			confirmNewPassword: "Please enter a matching password"
 		}
 	})	         

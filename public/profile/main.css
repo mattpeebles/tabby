@@ -1,64 +1,243 @@
-#userSection{
-	position: relative;
-	padding: 2%;
-	height: 90%;
-	width: 100%;
-}
 
-#profileContainer{
-	border-top: 2px solid green;
-	border-left: 2px solid green;
-	border-right: 2px solid green;
-	padding: %;
-	width: 100%;
-	position: relative;
-	margin-left: auto;
-	margin-right: auto;
-
-}
-
-#profileImageContainer{
-	border: 1px dotted blue;
-	padding: 1%;
-}
-
-#profileImage{
-
-}
-
-#profileImage > img{
-	width: 100%;
-	height: 100%;
+body{
+	background-color: #c3fdff;
+	height: 100vh;
 }
 
 
-#userInfoContainer{
-	border: 1px solid yellow;
+	.navbar{
+		border: 1px solid #5d99c6;
+		border-radius: 0;
+	}
+
+	.navbar > .container-fluid{
+		background-color: #5d99c6;
+	}
+
+	a.navbar-brand, .navbar-nav>li>a{
+		color: black;
+	}
+
+
+	.navbar-brand:hover, .navbar-nav>li>a:hover{
+		background-color: transparent;
+	}
+
+	#navBurg{
+		margin-right: 2%;
+		background-color: transparent;
+		border: none;
+	}
+
+	.navbar-default .navbar-toggle .icon-bar{
+		background-color: #333333;
+	}
+
+	.navbar-default .navbar-collapse, .navbar-default .navbar-form{
+		border: none;
+	}
+
+	#navLinks{
+			text-align: center;
+	}
+
+	#backButton, #userSettings, #changePassword, #changeEmail, #logOutButton, #logOut{
+		color: #333333;
+	}
+
+
+	/*profile*/
+/************************************/
+	#outer{
+		display: table;
+		position: absolute;
+		height: 85%;
+		width: 100%;
+	}
+
+	#top{
+		display: table-cell;
+		vertical-align: top;
+	}
+
+	#userSection{
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+
+	}
+
+	#profileContainer{
+		border-top: 1px solid #ededf0;
+		border-left: 1px solid #ededf0;
+		border-right: 1px solid #ededf0;
+		background-color: white;
+		width: 100%;
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+
+	}
+
+	#profileImageContainer{
+		padding: 1%;
+	}
+
+	#profileImage{
+
+	}
+
+	#profileImage > img{
+		width: 100%;
+		height: 100%;
+	}
+
+
+	#userInfoContainer{
+		font-size: 16px;
+	}
+
+	#userInfoContainer > p{
+		margin-bottom: 0;
+	}
+
+	#expiryContainer{
+		position: relative;
+		text-align: center;
+		margin-left: auto;
+		margin-right: auto;
+		border-bottom: 2px solid #ededf0;
+		border-left: 1px solid #ededf0;
+		border-right: 1px solid #ededf0;
+		width: 100%;
+		padding-left: 2%;
+		background-color: white;
+	}
+
+	#expiryDiv{
+		width: 100%;
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	#highContainer, #medContainer, #lowContainer{
+		height: 100%;
+	}
+
+	.priority{
+	}
+/************************************/
+
+@media screen and (min-device-width: 601px){
+	#outer{
+
+	}
+
+	#top{
+
+	}
+
+	#userSection{
+
+	}
+
+	#profileContainer{
+
+	}
+
+	#profileImageContainer{
+		padding: 2%;
+	}
+
+	#profileImage{
+
+	}
+
+	#profileImage > img{
+
+	}
+
+
+	#userInfoContainer{
+		font-size: 20px;
+	}
+
+	#userInfoContainer > p{
+		margin-bottom: 0;
+	}
+
+	#expiryContainer{
+		position: relative;
+		text-align: center;
+		margin-left: auto;
+		margin-right: auto;
+		padding-left: 0;
+		width: 100%;
+		background-color: white;
+	}
+
+	#expiryDiv{
+	}
+
+	#highContainer, #medContainer, #lowContainer{
+		font-size: 18px;
+	}
+
+	.priority{
+	}
 }
 
-#expiryContainer{
-	position: relative;
-	margin-left: auto;
-	margin-right: auto;
-	text-align: center;
-	border-bottom: 2px solid green;
-	border-left: 2px solid green;
-	border-right: 2px solid green;
-	width: 100%;
-}
+@media screen 
+  and (min-device-width: 1200px) 
+  and (max-device-width: 1600px) 
+  and (-webkit-min-device-pixel-ratio: 1) {
+	#outer{
 
-#expiryDiv{
-	width: 95%;
-	position: relative;
-	margin-left: auto;
-	margin-right: auto;
-}
+	}
 
-#highContainer, #medContainer, #lowContainer{
-	border: 1px solid orange;
-	height: 100%;
-	width: auto;
-}
+	#top{
 
-.priority{
+	}
+
+	#userSection{
+
+	}
+
+	#profileContainer{
+
+	}
+
+	#profileImageContainer{
+
+	}
+
+	#profileImage{
+
+	}
+
+	#profileImage > img{
+
+	}
+
+
+	#userInfoContainer{
+		margin-top: 5%;
+	}
+
+	#userInfoContainer > p{
+	}
+
+	#expiryContainer{
+
+	}
+
+	#expiryDiv{
+	}
+
+	#highContainer, #medContainer, #lowContainer{
+	}
+
+	.priority{
+	}
 }

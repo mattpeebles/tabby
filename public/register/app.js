@@ -29,7 +29,10 @@ function validateForm(){
 		rules: {
 			firstName: "required",
 			lastName: "required",
-			password: "required",
+			password: {
+				required: true,
+				minlength: 8
+			},
 			confirmPassword: {
 				equalTo: "#password"
 			},
@@ -88,7 +91,7 @@ function validateForm(){
 		},
 		// changes error messages
 		messages: {
-			password: "Please enter a password",
+			password: "Please enter a password of at least 8 characters",
 			confirmPassword: "Please enter a matching password"
 		}
 	})	         

@@ -35,25 +35,35 @@ function editUserData(data){
 					`<input type="text" name="lastName" class='form-control' placeholder="${data.user.user.lastName}" id="lastName"></input>` +
 				`</div>` +	
 			`</div>` +
-			`<div id="userPriorityExpiry">` +
-				`<p id="priorityTitle">Priority Settings</p>` +
-				`<div class="form-group has-feedback priorities">` +
-					`<label for="high" class='col-sm-2' control-label>High: </label>`+
-					`<div class='col-sm-10'>` +
-						`<input type="text" name="high" class='form-control' placeholder="${data.user.priorityExpiry.high}" id="high"></input>`+
+
+			`<div class='row' id="userPriorityExpiry">` +
+				`<div class='col-sm-12'>` +
+					`<p id="priorityTitle">Priority Settings</p>` +
+				`</div>` +
+				`<div class='col-xs-4'>` +
+					`<div class="form-group has-feedback priorities">` +
+						`<label for="high" class='col-sm-3' control-label>High: </label>`+
+						`<div class='col-sm-9'>` +
+							`<input type="text" name="high" class='form-control' placeholder="${data.user.priorityExpiry.high}" id="high"></input>`+
+						`</div>` +
+					`</div>` +
+				`</div>` +
+				`<div class='col-xs-4'>` +
+					`<div class='form-group has-feedback priorities'>` +
+						`<label for="medium" class='col-sm-3' control-label>Medium: </label>`+
+						`<div class='col-sm-9'>` +
+							`<input type="text" name="medium" class='form-control' placeholder="${data.user.priorityExpiry.medium}" id="medium"></input>`+	
+						`</div>` +
+					`</div>` +
+				`</div>` +
+				`<div class='col-xs-4'>` +
+					`<div class='form-group has-feedback priorities'>` +
+						`<label for="low" class='col-sm-3' control-label>Low: </label>`+
+						`<div class='col-sm-9'>` +
+							`<input type="text" name="low" class='form-control' placeholder="${data.user.priorityExpiry.low}" id="low"></input>`+
+						`</div>` +
 					`</div>` +	
-				`<div class='form-group has-feedback priorities'>` +
-					`<label for="medium" class='col-sm-2' control-label>Medium: </label>`+
-					`<div class='col-sm-10'>` +
-						`<input type="text" name="medium" class='form-control' placeholder="${data.user.priorityExpiry.medium}" id="medium"></input>`+	
-					`</div>` +
-				`</div>` +		
-				`<div class='form-group has-feedback priorities'>` +
-					`<label for="low" class='col-sm-2' control-label>Low: </label>`+
-					`<div class='col-sm-10'>` +
-						`<input type="text" name="low" class='form-control' placeholder="${data.user.priorityExpiry.low}" id="low"></input>`+
-					`</div>` +
-				`</div>` +		
+				`</div>` +
 			`</div>`+
 			`<div class='form-group has-feedback' id='buttonContainer'>` +
 				`<div class='col-sm-offset-2 col-sm-10' id='buttonDiv'>` +

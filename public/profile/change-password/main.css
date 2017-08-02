@@ -1,5 +1,6 @@
 	body{
 		height: 90vh;
+		background-color: #c3fdff;
 	}
 
 	input.error{
@@ -20,6 +21,50 @@
 		box-shadow: 0 0 5px green;
 	}
 
+		.navbar{
+		border: 1px solid #5d99c6;
+		border-radius: 0;
+	}
+
+	.navbar > .container-fluid{
+		background-color: #5d99c6;
+	}
+
+	a.navbar-brand, .navbar-nav>li>a{
+		color: black;
+	}
+
+	.navbar-brand:hover, .navbar-nav>li>a:hover{
+		background-color: transparent;
+	}
+
+	#navBurg{
+		margin-right: 2%;
+		background-color: transparent;
+		border: none;
+	}
+
+	.navbar-default .navbar-toggle .icon-bar{
+		background-color: #333333;
+	}
+
+	.navbar-default .navbar-collapse, .navbar-default .navbar-form{
+		border: none;
+	}
+
+	#navLinks{
+			text-align: center;
+	}
+
+	#backButton{
+		color: #333333;
+	}
+
+	.has-feedback label~.form-control-feedback.error{
+		top: 0;
+		color:red;
+	}
+
 	.feedback{
 		padding-right: 17px;
 	}
@@ -36,12 +81,6 @@
 		vertical-align: middle;
 	}
 
-	#cancelChange{
-		position: absolute;
-		right: 5px;
-		top: 5px;
-	}
-
 	#title{
 		text-align: center;
 		margin-bottom: 2%;
@@ -51,8 +90,8 @@
 		position: relative;
 		margin-left: auto;
 		margin-right: auto;
-		background-color: rgba(255,0,140,0.05);
-		border: 1px solid rgba(255,0,140, 0.2);
+		background-color: rgb(144,202,249);
+		border: 1px solid rgb(144,202,249);
 		border-radius: 5px;
 		width: 90%;
 		padding-top: 5%;
@@ -63,7 +102,74 @@
 		text-align: center;
 	}
 
-	.has-feedback label~.form-control-feedback.error{
-		top: 0;
-		color:red;
+	#buttonDiv{
+		text-align: center;
+		width: 100%;
 	}
+
+@media screen and (min-device-width: 601px){
+	.feedback{
+		padding-right: 20px;
+	}
+
+	.outer{
+
+	}
+
+	.middle{
+
+	}
+
+	#title{
+
+	}
+
+	#formContainer{
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+
+	#buttonContainer{
+	}
+
+	#buttonDiv{
+
+	}
+}
+
+@media screen 
+  and (min-device-width: 1200px) 
+  and (max-device-width: 1600px) 
+  and (-webkit-min-device-pixel-ratio: 1) {
+
+	.feedback{
+		padding-right: 20px;
+	}
+
+	.outer{
+
+	}
+
+	.middle{
+
+	}
+
+	#title{
+		margin-bottom: 4%;
+	}
+
+	#formContainer{
+		width: 60%;
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+
+	#buttonContainer{
+
+	}
+
+	#buttonDiv{
+
+	}
+
+}

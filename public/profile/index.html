@@ -5,7 +5,7 @@
 	<meta type="description" content="A web app for storing links you want to look at later">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>Journal</title>
+	<title>Tabby | Profile</title>
 
 		<!-- Bootstrap -->
 		<!-- Latest compiled and minified CSS -->
@@ -13,6 +13,8 @@
 
 		<!-- Optional theme -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 	<link rel="stylesheet" type="text/css" href="main.css">
 
@@ -30,14 +32,14 @@
 	        <span class="icon-bar"></span>
 	        <span class="icon-bar"></span>
       	</button>
-		<a href="/journal"><button type="button" class="pull-left btn btn-default navbar-btn" id="backJournal"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></button></a>
+		<a class="navbar-brand" href="/journal" id="backButton"><i class="material-icons">keyboard_arrow_left</i></a>
     </div>
 
     <div class="collapse navbar-collapse" id="userInfo">
-    	<ul class="nav navbar-nav">
-    		<li><a href="./user-settings">Edit User Settings<span class="sr-only"></span></a></li>
-    		  <li><a href="./change-email" id="logOut">Change Email<span class="sr-only"></span></a></li>
-    		<li><a href="./change-password" id="logOut">Change Password<span class="sr-only"></span></a></li>
+    	<ul class="nav navbar-nav navbar-right">
+    		<li><a href="./user-settings" id="userSettings">Edit User Settings<span class="sr-only"></span></a></li>
+    		  <li><a href="./change-email" id="changeEmail">Change Email<span class="sr-only"></span></a></li>
+    		<li><a href="./change-password" id="changePassword">Change Password<span class="sr-only"></span></a></li>
     		<li><a href="#" id="logOutButton">Log Out<span class="sr-only"></span></a></li>
     	</ul>
     </div>
@@ -47,68 +49,75 @@
 	<header>
 
 	</header>
-	<section class="container" id="userSection">
-		<div class="row" id="profileContainer">
-			<div class="col-xs-4 pull-left" id="profileImageContainer">
-				<div id="profileImage">
-					
+		<section id='outer'>
+			<div id='top'>
+				<div class="container" id="userSection">
+					<div class="row" id="profileContainer">
+						<div class="col-xs-4 pull-left" id="profileImageContainer">
+							<div id="profileImage">
+								
+							</div>
+						</div>
+						<div class="col-xs-8" id="userInfoContainer">
+							<div class="row">
+								<div class="col-xs-12" id="nameContainer">
+									<div id="name">
+										
+									</div>
+								</div>
+							</div>
+							<div class="row" id="emailContainer">
+								<div class="col-xs-12" id="email">
+									
+								</div>
+							</div>
+							<div class="row" id ="joinDateContainer">
+								<div class="col-xs-12" id="joinDate">
+								
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row" id="expiryContainer">
+						<div id="expiryDiv">
+							<div class="col-xs-4" id="highContainer">
+								<div class="row">
+									<div class="col-xs-12 priority">Gotta Read</div>
+								</div>						
+								<div class="row">
+									<div class="col-xs-12">
+										<div id="highExpiry">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-4" id="medContainer">
+								<div class="row">
+									<div class="col-xs-12 priority">Will Read</div>
+								</div>						
+								<div class="row">
+									<div class="col-xs-12">
+										<div id="medExpiry">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-4" id="lowContainer">
+								<div class="row">
+									<div class="col-xs-12 priority">Interesting</div>
+								</div>						
+								<div class="row">
+									<div class="col-xs-12">
+										<div id="lowExpiry">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>	
+					</div>
 				</div>
 			</div>
-			<div class="col-xs-8" id="userInfoContainer">
-				<div class="row">
-					<div class="col-xs-12" id="nameContainer">
-						<div id="name">
-							
-						</div>
-					</div>
-				</div>
-				<div class="row" id="emailContainer">
-					<div class="col-xs-12" id="email">
-						
-					</div>
-				</div>
-				<div class="row" id ="joinDateContainer">
-					<div class="col-xs-12" id="joinDate">
-					
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row" id="expiryContainer">
-			<div id="expiryDiv">
-				<div class="col-xs-4" id="highContainer">
-					<div class="row">
-						<div class="col-xs-12 priority">Gotta Read</div>
-					</div>						
-					<div class="row">
-						<div class="col-xs-12" id="highExpiry">
-							
-						</div>
-					</div>
-				</div>
-				<div class="col-xs-4" id="medContainer">
-					<div class="row">
-						<div class="col-xs-12 priority">Will Read</div>
-					</div>						
-					<div class="row">
-						<div class="col-xs-12" id="medExpiry">
-							
-						</div>
-					</div>
-				</div>
-				<div class="col-xs-4" id="lowContainer">
-					<div class="row">
-						<div class="col-xs-12 priority">Mildly Interesting</div>
-					</div>						
-					<div class="row">
-						<div class="col-xs-12" id="lowExpiry">
-							
-						</div>
-					</div>
-				</div>
-			</div>	
-		</div>
-	</section>
+		</section>
 	<footer>
 		
 	</footer>
@@ -122,5 +131,5 @@
 	<script src='../resources/jquery-dateFormat.js'></script>
 
 
-	<script type="text/javascript" src="./app-brow.js"></script>
+	<script type="text/javascript" src="./app.js"></script>
 </html>

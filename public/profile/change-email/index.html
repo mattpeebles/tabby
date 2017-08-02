@@ -15,20 +15,23 @@
 		<!-- Optional theme -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
 	<link rel="stylesheet" type="text/css" href="main.css">
 
 </head>
 
 <body>
 
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-		<a href="/profile"><button type="button" class="pull-left btn btn-default navbar-btn" id="backJournal"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></button></a>
-    </div>
-  </div><!-- /.container-fluid -->
-</nav>
+	<nav class="navbar navbar-default">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+			<a class="navbar-brand" href="/profile" id="backButton"><i class="material-icons">keyboard_arrow_left</i></a>
+	    </div>
+	  </div><!-- /.container-fluid -->
+	</nav>
+
 	<header>
 
 	</header>
@@ -36,7 +39,6 @@
 	<section id="formSection">
 		<div id="middle">
 			<div class="container" id="formContainer">
-				<a href="/profile"><button type="cancel" id="cancelChange" class="pull-right btn btn-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></a>
 				<div id="title">
 					<h1>Change Email</h1>
 				</div>
@@ -65,8 +67,8 @@
 					    	<input type="text" name="confirmNewEmail" class="form-control " id="confirmNewEmail">
 					    </div>
 					</div>
-				    <div class="form-group row">
-				      <div class="offset-sm-2 col-sm-10" id="buttonContainer">
+				    <div class="form-group row" id="buttonContainer">
+				      <div class="offset-sm-2 col-sm-10" id="buttonDiv">
 				        <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
 				      </div>
 				    </div>
