@@ -25,7 +25,6 @@ function generateJournalId(){
 
 //grabs signed in user database information
 //disallows a person from viewing info if they are
-//not authenticated without the right Basic authorization header
 
 userRouter.get('/me', authorize, (req, res) => {
 	res.json({user: req.user.userRepr()})
