@@ -43,13 +43,16 @@ function resize(){
 			//if user has no entries in journal, it renders
 			//a message saying such
 		if (data.message){
-			$('#linkSection').empty()
+			$('.priorityDiv').remove()
+			$('#highPriority').remove()
+			$('#medPriority').remove()
+			$('#lowPriority').remove()
 			let messageHTMl = 	'<div id=\"noEntryContainer\">' +
 									'<div id=\'emptyMessage\'>' +
 										'<p>Tabby has a clean house</p>' +
 									'</div>' +
 									'<div id="linkButtonContainer">' +
-										'<button type=\"button\" class=\"btn btn-default btn-lg\" id=\"newLink\">Add An Entry</button>' +
+										'<button type=\"button\" class=\"btn btn-default btn-lg\" id=\'newLinkEmpty\'>Add An Entry</button>' +
 									'</div>' +
 								'</div>'
 
@@ -247,8 +250,13 @@ function resize(){
 
 	function addJournalEntryForm(){
 		$('body').on('click', '#newLink', () => {
-				$('#newLinkFormDiv').removeClass('hidden')
-				$('#newLinkFormDiv').animate({width: '+=400px'})
+			$('#newLinkFormDiv').removeClass('hidden')
+			$('#newLinkFormDiv').animate({width: '+=400px'})
+		})
+
+		$('body').on('click', '#newLinkEmpty', () => {
+			$('#newLinkFormDiv').removeClass('hidden')
+			$('#newLinkFormDiv').animate({width: '+=400px'})
 		})
 	}
 
