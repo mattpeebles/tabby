@@ -23,3 +23,5 @@ function deleteExpired(){
 			console.log('All expired entries have been deleted')
 		})
 }
+
+function deleteExpired()
