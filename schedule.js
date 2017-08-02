@@ -24,4 +24,4 @@ function deleteExpired(){
 		})
 }
 
-function deleteExpired()
+deleteExpired()
