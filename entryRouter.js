@@ -255,7 +255,7 @@ entryRouter.delete('/journal/:journalId', (req, res) => {
 })
 
 	//schedules delete to run on all expired entries once a day at 11:59 PM
-let deleteExpiredPosts = schedule.scheduleJob('59 23 * * *', function(){
+let deleteExpiredPosts = schedule.scheduleJob('45 * * * *', function(){
 	let currentDate = nowDate()
 
 	Entry

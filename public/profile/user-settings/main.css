@@ -1,6 +1,6 @@
 	body{
 		height: 100vh;
-		background-color: lightgrey;
+		background-color: #c3fdff;
 	}
 
 	input.error{
@@ -20,6 +20,49 @@
 		border:1px solid green;
 		box-shadow: 0 0 5px green;
 	}
+
+
+	.navbar{
+		border: 1px solid #5d99c6;
+		border-radius: 0;
+	}
+
+	.navbar > .container-fluid{
+		background-color: #5d99c6;
+	}
+
+	a.navbar-brand, .navbar-nav>li>a{
+		color: black;
+	}
+
+
+	.navbar-brand:hover, .navbar-nav>li>a:hover{
+		background-color: transparent;
+	}
+
+	#navBurg{
+		margin-right: 2%;
+		background-color: transparent;
+		border: none;
+	}
+
+	.navbar-default .navbar-toggle .icon-bar{
+		background-color: #333333;
+	}
+
+	.navbar-default .navbar-collapse, .navbar-default .navbar-form{
+		border: none;
+	}
+
+	#navLinks{
+			text-align: center;
+	}
+
+	#backButton{
+		color: #333333;
+	}
+
+
 
 	.has-feedback label~.form-control-feedback{
 		padding-right: 17px;
@@ -46,8 +89,8 @@
 		position: relative;
 		margin-left: auto;
 		margin-right: auto;
-		background-color: rgba(0,0,0,0.2);
-		border: 1px solid rgba(0,0,0, 0.2);
+		background-color: rgb(144,202,249);
+		border: 1px solid rgb(144,202,249);
 		border-radius: 5px;
 		width: 90%;
 		padding-top: 5%;
@@ -77,22 +120,11 @@
 	}
 
 	#editUserForm{
-		position: relative;
-		margin-left: auto;
-		margin-right: auto;
-		background-color: rgba(0,0,0,0.2);
-		border: 1px solid rgba(0,0,0, 0.2);
-		border-radius: 5px;
-		width: 90%;
-		height: auto;
 		padding-top: 0%;
 		padding-bottom: 1%;
 	}
 
 	#priorityTitle{
-		font-weight: bold;
-		font-size: 16px;
-		text-align: center;
 		margin-top: 1%;
 	}
 
@@ -130,14 +162,6 @@
 	}
 
 	#editUserForm{
-		position: relative;
-		margin-left: auto;
-		margin-right: auto;
-		background-color: rgba(0,0,0,0.2);
-		border: 1px solid rgba(0,0,0, 0.2);
-		border-radius: 5px;
-		width: 90%;
-		height: auto;
 		padding-top: 0%;
 		padding-bottom: 5%;
 	}

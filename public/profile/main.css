@@ -1,13 +1,49 @@
 
 body{
-	background-color: #f4f4f6;
+	background-color: #c3fdff;
 	height: 100vh;
 }
 
 
-.navbar{
-	text-align: center;
-}
+	.navbar{
+		border: 1px solid #5d99c6;
+		border-radius: 0;
+	}
+
+	.navbar > .container-fluid{
+		background-color: #5d99c6;
+	}
+
+	a.navbar-brand, .navbar-nav>li>a{
+		color: black;
+	}
+
+
+	.navbar-brand:hover, .navbar-nav>li>a:hover{
+		background-color: transparent;
+	}
+
+	#navBurg{
+		margin-right: 2%;
+		background-color: transparent;
+		border: none;
+	}
+
+	.navbar-default .navbar-toggle .icon-bar{
+		background-color: #333333;
+	}
+
+	.navbar-default .navbar-collapse, .navbar-default .navbar-form{
+		border: none;
+	}
+
+	#navLinks{
+			text-align: center;
+	}
+
+	#backButton, #userSettings, #changePassword, #changeEmail, #logOutButton, #logOut{
+		color: #333333;
+	}
 
 
 	/*profile*/

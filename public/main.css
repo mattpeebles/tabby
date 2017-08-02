@@ -10,11 +10,48 @@
 }
 
 .navbar{
+	border: 1px solid #5d99c6;
+	border-radius: 0;
 	margin-bottom: 0;
 }
 
+.navbar > .container-fluid{
+	background-color: #5d99c6;
+}
+
+a.navbar-brand, .navbar-nav>li>a{
+	color: black;
+}
+
+
+.navbar-brand:hover, .navbar-nav>li>a:hover{
+	background-color: transparent;
+}
+
+#navBurg{
+	margin-right: 2%;
+	background-color: transparent;
+	border: none;
+}
+
+.navbar-default .navbar-toggle .icon-bar{
+	background-color: #333333;
+}
+
+.navbar-default .navbar-collapse, .navbar-default .navbar-form{
+	border: none;
+}
+
 #navLinks{
-	text-align: center;
+		text-align: center;
+}
+
+#tabby, #navRegister, #navLogin, #author{
+	color: #333333;
+}
+
+#githubIcon{
+	margin-right: 3%;
 }
 
 #githubIcon > img{
@@ -32,7 +69,7 @@
 	position: absolute;
 	height: 100%;
 	width: 100%;
-	background-color: gray;
+	background-color: #c3fdff;
 }
 
 #headerMiddle{
@@ -74,7 +111,7 @@
 	position: relative;
 	margin-right: auto;
 	margin-left: auto;
-	border: 1px solid black;
+	border: 1px solid #ededf0;
 	width: 90%;
 	height: 35vh;
 	margin-top: 10%;
@@ -88,7 +125,8 @@
 
 #register{
 	width: 30%;
-	border: 1px solid black;
+	border: 1px solid #5d99c6;
+	background-color: #5d99c6;
 }
 
 #divider{
@@ -101,7 +139,7 @@
 	width: 60%;
    	border: 0;
     height: 1px;
-    background: #333;
+    background: #90caf9;
     background-image: linear-gradient(to right, #ccc, #333, #ccc);
 }
 
@@ -113,7 +151,9 @@
 
 #login{
 	width: 30%;
-	border: 1px solid black;
+	border: 1px solid #5d99c6;
+	background-color: #5d99c6;
+
 }
 
 #works{
@@ -139,7 +179,7 @@
 }
 
 .moreInfo{
-	border: 1px solid black;
+	border: 1px solid #ededf0;
 	margin-bottom: 15%;
 	text-align: center;
 }
@@ -150,7 +190,7 @@
 
 .material-icons{ 
 	font-size: 48px;
-	color: gray;
+	color: #90caf9;
 }
 
 .explanationTitle{
@@ -249,9 +289,7 @@
 	}
 
 	.moreInfo{
-		border: 1px solid black;
-		margin-bottom: 5%;
-		text-align: center;
+		
 	}
 
 	.explanationImage{
@@ -259,8 +297,7 @@
 	}
 
 	.material-icons{ 
-		font-size: 48px;
-		color: gray;
+
 	}
 
 	.explanationTitle{

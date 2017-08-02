@@ -134,7 +134,7 @@ function resize(){
 
 					highHtml = '<div class=\"row\">'
 					highHtml += highArray[index]
-					highCounter = 2 //this is two because i've pushed an element right before.	
+					highCounter = 1
 				}
 			}
 
@@ -306,14 +306,14 @@ function resize(){
 			let formTemplate = "<div class=\"editForm\" id=\"editLinkFormDiv-" + linkID + "\">" +
 						"<form id=\"editLinkForm\">" +
 							"<div class=\'form-group\'>" +
-							"<label>Priority</label>" +
+							"<label>Update Priority</label>" +
 								"<select name=\"priority\" id=\"linkPriority\" class=\"form-control\">" +
 									"<option id=\"high\" value=\"high\">Gotta Read</option>" +
 									"<option id=\"medium\"value=\"medium\">Will Read</option>" +
 									"<option id=\"low\" value=\"low\">Interesting</option>" +
 							"</div>" +
-							"<input type=\"submit\" name=\"submit\" id=\"editLinkFormSubmit\"></input>" +
-							"<button type=\'cancel\' id=\'cancelEditForm\'>Cancel</button>"
+							"<input type=\"submit\" name=\"submit\" id=\"editLinkFormSubmit\" class=\"btn btn-primary\"></input>" +
+							"<button type=\'cancel\' id=\'cancelEditForm\' class=\'btn btn-danger\'>Cancel</button>"
 						"<form>" +
 					"</div>";
 

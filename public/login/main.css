@@ -1,7 +1,7 @@
 /*Mobile Styling*/
 
 	body{
-		background-color: lightgray;
+		background-color: #c3fdff;
 	}
 	
 		/*Log In Form*/
@@ -22,8 +22,8 @@
 			position: relative;
 			margin-left: auto;
 			margin-right: auto;
-			background-color: rgba(0,0,0,0.2);
-			border: 1px solid rgba(0,0,0, 0.2);
+			background-color: rgb(144,202,249);
+			border: 1px solid rgb(144,202,249);
 			border-radius: 5px;
 			width: 90%;
 			padding-top: 5%;
@@ -113,5 +113,4 @@
 
 		#registerCall{
 
-		}
-}
+		}}

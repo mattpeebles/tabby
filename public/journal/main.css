@@ -194,7 +194,7 @@ input.valid:focus{
 			position: absolute;
 			right: 0;
 			top: 0;
-			background-color: white;
+			background-color: #90caf9;
 			z-index: 3;
 		}
 
@@ -237,6 +237,27 @@ input.valid:focus{
 			right: 0;
 			width: 100%;
 			background-color: white;
+			z-index: 2;
+		}
+
+		#editLinkForm{
+
+		}
+
+		.form-group > label{
+			margin-top: 2%;
+		}
+
+		#linkPriority{
+			width: 60%;
+			position: relative;
+			margin-left: auto;
+			margin-right: auto;
+			margin-bottom: 2%
+		}
+
+		#editLinkFormSubmit{
+			margin-right: 2%;
 		}
 
 	/***********************************/			
