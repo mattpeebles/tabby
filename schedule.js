@@ -2,7 +2,7 @@ const {DATABASE_URL, PORT} = require('./config')
 const {Users, Entry} = require('./models')
 const schedule = require('node-schedule')
 
-let deleteExpiredPosts = schedule.scheduleJob('20 * * * *', function(){
+let deleteExpiredPosts = schedule.scheduleJob('30 * * * *', function(){
 	let currentDate = nowDate()
 
 	Entry
