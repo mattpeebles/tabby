@@ -2,6 +2,8 @@ const {DATABASE_URL, PORT} = require('./config')
 const {Users, Entry} = require('./models')
 const {addDays, nowDate} = require('./resources/date-module')
 
+const mongoose = require('mongoose')
+mongoose.Promise = global.Promise
 
 
 function deleteExpired(){
