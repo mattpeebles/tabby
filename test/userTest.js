@@ -92,7 +92,7 @@ function seedUserData(){
 		console.info('creating test database of entries')
 		const seedData = []
 		
-		for (let i = 0; i < 20; i++){
+		for (let i = 0; i < 5; i++){
 			seedData.push(generateEntry())
 		}
 
@@ -344,14 +344,13 @@ describe('Users API resource', () => {
 				.find({journalId: journalIdArray[0]})
 				.exec()
 				.then((res) => {
-					let journalId = res[0].journalId
 					updateUser.id = res[0].id
 						return chai.request(app)
 							.put(`/users/${updateUser.id}`)
 							.send(updateUser)
 							.then(res => {
 									return Entry
-										.find({journalId: journalId})
+										.find({journalId: journalIdArray[0]})
 										.exec()
 										.then(res => {
 											res.forEach(entry => {

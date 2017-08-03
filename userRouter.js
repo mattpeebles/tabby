@@ -154,6 +154,7 @@ userRouter.put('/:id', (req, res) => {
 			})
 	}
 
+		// updates all expiration dates for entries when user updates priority expiry 
 	if(toUpdate.priorityExpiry !== undefined){
 		Users
 			.findByIdAndUpdate(req.params.id, {$set: toUpdate}, {new: true})
@@ -181,7 +182,7 @@ userRouter.put('/:id', (req, res) => {
 							Entry
 								.findByIdAndUpdate(entryId, {$set: toUpdate}, {new: true})
 								.exec()
-							})
+						})
 					})
 				})
 			.then(() => {
