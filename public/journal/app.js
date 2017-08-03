@@ -1,26 +1,6 @@
 // const isUrl = require('is-url') //validates url
 const windowURL = window.location.origin
 
-	
-function equalHeight () {
-    var heights = $(".postDiv").map(function() {
-        return $(this).height();
-    }).get(),
-
-    maxHeight = Math.max.apply(null, heights);
-
-    $(".postDiv").height(maxHeight);
-};
-
-function resize(){
-	$('window').resize(() => {
-		equalHeight()
-	})
-
-	$()
-}
-
-
 	// Get journal entries
 // *********************************** //
 	function getJournalEntries(callback){
@@ -52,12 +32,12 @@ function resize(){
 										'<p>Tabby has a clean house</p>' +
 									'</div>' +
 									'<div id="linkButtonContainer">' +
-										'<button type=\"button\" class=\"btn btn-default btn-lg\" id=\'newLinkEmpty\'>Add An Entry</button>' +
+										'<button type=\"button\" class=\"btn btn-variant btn-lg\" id=\'newLinkEmpty\'>Add An Entry</button>' +
 									'</div>' +
 								'</div>'
 
 
-			$('#linkSection').append(messageHTMl)
+			$('#mediumSection').append(messageHTMl)
 		}
 		else {
 
@@ -182,7 +162,6 @@ function resize(){
 			}
 
 		}
-		equalHeight()
 	}
 
 	function getAndDisplayJournalEntries(){
@@ -287,12 +266,21 @@ function resize(){
 				data: JSON.stringify(newLink),
 				contentType: 'application/json',
 				success: function(data){
-					$('#newLinkFormDiv').empty().append(`<div id="approveDiv"><i class="material-icons">check_circle</i></div>`)
+
+					$('#newLinkFormDiv').empty().append(`<div id="approveDiv"><i class="material-icons">check_circle</i></div>`) 
 					setTimeout(() => $('#newLinkFormDiv').animate({width: '-=400px'}), 1000)
 					setTimeout(() => $('#newLinkFormDiv').addClass('hidden'), 1250)
 					setTimeout(() => window.location.reload(true), 1250)
 				},
-				error: function (request, status, error) { console.log(request); console.log(status); console.log(error) }
+				error: function (res, status, error) { 
+					let parent = $('#linkUrl').parent()
+					$('#linkUrl').val('').focus()
+					$('#linkUrl').addClass('error')
+					$(parent).append(`<label id="linkUrl-error" class="error" for="linkUrl">${res.responseJSON.message}</label>`)
+					$('#linkUrl').removeClass('valid')
+					$(parent).children('.feedback').remove()
+					$(parent).removeClass('has-success').addClass('has-danger')
+				}
 			})
 		})
 	}
@@ -313,15 +301,20 @@ function resize(){
 
 			let formTemplate = "<div class=\"editForm\" id=\"editLinkFormDiv-" + linkID + "\">" +
 						"<form id=\"editLinkForm\">" +
+							`<button type="cancel" id="cancelEditForm" class="pull-right btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>` +
+							"<label id=\"editFormLabel\">Update Entry</label>" +
 							"<div class=\'form-group\'>" +
-							"<label>Update Priority</label>" +
+								"<input type=\"text\" name=\"putTitle\" id=\"putTitle\" placeholder=\"Title\" class=\"form-control\">" +
+							"</div>" +
+							"<div class=\'form-group\'>" +
 								"<select name=\"priority\" id=\"linkPriority\" class=\"form-control\">" +
 									"<option id=\"high\" value=\"high\">Gotta Read</option>" +
 									"<option id=\"medium\"value=\"medium\">Will Read</option>" +
 									"<option id=\"low\" value=\"low\">Interesting</option>" +
 							"</div>" +
-							"<input type=\"submit\" name=\"submit\" id=\"editLinkFormSubmit\" class=\"btn btn-primary\"></input>" +
-							"<button type=\'cancel\' id=\'cancelEditForm\' class=\'btn btn-danger\'>Cancel</button>"
+							"<div class=\'form-group\'>" +
+								"<input type=\"submit\" name=\"submit\" id=\"editLinkFormSubmit\" class=\"btn btn-variant\"></input>" +
+							"</div>"
 						"<form>" +
 					"</div>";
 
@@ -354,7 +347,7 @@ function resize(){
 
 			let editEntry = {
 				entryId: id,
-				title: $("#linkTitle").val(),
+				title: $("#putTitle").val(),
 				priority: $('#linkPriority').val(),
 				link: $('#linkUrl').val()
 			}
@@ -369,6 +362,13 @@ function resize(){
 					location.reload()
 				}
 			})
+		})
+	}
+
+	function cancelEditForm(){
+		$('#linkSection').on('click', '#cancelEditForm', (event) => {
+			event.preventDefault()
+			$('.editForm').remove()
 		})
 	}
 // *********************************** //
@@ -434,7 +434,6 @@ function displayPopover(){
 // *********************************** //
  
 $(() => {
-	resize()
 	getAndDisplayJournalEntries()
 	addJournalEntryForm()
 	removeJournalEntryForm()
@@ -445,5 +444,6 @@ $(() => {
 	deleteEntryFromDataBase()
 	signout()
 	displayError()
+	cancelEditForm()
 	// displayPopover()
 })

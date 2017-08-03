@@ -67,7 +67,7 @@ function editUserData(data){
 			`</div>`+
 			`<div class='form-group has-feedback' id='buttonContainer'>` +
 				`<div class='col-sm-offset-2 col-sm-10' id='buttonDiv'>` +
-					`<input class='btn btn-default' type="submit" name="submit" id="editUserSubmit"></input>` +
+					`<input class='btn btn-variant' type="submit" name="submit" id="editUserSubmit"></input>` +
 				`</div>` +
 			`</div>` +
 		`</form>`;

@@ -1,7 +1,7 @@
 /***********************************/
 	body{
 		height: 90vh;
-		background-color: #c3fdff;
+		background-color: #303036;
 	}
 
 	input.error{
@@ -20,6 +20,20 @@
 	input.valid:focus{
 		border:1px solid green;
 		box-shadow: 0 0 5px green;
+	}
+
+	.btn-variant {
+	border: none;
+	border-radius: 300px;
+	font-weight: 700;
+	text-transform: uppercase;
+	padding: 15px 30px;
+	background-color: #FC772F;
+	color: #fff;
+	}
+
+	.btn-variant:hover {
+		cursor: pointer;
 	}
 
 	.outer{
@@ -49,8 +63,9 @@
 		position: relative;
 		margin-left: auto;
 		margin-right: auto;
-		background-color: rgb(144,202,249);
-		border: 1px solid rgb(144,202,249);
+		border: 1px solid #fff;
+		background-color: rgba(255,255,255,.5);
+		border: 1px solid rgba(255,255,255,.3);
 		border-radius: 5px;
 		width: 90%;
 		padding-top: 5%;
@@ -130,7 +145,7 @@
 	#formContainer{
 		padding-top: 1%;
 		padding-bottom: 2%;
-		width: 55%;
+		width: 35%;
 	}
 
 	#registerCall{

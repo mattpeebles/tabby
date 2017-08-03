@@ -186,7 +186,8 @@ userRouter.post('/', (req, res) => {
 		.catch(err => {
 			res.status(500).json({message: 'Internal server error'})
 		})
-})```
+})
+```
 -Allows a user to create a profile
 -Uses bcrypt to hash password
 -Uses faker to create a random journal id that entries are built off of

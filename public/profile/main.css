@@ -1,49 +1,73 @@
 
 body{
-	background-color: #c3fdff;
 	height: 100vh;
+	color: #050401;
 }
 
 
-	.navbar{
-		border: 1px solid #5d99c6;
-		border-radius: 0;
-	}
+.btn-variant {
+	border: none;
+	border-radius: 300px;
+	font-weight: 700;
+	text-transform: uppercase;
+	padding: 15px 30px;
+	background-color: #FC772F;
+	color: #fff;
+}
 
-	.navbar > .container-fluid{
-		background-color: #5d99c6;
-	}
+.btn-variant:hover {
+	cursor: pointer;
+}
 
-	a.navbar-brand, .navbar-nav>li>a{
-		color: black;
-	}
+.button{
+	height: 50px;
+	background: none;
+	color: black;
+}
+
+.button:active{
+	background: gray;
+	color: white;
+}
+
+.navbar{
+	border: 1px solid white;
+	border-radius: 0;
+	margin-bottom: 0;
+}
+
+.navbar > .container-fluid{
+	background-color: white;
+}
+
+a.navbar-brand, .navbar-nav>li>a{
+	color: black;
+}
 
 
-	.navbar-brand:hover, .navbar-nav>li>a:hover{
-		background-color: transparent;
-	}
+.navbar-brand:hover, .navbar-nav>li>a:hover{
+	background-color: transparent;
+}
 
-	#navBurg{
-		margin-right: 2%;
-		background-color: transparent;
-		border: none;
-	}
+#navBurg{
+	margin-right: 2%;
+	background-color: transparent;
+}
 
-	.navbar-default .navbar-toggle .icon-bar{
-		background-color: #333333;
-	}
+.navbar-default .navbar-toggle .icon-bar{
+	background-color: #333333;
+}
 
-	.navbar-default .navbar-collapse, .navbar-default .navbar-form{
-		border: none;
-	}
+.navbar-default .navbar-collapse, .navbar-default .navbar-form{
+}
 
-	#navLinks{
-			text-align: center;
-	}
+#navLinks{
+	text-align: center;
+}
 
-	#backButton, #userSettings, #changePassword, #changeEmail, #logOutButton, #logOut{
-		color: #333333;
-	}
+#backButton, #userSettings, #changePassword, #changeEmail, #logOutButton, #logOut{
+	color: #FC772F;
+}
 
 
 	/*profile*/
@@ -68,15 +92,15 @@ body{
 	}
 
 	#profileContainer{
-		border-top: 1px solid #ededf0;
-		border-left: 1px solid #ededf0;
-		border-right: 1px solid #ededf0;
-		background-color: white;
+		border-top: 1px solid #FC772F;
+		border-left: 1px solid #FC772F;
+		border-right: 1px solid #FC772F;
+		background-color: #FC772F;
 		width: 100%;
 		position: relative;
 		margin-left: auto;
 		margin-right: auto;
-
+		margin-top: 10%;
 	}
 
 	#profileImageContainer{
@@ -106,12 +130,11 @@ body{
 		text-align: center;
 		margin-left: auto;
 		margin-right: auto;
-		border-bottom: 2px solid #ededf0;
-		border-left: 1px solid #ededf0;
-		border-right: 1px solid #ededf0;
+		margin-top: -1px;
+		border-bottom: 1px solid #FC772F;
+		border: 1px solid #FC772F;
 		width: 100%;
-		padding-left: 2%;
-		background-color: white;
+		background-color: #FC772F;
 	}
 
 	#expiryDiv{
@@ -123,6 +146,13 @@ body{
 
 	#highContainer, #medContainer, #lowContainer{
 		height: 100%;
+		border-top: 1px solid #303036;
+
+	}
+
+	#medContainer{
+		border-right: 1px solid #303036;
+		border-left: 1px solid #303036;
 	}
 
 	.priority{
@@ -168,13 +198,7 @@ body{
 	}
 
 	#expiryContainer{
-		position: relative;
-		text-align: center;
-		margin-left: auto;
-		margin-right: auto;
-		padding-left: 0;
-		width: 100%;
-		background-color: white;
+
 	}
 
 	#expiryDiv{
