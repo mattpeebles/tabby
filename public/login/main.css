@@ -3,17 +3,26 @@
 	body{
 		background-color: #303036;
 	}
-
-	.btn-variant {
-		border: none;
-		border-radius: 300px;
-		font-weight: 700;
-		text-transform: uppercase;
-		padding: 15px 30px;
-		background-color: #FC772F;
-		color: #fff;
+	
+	.title-font{
+		font-family: 'Fjalla One', sans-serif
 	}
 
+	.normal-font{
+		font-family: 'Raleway', sans-serif;
+	}
+
+
+	.btn-variant {
+	border: none;
+	border-radius: 300px;
+	font-weight: 700;
+	text-transform: uppercase;
+	padding: 15px 30px;
+	background-color: #FC772F;
+	color: #fff;
+	font-family: 'Raleway', sans-serif;
+	}
 	.btn-variant:hover {
 		cursor: pointer;
 	}

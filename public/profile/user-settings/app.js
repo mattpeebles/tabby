@@ -19,9 +19,9 @@ function getUserData(callback){
 function editUserData(data){
 
 	let editForm = 	
-		`<form class='horizontal' id='editUserForm'>` +
+		`<form class='horizontal normal-font' id='editUserForm'>` +
 			`<div id="editProfile">` +
-				`<h1>Edit Profile</h1>` +
+				`<h1 class="title-font">Edit Profile</h1>` +
 			`</div>` +
 			`<div class='form-group has-feedback' id='firstNameDiv'>`+
 				`<label for='firstName' class='col-sm-2' control-label>First Name: </label>` +

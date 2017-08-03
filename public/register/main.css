@@ -22,6 +22,15 @@
 		box-shadow: 0 0 5px green;
 	}
 
+	.title-font{
+		font-family: 'Fjalla One', sans-serif
+	}
+
+	.normal-font{
+		font-family: 'Raleway', sans-serif;
+	}
+
+
 	.btn-variant {
 	border: none;
 	border-radius: 300px;
@@ -30,6 +39,7 @@
 	padding: 15px 30px;
 	background-color: #FC772F;
 	color: #fff;
+	font-family: 'Raleway', sans-serif;
 	}
 
 	.btn-variant:hover {

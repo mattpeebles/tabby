@@ -29,7 +29,7 @@ const windowURL = window.location.origin
 			$('#lowPriority').remove()
 			let messageHTMl = 	'<div id=\"noEntryContainer\">' +
 									'<div id=\'emptyMessage\'>' +
-										'<p>Tabby has a clean house</p>' +
+										'<p class=\"titleFont\">Tabby has a clean house</p>' +
 									'</div>' +
 									'<div id="linkButtonContainer">' +
 										'<button type=\"button\" class=\"btn btn-variant btn-lg\" id=\'newLinkEmpty\'>Add An Entry</button>' +
@@ -65,9 +65,9 @@ const windowURL = window.location.origin
 					   expiryDate = 'Expires tonight'
 				}
 
-				let entryHtml = `<div class='postContainer col-xs-12 col-sm-6 col-lg-4'>` + 
+				let entryHtml = `<div class='postContainer col-xs-12 col-sm-6 col-lg-4 normal-font'>` + 
 									'<div class=\"postDiv\" id=\"' + entry.entryId + '\">' +
-										'<p class=\"linkTitle\" value=\"' + entry.priority + '\">' + entry.title + '</p>' +
+										'<p class=\"linkTitle title-font\" value=\"' + entry.priority + '\">' + entry.title + '</p>' +
 										`<a class="url" href='${entry.link}'><span class='linkSpan'></span></a>` +
 										`<div class="postImage">` +
 											`<img src='${entry.image}'></img>` +
@@ -298,13 +298,14 @@ const windowURL = window.location.origin
 			let parentDiv = $(this).parent().parent().parent() //targets postDiv
 			let linkPriority = $(parentDiv).children('.linkTitle').attr('value') //grabs priority of link
 			let linkID = $(parentDiv).attr('id') //grabs id of link
-
+			let title = $(parentDiv).children('.linkTitle').text()
+			
 			let formTemplate = "<div class=\"editForm\" id=\"editLinkFormDiv-" + linkID + "\">" +
-						"<form id=\"editLinkForm\">" +
+						"<form class=\"normal-font\" id=\"editLinkForm\">" +
 							`<button type="cancel" id="cancelEditForm" class="pull-right btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>` +
-							"<label id=\"editFormLabel\">Update Entry</label>" +
+							"<label class=\"title-font\" id=\"editFormLabel\">Update Entry</label>" +
 							"<div class=\'form-group\'>" +
-								"<input type=\"text\" name=\"putTitle\" id=\"putTitle\" placeholder=\"Title\" class=\"form-control\">" +
+								`<input type="text" name="putTitle" id="putTitle" placeholder="${title}"" class="form-control">` +
 							"</div>" +
 							"<div class=\'form-group\'>" +
 								"<select name=\"priority\" id=\"linkPriority\" class=\"form-control\">" +
@@ -347,9 +348,12 @@ const windowURL = window.location.origin
 
 			let editEntry = {
 				entryId: id,
-				title: $("#putTitle").val(),
 				priority: $('#linkPriority').val(),
 				link: $('#linkUrl').val()
+			}
+
+			if ($("#putTitle").val() !== "") {
+				editEntry.title = $("#putTitle").val()
 			}
 
 			$.ajax({

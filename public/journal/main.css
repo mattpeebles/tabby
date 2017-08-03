@@ -31,6 +31,14 @@ input.valid:focus{
 
 	/*navbar*/
 /***********************************/
+	.title-font{
+		font-family: 'Fjalla One', sans-serif
+	}
+
+	.normal-font{
+		font-family: 'Raleway', sans-serif;
+	}
+
 
 	.btn-variant {
 		border: none;
@@ -40,6 +48,7 @@ input.valid:focus{
 		padding: 15px 30px;
 		background-color: #FC772F;
 		color: #fff;
+		font-family: 'Raleway', sans-serif;
 	}
 
 	.btn-variant:hover {
@@ -554,7 +563,7 @@ input.valid:focus{
 			}
 
 			#mediumSection{
-				padding-top: 50px;
+				padding-top: 30px;
 				min-height: 28vh;
 			}
 
