@@ -1,65 +1,90 @@
 
 body{
-	background-color: #c3fdff;
 	height: 100vh;
+	color: #050401;
+}
+
+.material-icons{
+	font-size: 30px;
+}
+
+.title-font{
+	font-family: 'Fjalla One', sans-serif
+}
+
+.normal-font{
+	font-family: 'Raleway', sans-serif;
 }
 
 
-	.navbar{
-		border: 1px solid #5d99c6;
-		border-radius: 0;
-	}
+.btn-variant {
+	border: none;
+	border-radius: 300px;
+	font-weight: 700;
+	text-transform: uppercase;
+	padding: 15px 30px;
+	background-color: #FC772F;
+	color: #fff;
+	font-family: 'Raleway', sans-serif;
+}
 
-	.navbar > .container-fluid{
-		background-color: #5d99c6;
-	}
+.btn-variant:hover {
+	cursor: pointer;
+}
 
-	a.navbar-brand, .navbar-nav>li>a{
-		color: black;
-	}
+.button{
+	height: 50px;
+	background: none;
+	color: black;
+}
+
+.button:active{
+	background: gray;
+	color: white;
+}
+
+.navbar{
+	border: 1px solid white;
+	border-radius: 0;
+	margin-bottom: 0;
+}
+
+.navbar > .container-fluid{
+	background-color: white;
+}
+
+a.navbar-brand, .navbar-nav>li>a{
+	color: black;
+}
 
 
-	.navbar-brand:hover, .navbar-nav>li>a:hover{
-		background-color: transparent;
-	}
+.navbar-brand:hover, .navbar-nav>li>a:hover{
+	background-color: transparent;
+}
 
-	#navBurg{
-		margin-right: 2%;
-		background-color: transparent;
-		border: none;
-	}
+#navBurg{
+	margin-right: 2%;
+	background-color: transparent;
+}
 
-	.navbar-default .navbar-toggle .icon-bar{
-		background-color: #333333;
-	}
+.navbar-default .navbar-toggle .icon-bar{
+	background-color: #333333;
+}
 
-	.navbar-default .navbar-collapse, .navbar-default .navbar-form{
-		border: none;
-	}
+.navbar-default .navbar-collapse, .navbar-default .navbar-form{
+}
 
-	#navLinks{
-			text-align: center;
-	}
+#navLinks{
+	text-align: center;
+}
 
-	#backButton, #userSettings, #changePassword, #changeEmail, #logOutButton, #logOut{
-		color: #333333;
-	}
+#backButton, #userSettings, #changePassword, #changeEmail, #logOutButton, #logOut{
+	color: #FC772F;
+}
 
 
 	/*profile*/
 /************************************/
-	#outer{
-		display: table;
-		position: absolute;
-		height: 85%;
-		width: 100%;
-	}
-
-	#top{
-		display: table-cell;
-		vertical-align: top;
-	}
-
 	#userSection{
 		position: relative;
 		margin-left: auto;
@@ -68,50 +93,66 @@ body{
 	}
 
 	#profileContainer{
-		border-top: 1px solid #ededf0;
-		border-left: 1px solid #ededf0;
-		border-right: 1px solid #ededf0;
-		background-color: white;
+		background-color: #FC772F;
 		width: 100%;
+		height: 65vh;
 		position: relative;
 		margin-left: auto;
 		margin-right: auto;
-
+		margin-top: 30%;
 	}
 
 	#profileImageContainer{
-		padding: 1%;
+		width: 100%;
+		margin-top: -20%;
 	}
 
 	#profileImage{
-
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+		text-align: center;
 	}
 
 	#profileImage > img{
-		width: 100%;
-		height: 100%;
+		width: 150px;
+		height: 150px;
+		border-radius: 100%;
+
 	}
 
-
 	#userInfoContainer{
-		font-size: 16px;
+		margin-top: 5%;
+		color: #fff;
 	}
 
 	#userInfoContainer > p{
 		margin-bottom: 0;
 	}
 
-	#expiryContainer{
-		position: relative;
+	#nameContainer{
+		font-size: 24px;
 		text-align: center;
-		margin-left: auto;
-		margin-right: auto;
-		border-bottom: 2px solid #ededf0;
-		border-left: 1px solid #ededf0;
-		border-right: 1px solid #ededf0;
+	}
+
+	#emailContainer{
+		font-size: 20px;
+		text-align: center;
+	}
+
+	#joinDateContainer{
+		font-style: 18px;
+		text-align: center;
+	}
+
+	#expiryContainer{
+		position: absolute;
+		bottom: 0;
+		text-align: center;
 		width: 100%;
-		padding-left: 2%;
-		background-color: white;
+		height: auto;
+		font-size: 18px;
+		color: #fff;
 	}
 
 	#expiryDiv{
@@ -123,65 +164,244 @@ body{
 
 	#highContainer, #medContainer, #lowContainer{
 		height: 100%;
+		border-top: 1px solid #fff;
+	}
+
+	#medContainer{
+		border-right: 1px solid #fff;
+		border-left: 1px solid #fff;
 	}
 
 	.priority{
 	}
 /************************************/
 
-@media screen and (min-device-width: 601px){
-	#outer{
-
-	}
-
-	#top{
-
-	}
-
-	#userSection{
+@media screen and (min-device-width: 568px){
+#userSection{
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
 
 	}
 
 	#profileContainer{
-
+		background-color: #FC772F;
+		width: 100%;
+		min-height: 100vh;
+		height: auto;
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 10%;
 	}
 
 	#profileImageContainer{
-		padding: 2%;
+		width: 100%;
+		margin-top: -7%;
 	}
 
 	#profileImage{
-
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+		text-align: center;
 	}
 
 	#profileImage > img{
+		width: 100px;
+		height: 100px;
+		border-radius: 100%;
 
 	}
 
-
 	#userInfoContainer{
-		font-size: 20px;
+
 	}
 
 	#userInfoContainer > p{
-		margin-bottom: 0;
+
+	}
+
+	#nameContainer{
+
+	}
+
+	#emailContainer{
+
+	}
+
+	#joinDateContainer{
+
 	}
 
 	#expiryContainer{
-		position: relative;
-		text-align: center;
-		margin-left: auto;
-		margin-right: auto;
-		padding-left: 0;
-		width: 100%;
-		background-color: white;
+
 	}
 
 	#expiryDiv{
+
 	}
 
 	#highContainer, #medContainer, #lowContainer{
-		font-size: 18px;
+	}
+
+	#medContainer{
+
+	}
+
+	.priority{
+	}
+}
+
+
+@media screen and (min-device-width: 667px){
+	#userSection{
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+
+	}
+
+	#profileContainer{
+		background-color: #FC772F;
+		width: 100%;
+		min-height: 85vh;
+		height: auto;
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 10%;
+	}
+
+	#profileImageContainer{
+		width: 100%;
+		margin-top: -7%;
+	}
+
+	#profileImage{
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+		text-align: center;
+	}
+
+	#profileImage > img{
+		width: 100px;
+		height: 100px;
+		border-radius: 100%;
+
+	}
+
+	#userInfoContainer{
+
+	}
+
+	#userInfoContainer > p{
+
+	}
+
+	#nameContainer{
+
+	}
+
+	#emailContainer{
+
+	}
+
+	#joinDateContainer{
+
+	}
+
+	#expiryContainer{
+
+	}
+
+	#expiryDiv{
+
+	}
+
+	#highContainer, #medContainer, #lowContainer{
+	}
+
+	#medContainer{
+
+	}
+
+	.priority{
+	}
+}
+
+@media screen and (min-device-width: 768px){
+	#userSection{
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+
+	}
+
+	#profileContainer{
+		background-color: #FC772F;
+		width: 100%;
+		min-height: 45vh;
+		height: auto;
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 15%;
+	}
+
+	#profileImageContainer{
+		width: 100%;
+		margin-top: -10%;
+	}
+
+	#profileImage{
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+		text-align: center;
+	}
+
+	#profileImage > img{
+		width: 150px;
+		height: 150px;
+		border-radius: 100%;
+
+	}
+
+	#userInfoContainer{
+
+	}
+
+	#userInfoContainer > p{
+
+	}
+
+	#nameContainer{
+
+	}
+
+	#emailContainer{
+
+	}
+
+	#joinDateContainer{
+
+	}
+
+	#expiryContainer{
+
+	}
+
+	#expiryDiv{
+
+	}
+
+	#highContainer, #medContainer, #lowContainer{
+	}
+
+	#medContainer{
+
 	}
 
 	.priority{
@@ -192,40 +412,61 @@ body{
   and (min-device-width: 1200px) 
   and (max-device-width: 1600px) 
   and (-webkit-min-device-pixel-ratio: 1) {
-	#outer{
-
-	}
-
-	#top{
-
-	}
-
-	#userSection{
+#userSection{
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
 
 	}
 
 	#profileContainer{
-
+		background-color: #FC772F;
+		width: 100%;
+		min-height: 70vh;
+		height: auto;
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 10%;
 	}
 
 	#profileImageContainer{
-
+		width: 100%;
+		margin-top: -5%;
 	}
 
 	#profileImage{
-
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+		text-align: center;
 	}
 
 	#profileImage > img{
+		width: 150px;
+		height: 150px;
+		border-radius: 100%;
 
 	}
 
-
 	#userInfoContainer{
-		margin-top: 5%;
+		margin-top: 3%;
 	}
 
 	#userInfoContainer > p{
+
+	}
+
+	#nameContainer{
+
+	}
+
+	#emailContainer{
+
+	}
+
+	#joinDateContainer{
+
 	}
 
 	#expiryContainer{
@@ -233,9 +474,14 @@ body{
 	}
 
 	#expiryDiv{
+
 	}
 
 	#highContainer, #medContainer, #lowContainer{
+	}
+
+	#medContainer{
+
 	}
 
 	.priority{

@@ -1,3 +1,27 @@
+.title-font{
+	font-family: 'Fjalla One', sans-serif
+}
+
+.normal-font{
+	font-family: 'Raleway', sans-serif;
+}
+
+
+.btn-variant {
+	border: none;
+	border-radius: 300px;
+	font-weight: 700;
+	text-transform: uppercase;
+	padding: 15px 30px;
+	background-color: #FC772F;
+	color: #fff;
+	font-family: 'Raleway', sans-serif;
+}
+
+.btn-variant:hover {
+	cursor: pointer;
+}
+
 .button{
 	height: 50px;
 	background: none;
@@ -10,13 +34,13 @@
 }
 
 .navbar{
-	border: 1px solid #5d99c6;
+	border: 1px solid white;
 	border-radius: 0;
 	margin-bottom: 0;
 }
 
 .navbar > .container-fluid{
-	background-color: #5d99c6;
+	background-color: white;
 }
 
 a.navbar-brand, .navbar-nav>li>a{
@@ -31,7 +55,6 @@ a.navbar-brand, .navbar-nav>li>a{
 #navBurg{
 	margin-right: 2%;
 	background-color: transparent;
-	border: none;
 }
 
 .navbar-default .navbar-toggle .icon-bar{
@@ -39,7 +62,6 @@ a.navbar-brand, .navbar-nav>li>a{
 }
 
 .navbar-default .navbar-collapse, .navbar-default .navbar-form{
-	border: none;
 }
 
 #navLinks{
@@ -47,7 +69,7 @@ a.navbar-brand, .navbar-nav>li>a{
 }
 
 #tabby, #navRegister, #navLogin, #author{
-	color: #333333;
+	color: #FC772F;
 }
 
 #githubIcon{
@@ -61,99 +83,80 @@ a.navbar-brand, .navbar-nav>li>a{
 
 #header{
 	height: 70vh;
+	width: 100%;
 	position: relative;
 }
 
-#headerOuter{
-	display: table;
-	position: absolute;
-	height: 100%;
-	width: 100%;
-	background-color: #c3fdff;
-}
+#header{
+		background-image: 
+		linear-gradient(
+	      rgba(0, 0, 0, 0.5),
+	      rgba(0, 0, 0, 0.5)
+	    ),
+	    url('/resources/images/header.jpg');
 
-#headerMiddle{
-	display: table-cell;
-	vertical-align: middle;
-}
-
-#headerInner{
-	background-color: rgba(239, 245, 255, 0.5);
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	color: #fff;
+	text-align: center;
+	padding-top: 50px;
+	padding-bottom: 25px;
+	height: auto;
 }
 
 #title{
-	text-align: center;
+	margin-top: 0;
+	font-size: 42px;
+}
+
+#titleLine{
+	width: 60px;
+	background-color: black;
+	margin-top: 50px;
+	margin-bottom: 50px;
+
 }
 
 #subtitle{
 	text-align: center;
+	font-size: 26px;
+	font-weight: 300;
+	margin-bottom: 50px;
+}
+
+
+#titleButton{
+	margin-top: 25px;
+}
+
+#summaryContainer{
+	background-color: #FC772F;
+	min-height: auto;
+	padding-bottom: 25px;
 }
 
 #summary{
 	font-size: 26px;
-	margin-top: 10%;
 	text-align: center;
 }
 
 #sumFirstLine{
-	margin-bottom: 10%;
+	padding-top: 50px;
+	margin-bottom: 25px;
 }
 
-#ctaContainer{
-	text-align: center;
-	position: relative;
-	margin-left: auto;
-	margin-right: auto;
-	width: 100%;
-}
-
-#cta{
-	position: relative;
-	margin-right: auto;
-	margin-left: auto;
-	border: 1px solid #ededf0;
-	width: 90%;
-	height: 35vh;
-	margin-top: 10%;
-}
-
-#registerContainer{
-	position: absolute;
-	width: 100%;
-	top: 10%;
-}
-
-#register{
+#summaryHr{
 	width: 30%;
-	border: 1px solid #5d99c6;
-	background-color: #5d99c6;
+	border-width: 3px;
+	max-width: 50px;
+	margin-bottom: 25px;
 }
 
-#divider{
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	margin: auto;
-	width: 60%;
-   	border: 0;
-    height: 1px;
-    background: #90caf9;
-    background-image: linear-gradient(to right, #ccc, #333, #ccc);
-}
-
-#loginContainer{
-	position: absolute;
-	width: 100%;
-	bottom: 10%;
-}
-
-#login{
-	width: 30%;
-	border: 1px solid #5d99c6;
-	background-color: #5d99c6;
-
+#summaryButton{
+	margin-top: 50px;
+	color: #FC772F;
+	background-color: #fff;
 }
 
 #works{
@@ -162,8 +165,23 @@ a.navbar-brand, .navbar-nav>li>a{
 	margin-left: auto;
 	position: relative;
 	text-align: center;
-	margin-top: 10%;
+	margin-top: 20%;
 	margin-bottom: 3%;
+}
+
+#worksTitle{
+	font-size: 30px;
+}
+
+#worksHr{
+	width: 30%;
+	border-width: 3px;
+	max-width: 50px;
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	border-color: black;
+	margin-bottom: 10%;
 }
 
 #moreInfoContainer{
@@ -179,7 +197,6 @@ a.navbar-brand, .navbar-nav>li>a{
 }
 
 .moreInfo{
-	border: 1px solid #ededf0;
 	margin-bottom: 15%;
 	text-align: center;
 }
@@ -190,7 +207,7 @@ a.navbar-brand, .navbar-nav>li>a{
 
 .material-icons{ 
 	font-size: 48px;
-	color: #90caf9;
+	color: #FC772F;
 }
 
 .explanationTitle{
@@ -203,14 +220,128 @@ a.navbar-brand, .navbar-nav>li>a{
 }
 
 
-@media screen and (min-device-width: 601px){
+@media screen and (min-device-width: 568px){
 	#navLinks{
 
 	}
 
 
 	#header{
+		height: auto;
+	}
 
+	#title{
+		margin-top: 25px;
+	}
+
+	#titleLine{
+		margin-top: 25px;
+		margin-bottom: 25px;
+	}
+
+	#titleButton{
+		margin-bottom: 25px;
+	}
+
+	#subtitle{
+		text-align: center;
+		font-size: 16px;
+		font-weight: 300;
+		margin-bottom: 50px;
+		width: 60%;
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	#summaryContainer{
+		margin-top: 0; 
+		min-height: 50vh;
+		height: auto;
+	}
+
+	#summary{
+	}
+
+	#sumFirstLine{
+		margin-bottom: 25px;
+	}
+
+	#sumSecondLine{
+		position: relative;
+		width: 60%;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	#summaryHr{
+
+	}
+
+	#summaryButton{
+		margin-top: 25px;
+		margin-bottom: 25px;
+	}
+
+	#works{
+		margin-top: 40px;
+		margin-bottom: 3%;
+	}
+
+	#worksHr{
+		margin-bottom: 25px;
+	}
+
+	#moreInfoContainer{
+		position: relative;
+		width: 90%;
+		margin-left: auto;
+		margin-right: auto;
+		height: auto;
+	}
+
+	.infoSection{
+
+	}
+
+	.moreInfo{
+		width: 60%;
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 10px;
+		text-align: center;
+	}
+
+	.explanationImage{
+
+	}
+
+	.material-icons{ 
+
+	}
+
+	.explanationTitle{
+
+	}
+
+	.explanation{
+
+	}
+}
+
+
+@media screen 
+  and (min-device-width: 1024px) 
+  and (max-device-width: 1600px) 
+  and (-webkit-min-device-pixel-ratio: 1) {
+	
+	#navLinks{
+
+	}
+
+
+	#header{
 	}
 
 	#headerOuter{
@@ -218,78 +349,85 @@ a.navbar-brand, .navbar-nav>li>a{
 	}
 
 	#headerMiddle{
-
-	}
+	}	
 
 	#headerInner{
-
 	}
 
 	#title{
+		margin-top: 50px;
+		font-size: 46px;
+	}
 
+	#titleLine{
+		margin-top: 50px;
+		margin-bottom: 50px;
+	}
+
+	#titleButton{
+		margin-bottom: 50px;
 	}
 
 	#subtitle{
+		font-size: 36px;
+	}
 
+	#summaryContainer{
+		margin-top: 0; 
+		width: 100%;
+		border: 1px solid black;
+		height: auto;
 	}
 
 	#summary{
-		margin-top: 3%;
+		margin-top: 0;
+		padding-top: 0;
+		position: relative;
+		width: 100%;
+		height: 100%;
 	}
 
 	#sumFirstLine{
-		margin-bottom: 5%;
+		margin-bottom: 25px;
 	}
 
-	#sumSecondLine{
-		font-size: 18px;
-	}
-	
-	#ctaContainer{
+	#summaryHr{
 
 	}
 
-	#cta{
-		width: 65%;
-		height: 65vh;
-		margin-top: 5%;
-	}
-
-	#registerContainer{
-
-	}
-
-	#register{
-
-	}
-
-	#divider{
-
-	}
-
-	#loginContainer{
-
-	}
-
-	#login{
-
+	#summaryButton{
+		margin-top: 25px;
+		margin-bottom: 25px;
 	}
 
 	#works{
-		margin-top: 5%;
-		margin-bottom: 2%;
+		margin-top: 40px;
+		margin-bottom: 3%;
+	}
+
+	#worksHr{
+		margin-bottom: 25px;
 	}
 
 	#moreInfoContainer{
 		position: relative;
-		width: 65%;
+		width: 100%;
 		margin-left: auto;
 		margin-right: auto;
 		height: auto;
 	}
 
+	.infoSection{
+
+	}
+
 	.moreInfo{
-		
+		width: auto;
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 10px;
+		text-align: center;
 	}
 
 	.explanationImage{
@@ -301,119 +439,9 @@ a.navbar-brand, .navbar-nav>li>a{
 	}
 
 	.explanationTitle{
-		text-align: center;
-		font-size: 22px;
-	}
-
-	.explanation{
-		font-size: 20px;
-	}
-}
-
-
-@media screen 
-  and (min-device-width: 1200px) 
-  and (max-device-width: 1600px) 
-  and (-webkit-min-device-pixel-ratio: 1) {
-	
-	#navRegister{
-
-	}
-
-	#header{
-
-	}
-
-	#headerOuter{
-
-	}
-
-	#headerMiddle{
-
-	}
-
-	#headerInner{
-	}
-
-	#title{
-
-	}
-
-	#subtitle{
-	}
-
-	#summary{
-		margin-top: 5%;
-	}
-
-	#sumFirstLine{
-		margin-bottom: 5%;
-	}
-
-	#ctaContainer{
-		width: 100%;
-	}
-
-	#cta{
-		margin-top: 5%;
-		height: 45vh;
-	}
-
-	#registerContainer{
-
-	}
-
-	#register{
-
-	}
-
-	#divider{
-
-	}
-
-	#loginContainer{
-
-	}
-
-	#login{
-
-	}
-
-	#works{
-		margin-top: 5%;
-		margin-bottom: 2%;
-	}
-
-	#moreInfoContainer{
-		width: 100%;
-		position: relative;
-		margin-left: auto;
-		margin-right: auto;
-		margin-bottom: 3%;
-	}
-
-	.infoSection{
-		border: 1px solid black;
-	}
-
-	.moreInfo{
-		border: none;
-		padding: 10px;
-	}
-
-	.explanationImage{
-
-	}
-
-	.material-icons{ 
-
-	}
-
-	.explanationTitle{
 
 	}
 
 	.explanation{
-
 	}
 }

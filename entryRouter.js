@@ -125,7 +125,8 @@ entryRouter.post('/', authorize, (req, res) => {
 
 							title = pageTitle.split("-")[0].split('|')[0]
 							
-							if (title == null){
+
+							if (title == null || title == ""){
 								linkArray = (url).split('/')
 								title = linkArray[linkArray.length - 1]
 							}
@@ -162,6 +163,10 @@ entryRouter.post('/', authorize, (req, res) => {
 								
 							})
 						})
+						.catch(err => {
+							console.log('website does not exist')
+							return res.status(400).json({message: 'Website does not exist'})
+						})
 					}
 			})
 })
@@ -177,7 +182,7 @@ entryRouter.put('/:entryId', (req, res) => {
 	}
 
 	let toUpdate = {}
-	const updateableFields = ['link', 'priority']
+	const updateableFields = ['link', 'priority', 'title']
 	let addDate;
 	
 	updateableFields.forEach(field => {

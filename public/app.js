@@ -17,6 +17,6 @@ function resize(){
 
 
 $(() => {
-	equalHeight()
-	resize()
+	// equalHeight()
+	// resize()
 })

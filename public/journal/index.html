@@ -15,6 +15,8 @@
 		<!-- Optional theme -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
+	<link href="https://fonts.googleapis.com/css?family=Fjalla+One|Raleway" rel="stylesheet">
+
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 	<link rel="stylesheet" type="text/css" href="main.css">
@@ -33,10 +35,10 @@
 		        <span class="icon-bar"></span>
 		        <span class="icon-bar"></span>
 	      	</button>
-	      	<a class="navbar-brand" href="/" id="tabby">Tabby</a>
+	      	<a class="navbar-brand title-font" href="/" id="tabby">Tabby</a>
 	    </div>
 
-	    <div class="collapse navbar-collapse navbar-right" id="userInfo">
+	    <div class="collapse navbar-collapse navbar-right normal-font" id="userInfo">
 	    	<ul class="nav navbar-nav" id="navLinks">
 	    		<li><a href='#' id='newLink'><i id="iconAdd" class="material-icons">add</i></a></li>
 	    		<li><a href="/profile" id="profile">Profile</a></li>
@@ -51,30 +53,36 @@
 	</header>
 	<section id="linkSection">
 		
-		<div class="priorityDiv">
-			<p>Gotta Read</p>
+		<div id='highSection'>
+			<div class="priorityDiv">
+				<p class="title-font">Gotta Read</p>
+			</div>
+			<section id="highPriority"  class="container-fluid">
+				
+			</section>
 		</div>
-		<section id="highPriority"  class="container-fluid">
-			
-		</section>
-		
-		<div class="priorityDiv">
-			<p>Will Read</p>
-		</div>
-		<section id="medPriority" class="container-fluid">
-			
-		</section>
-		
-		<div class="priorityDiv">
-			<p>Interesting</p>
-		</div>
-		<section id="lowPriority" class="container-fluid">
 
-		</section>
+		<div id="mediumSection">
+			<div class="priorityDiv">
+				<p class="title-font">Will Read</p>
+			</div>
+			<section id="medPriority" class="container-fluid">
+				
+			</section>
+		</div>
+		
+		<div id="lowSection">
+			<div class="priorityDiv">
+				<p class="title-font">Interesting</p>
+			</div>
+			<section id="lowPriority" class="container-fluid">
+
+			</section>
+		</div>
 
 		<div id="newLinkFormDiv" class='hidden'>
-			<h2 id="formTitle">tabby</h2>
-			<form id="newLinkForm">
+			<h2 id="formTitle" class="title-font">tabby</h2>
+			<form id="newLinkForm" class="normal-font">
 				<button type="cancel" id="cancelNewForm" class="pull-right btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
 				<div class="form-group has-feedback">
 					<label>Link</label>
@@ -83,13 +91,13 @@
 				<div class="form-group">
 					<label for="linkPriority">Priority</label>
 					<select class="form-control" name="priority" id="linkPriority">
-						<option value="high">High</option>
-						<option value="medium" selected>Medium</option>
-						<option value="low">Low</option>
+						<option value="high">Gotta Read</option>
+						<option value="medium" selected>Will Read</option>
+						<option value="low">Interesting</option>
 					</select>
 				</div>
 				<div class="form-group" id="submitDiv">
-					<input type="submit" name="submit" id="newLinkFormSubmit" class="btn btn-primary"></input>
+					<input type="submit" name="submit" id="newLinkFormSubmit" class="btn btn-variant"></input>
 				</div>
 			<form>
 		</div>
@@ -98,7 +106,7 @@
 	<footer>
 		<nav class="navbar navbar-default navbar-bottom">
   			<div class="container-fluid">
-  				<a class="navbar-brand" href="#" id="author">Matt Peebles</a>
+  				<a class="navbar-brand title-font" href="#" id="author">Matt Peebles</a>
   				<a href="https://github.com/mattpeebles" role="button" class=" navbar-btn navbar-right pull-right" id="githubIcon"><img src="/resources/images/github.png"></a>
   			</div>
 		</nav>

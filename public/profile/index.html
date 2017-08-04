@@ -14,6 +14,8 @@
 		<!-- Optional theme -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
+	<link href="https://fonts.googleapis.com/css?family=Fjalla+One|Raleway" rel="stylesheet">
+
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 	<link rel="stylesheet" type="text/css" href="main.css">
@@ -23,7 +25,7 @@
 <body>
 
 <nav class="navbar navbar-default">
-  <div class="container-fluid">
+  <div class="container-fluid normal-font">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
   		<button type="button" class=" pull-right navbar-toggle collapsed" id="navBurg" data-toggle="collapse" data-target="#userInfo" aria-expanded="false">
@@ -36,7 +38,7 @@
     </div>
 
     <div class="collapse navbar-collapse" id="userInfo">
-    	<ul class="nav navbar-nav navbar-right">
+    	<ul id="navLinks" class="nav navbar-nav navbar-right">
     		<li><a href="./user-settings" id="userSettings">Edit User Settings<span class="sr-only"></span></a></li>
     		  <li><a href="./change-email" id="changeEmail">Change Email<span class="sr-only"></span></a></li>
     		<li><a href="./change-password" id="changePassword">Change Password<span class="sr-only"></span></a></li>
@@ -49,78 +51,89 @@
 	<header>
 
 	</header>
-		<section id='outer'>
-			<div id='top'>
-				<div class="container" id="userSection">
-					<div class="row" id="profileContainer">
-						<div class="col-xs-4 pull-left" id="profileImageContainer">
-							<div id="profileImage">
-								
-							</div>
+		<section class='container-fluid' id="profileContainer">
+			<div class="row" id="userSection">
+				<div class="col-xs-12" id="profileImageSection">
+					<div id="profileImageContainer">
+						<div id="profileImage">
+							
 						</div>
-						<div class="col-xs-8" id="userInfoContainer">
-							<div class="row">
-								<div class="col-xs-12" id="nameContainer">
-									<div id="name">
-										
-									</div>
-								</div>
-							</div>
-							<div class="row" id="emailContainer">
-								<div class="col-xs-12" id="email">
-									
-								</div>
-							</div>
-							<div class="row" id ="joinDateContainer">
-								<div class="col-xs-12" id="joinDate">
-								
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row" id="expiryContainer">
-						<div id="expiryDiv">
-							<div class="col-xs-4" id="highContainer">
-								<div class="row">
-									<div class="col-xs-12 priority">Gotta Read</div>
-								</div>						
-								<div class="row">
-									<div class="col-xs-12">
-										<div id="highExpiry">
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-xs-4" id="medContainer">
-								<div class="row">
-									<div class="col-xs-12 priority">Will Read</div>
-								</div>						
-								<div class="row">
-									<div class="col-xs-12">
-										<div id="medExpiry">
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-xs-4" id="lowContainer">
-								<div class="row">
-									<div class="col-xs-12 priority">Interesting</div>
-								</div>						
-								<div class="row">
-									<div class="col-xs-12">
-										<div id="lowExpiry">
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>	
 					</div>
 				</div>
 			</div>
+
+			<div class='row'>
+				<div class="col-xs-12" id="userInfoContainer">
+					<div class="row">
+						<div class="col-xs-12" id="nameContainer">
+							<div id="name" class="title-font">
+								
+							</div>
+						</div>
+					</div>
+					<div class="row normal-font" id="emailContainer">
+						<div class="col-xs-12" id="email">
+							
+						</div>
+					</div>
+					<div class="row normal-font" id ="joinDateContainer">
+						<div class="col-xs-12" id="joinDate">
+						
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row normal-font" id="expiryContainer">
+				<div class='col-xs-12' id="expiryDiv">
+					<div class="row">	
+						<div class="col-xs-4" id="highContainer">
+							<div class="row">
+								
+								<div class="col-xs-12 priority">
+									<i class="material-icons">star</i>
+									<p>Gotta Read</p>
+								</div>
+							</div>						
+							<div class="row">
+								<div class="col-xs-12">
+									<div id="highExpiry">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-4" id="medContainer">
+							<div class="row">
+								<div class="col-xs-12 priority">
+									<i class="material-icons">star_half</i>
+									<p>Will Read</p>
+								</div>							
+							</div>						
+							<div class="row">
+								<div class="col-xs-12">
+									<div id="medExpiry">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-4" id="lowContainer">
+							<div class="row">
+								<div class="col-xs-12 priority">
+									<i class="material-icons">star_border</i>
+									<p>Interesting</p>
+								</div>
+							</div>						
+							<div class="row">
+								<div class="col-xs-12">
+									<div id="lowExpiry">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>
 		</section>
-	<footer>
-		
-	</footer>
 
 </body>
 

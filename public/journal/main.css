@@ -1,5 +1,4 @@
 body{
-	background-color: #c3fdff;
 	height: 100vh;
 }
 
@@ -32,14 +31,49 @@ input.valid:focus{
 
 	/*navbar*/
 /***********************************/
+	.title-font{
+		font-family: 'Fjalla One', sans-serif
+	}
+
+	.normal-font{
+		font-family: 'Raleway', sans-serif;
+	}
+
+
+	.btn-variant {
+		border: none;
+		border-radius: 300px;
+		font-weight: 700;
+		text-transform: uppercase;
+		padding: 15px 30px;
+		background-color: #FC772F;
+		color: #fff;
+		font-family: 'Raleway', sans-serif;
+	}
+
+	.btn-variant:hover {
+		cursor: pointer;
+	}
+
+	.button{
+		height: 50px;
+		background: none;
+		color: black;
+	}
+
+	.button:active{
+		background: gray;
+		color: white;
+	}
 
 	.navbar{
-		border: 1px solid #5d99c6;
+		border: 1px solid white;
 		border-radius: 0;
+		margin-bottom: 0;
 	}
 
 	.navbar > .container-fluid{
-		background-color: #5d99c6;
+		background-color: white;
 	}
 
 	a.navbar-brand, .navbar-nav>li>a{
@@ -54,7 +88,6 @@ input.valid:focus{
 	#navBurg{
 		margin-right: 2%;
 		background-color: transparent;
-		border: none;
 	}
 
 	.navbar-default .navbar-toggle .icon-bar{
@@ -62,7 +95,6 @@ input.valid:focus{
 	}
 
 	.navbar-default .navbar-collapse, .navbar-default .navbar-form{
-		border: none;
 	}
 
 	#navLinks{
@@ -70,7 +102,7 @@ input.valid:focus{
 	}
 
 	#tabby, #newLink, #profile, #logOut, #author{
-		color: #333333;
+		color: #FC772F;
 	}
 /***********************************/
 /*Mobile Styling*/
@@ -83,11 +115,10 @@ input.valid:focus{
 		.priorityDiv{ 
 			font-size: 30px;
 			font-weight: bold;
-			margin-top: 5%;
 			padding-left: 3%;
-			background-color: #90caf9;
 			width: 100%;
-			margin-bottom: 0;
+			margin-bottom: 3%;
+			color: #050401;
 		}
 
 		.priorityDiv > p { 
@@ -103,14 +134,37 @@ input.valid:focus{
 			padding: 0;
 		}
 
+		#highSection{
+			padding-top: 30px;
+			min-height: 29vh;
+			background-color: rgba(252, 119, 47, .7);
+		}
+
+		#mediumSection{
+			padding-top: 30px;
+			min-height: 29vh;
+		}
+
+		#mediumSection > .priorityDiv{
+			color: #FC772F;
+		}
+
+		#lowSection{
+			min-height: 29vh;
+			padding-top: 30px;
+			background-color: rgba(252, 119, 47, .7);
+		}
+
 		.postDiv{
 			text-align: center;
 			position: relative;
 			margin-left: auto;
 			margin-right: auto;
 			width: 100%;
-			background-color: #cfd8dc;
-			border-bottom: 2px solid grey;
+			color: #fff;
+			background-color: rgba(255,255,255, .7);
+			border: rgba(48, 48, 54, .7);
+			border-bottom: 2px solid rgba(48, 48, 54, .7);
 		}
 
 		.linkSpan{ /*provides clickable link over 90% of post */
@@ -130,8 +184,9 @@ input.valid:focus{
 		.linkTitle{
 			position: relative;
 			width: 90%;
+			padding-top: 10px;
 			overflow: hidden;
-			height: 60px;
+			height: 70px;
 			color: black;
 			font-size: 22px;
 			text-align: left;
@@ -154,8 +209,7 @@ input.valid:focus{
 		.infoRow{ /*contains manipGroup, and expiryDate*/
 			position: relative;
 			padding-top: 2%;
-			
-			
+			color: #050401;
 		}
 
 		.manipGroup { /*contains edit and delete buttons*/
@@ -185,6 +239,7 @@ input.valid:focus{
 			left: 0;
 			right: 0;
 			top: 6%;
+			color: #FC772F;
 		}
 
 		#newLinkFormDiv{
@@ -194,7 +249,8 @@ input.valid:focus{
 			position: absolute;
 			right: 0;
 			top: 0;
-			background-color: #90caf9;
+			background-color: #fff;
+			border: 1px solid #FC772F;
 			z-index: 3;
 		}
 
@@ -231,6 +287,12 @@ input.valid:focus{
 		/*Edit Post Styling*/
 	/***********************************/			
 
+		#cancelEditForm{
+			position: absolute;
+			top: 3%;
+			right: 5%;
+		}
+
 		.editForm{
 			position: absolute;
 			bottom: 0;
@@ -238,10 +300,13 @@ input.valid:focus{
 			width: 100%;
 			background-color: white;
 			z-index: 2;
+			color: #333;
+			height: 75%;
 		}
 
 		#editLinkForm{
-
+			height: 75%;
+			margin-top: 15%;
 		}
 
 		.form-group > label{
@@ -260,6 +325,17 @@ input.valid:focus{
 			margin-right: 2%;
 		}
 
+		#putTitle{
+			position: relative;
+			margin-left: auto;
+			margin-right: auto;
+			width: 60%;
+		}
+
+		#linkPriority{
+
+		}
+
 	/***********************************/			
 
 		/*styling when no entries exist*/
@@ -267,7 +343,6 @@ input.valid:focus{
 			#noEntryContainer{
 				text-align: center;
 				font-size: 24px;
-				margin-top: 20%;
 			}
 
 			#emptyMessage {
@@ -302,6 +377,28 @@ input.valid:focus{
 			padding: 0;
 			margin-bottom: 2%;
 
+		}
+
+		#highSection{
+			padding-top: 30px;
+			min-height: 21vh;
+			background-color: rgba(252, 119, 47, .7);
+		}
+
+		#mediumSection{
+			position: relative;
+			padding-top: 30px;
+			min-height: 21vh;
+		}
+
+		#mediumSection > .priorityDiv{
+			color: #FC772F;
+		}
+
+		#lowSection{
+			min-height: 21vh;
+			padding-top: 30px;
+			background-color: rgba(252, 119, 47, .7);
 		}
 
 		.postDiv{
@@ -407,12 +504,17 @@ input.valid:focus{
 			#noEntryContainer{
 				text-align: center;
 				font-size: 24px;
-				margin-top: 10%;
+				margin-top: 0;
 			}
 
 			#emptyMessage {
-				margin-bottom: 10%;
-			}	/***********************************/
+				margin-bottom: 1%;
+			}
+
+			#newLinkEmpty {
+				margin-bottom: 2%;
+			}	
+	/***********************************/
 
 /***********************************/
 
@@ -434,11 +536,10 @@ input.valid:focus{
 				/*styling for priority headers*/
 		/***********************************/
 			.priorityDiv{ 
-				margin-top: 0;
-				width: 95%;
-				margin-bottom: 1%;
-				border: 1px solid #90caf9;
-				border-bottom: 1px solid #90caf9;
+				background-color: transparent;
+				color: #fff;
+				width: 100%;
+				margin-bottom: 30px;
 			}
 
 			.priorityDiv > p { 
@@ -455,18 +556,41 @@ input.valid:focus{
 				margin-bottom: 2%;
 			}
 
+			#highSection{
+				padding-top: 30px;
+				min-height: 27vh;
+				background-color: rgba(252, 119, 47, .7);
+			}
+
+			#mediumSection{
+				padding-top: 30px;
+				min-height: 28vh;
+			}
+
+			#mediumSection > .priorityDiv{
+				color: #FC772F;
+			}
+
+			#lowSection{
+				padding-top: 30px;
+				min-height: 27vh;
+				background-color: rgba(252, 119, 47, .7);
+			}
+
 			.postDiv{
 				text-align: center;
 				position: relative;
 				margin-left: auto;
 				margin-right: auto;
-				background-color: #ffddc1;
-				border: 1px solid #ffddc1;
-				border-bottom: 1px solid #ffddc1;
+				width: 80%;
+				color: #fff;
+				background-color: rgba(48, 48, 54, .7);
+				border: rgba(48, 48, 54, .7);
+				border-radius: 2px;
 			}
 
 			.postDiv:hover > .linkTitle{
-				color: #f4511e;
+				color: #30BCED;
 			}
 
 			.linkSpan{ /*provides clickable link over 90% of post */
@@ -478,7 +602,8 @@ input.valid:focus{
 			}
 
 			.linkTitle{
-
+				padding-top: 10px;
+				color: #fff;
 			}
 
 
@@ -510,7 +635,7 @@ input.valid:focus{
 			}
 
 			.postDiv:hover > .infoRow > .manipGroup{
-				color: #333333;
+				color: #fff;
 			}
 
 			.edit{
@@ -518,7 +643,7 @@ input.valid:focus{
 			}
 
 			.edit:hover, .delete:hover{
-				color: #f4511e;
+				color: #30BCED;
 			}
 
 			.expiryDate{
@@ -532,25 +657,25 @@ input.valid:focus{
 
 			/*new link form stylings*/
 		/***********************************/
-		#formTitle{
+			#formTitle{
 
-		}
+			}
 
-		#newLinkFormDiv{
+			#newLinkFormDiv{
 
-		}
+			}
 
-		#newLinkForm{
+			#newLinkForm{
 
-		}
+			}
 
-		#submitDiv{
+			#submitDiv{
 
-		}
+			}
 
-		#cancelNewForm{
+			#cancelNewForm{
 
-		}
+			}
 		/***********************************/
 
 
@@ -559,7 +684,6 @@ input.valid:focus{
 			#noEntryContainer{
 				text-align: center;
 				font-size: 24px;
-				margin-top: 10%;
 			}
 
 			#emptyMessage {
