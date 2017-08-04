@@ -199,11 +199,24 @@ const windowURL = window.location.origin
 
 
 	function validateForm(){
+	
+
 	$('#newLinkForm').validate({
 		rules: {
 			link: {
 				required: true,
-				url: true
+				url: true,
+				normalizer: function(value){
+					
+						// determines if link has http:// or https://, if not, adds http:// for validation
+					if(value.indexOf("http://") == -1 || value.indexOf("https://") == -1){
+						value = 'http://' + value
+						return value
+					}
+					else {
+						return value
+					}
+				}
 			}
 		},
 
@@ -222,7 +235,7 @@ const windowURL = window.location.origin
 		},
 		// changes error messages
 		messages: {
-			newLink: "Please enter a valid url - requires http://",
+			link: "Please enter a valid url",
 		}
 	})	         
 }
