@@ -98,9 +98,10 @@ function validateForm(){
 }
 
 function register(){
-	$("#registerButton").on('click', () => {
+	$("#registerButton").on('click', (event) => {
 
 		event.preventDefault()
+
 
 		let user = {} 
 		

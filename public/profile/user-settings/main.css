@@ -234,3 +234,49 @@
 	}
 
 }
+
+@-moz-document url-prefix(){
+	#outer{
+
+	}
+
+	#userSection{
+	}
+
+	#editProfile{
+	}
+
+	#editUserForm{
+		padding-top: 0%;
+		padding-bottom: 8%;
+	}
+
+	#priorityTitle{
+		font-weight: bold;
+		font-size: 16px;
+		text-align: center;
+		margin-top: 3%;
+	}
+
+	#firstNameDiv{
+		margin-bottom: 7%;
+		text-align: right;
+	}
+
+	#lastNameDiv{
+		text-align: right;
+	}
+
+	#buttonContainer{
+		text-align: center;
+		margin-top: 3%;
+		width: 100%;
+	}
+
+	#buttonDiv{
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+		width: 100%;
+	}
+}

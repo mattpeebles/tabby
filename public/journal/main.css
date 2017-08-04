@@ -693,3 +693,172 @@ input.valid:focus{
 
 	/***********************************/
 }
+
+@-moz-document url-prefix(){
+		#iconAdd{
+			font-size: 24px;
+		}
+
+		.popover{
+			width: 130px;
+			text-align: center;
+		}
+
+				/*styling for priority headers*/
+		/***********************************/
+			.priorityDiv{ 
+				background-color: transparent;
+				color: #fff;
+				width: 100%;
+				margin-bottom: 30px;
+			}
+
+			.priorityDiv > p { 
+				margin-bottom: 0;
+			}
+		/***********************************/
+			
+
+			/*Styles for entries*/
+		/***********************************/
+			.postContainer{
+				position: relative;
+				padding: 0;
+				margin-bottom: 2%;
+			}
+
+			#highSection{
+				padding-top: 30px;
+				min-height: 27vh;
+				background-color: rgba(252, 119, 47, .7);
+			}
+
+			#mediumSection{
+				padding-top: 30px;
+				min-height: 28vh;
+			}
+
+			#mediumSection > .priorityDiv{
+				color: #FC772F;
+			}
+
+			#lowSection{
+				padding-top: 30px;
+				min-height: 27vh;
+				background-color: rgba(252, 119, 47, .7);
+			}
+
+			.postDiv{
+				text-align: center;
+				position: relative;
+				margin-left: auto;
+				margin-right: auto;
+				width: 80%;
+				color: #fff;
+				background-color: rgba(48, 48, 54, .7);
+				border: rgba(48, 48, 54, .7);
+				border-radius: 2px;
+			}
+
+			.postDiv:hover > .linkTitle{
+				color: #30BCED;
+			}
+
+			.linkSpan{ /*provides clickable link over 90% of post */
+
+			}
+
+			.linkSpan:hover{
+
+			}
+
+			.linkTitle{
+				padding-top: 10px;
+				color: #fff;
+			}
+
+
+			.postImage{ /*container for image*/
+				height: 200px;
+				overflow: hidden;
+			}
+
+			.postImage > img{
+				width: 100%;
+				height: 300px;
+
+			}
+
+			.infoRow{ /*contains manipGroup, and expiryDate*/
+				position: relative;
+				padding-top: 2%;
+			}
+
+			.manipGroup { /*contains edit and delete buttons*/
+				position: relative;
+				padding-right: 10%;
+				font-size: 20px;
+				color: transparent;
+				padding-top: 1%;
+				transition: .25s ease-in-out;
+			   -moz-transition: .25s ease-in-out;
+			   -webkit-transition: .25s ease-in-out
+			}
+
+			.postDiv:hover > .infoRow > .manipGroup{
+				color: #fff;
+			}
+
+			.edit{
+				margin-right: 4%;
+			}
+
+			.edit:hover, .delete:hover{
+				color: #30BCED;
+			}
+
+			.expiryDate{
+				padding-left: 10%;
+				font-size: 16px;
+				font-style: italic;
+				padding-bottom: 2%;
+			}
+		/***********************************/
+
+
+			/*new link form stylings*/
+		/***********************************/
+			#formTitle{
+
+			}
+
+			#newLinkFormDiv{
+
+			}
+
+			#newLinkForm{
+
+			}
+
+			#submitDiv{
+
+			}
+
+			#cancelNewForm{
+
+			}
+		/***********************************/
+
+
+			/*styling when no entries exist*/
+		/***********************************/			
+			#noEntryContainer{
+				text-align: center;
+				font-size: 24px;
+			}
+
+			#emptyMessage {
+				margin-bottom: 5%;
+			}
+		/***********************************/
+}

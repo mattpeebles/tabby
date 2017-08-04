@@ -363,7 +363,6 @@ const windowURL = window.location.origin
 				contentType: 'application/json',
 				success: function(){
 					getAndDisplayJournalEntries()
-					location.reload()
 				}
 			})
 		})

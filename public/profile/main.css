@@ -487,3 +487,80 @@ a.navbar-brand, .navbar-nav>li>a{
 	.priority{
 	}
 }
+
+@-moz-document url-prefix(){
+#userSection{
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+
+	}
+
+	#profileContainer{
+		background-color: #FC772F;
+		width: 100%;
+		min-height: 70vh;
+		height: auto;
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 5%;
+	}
+
+	#profileImageContainer{
+		width: 100%;
+		margin-top: -5%;
+	}
+
+	#profileImage{
+		position: relative;
+		margin-left: auto;
+		margin-right: auto;
+		text-align: center;
+	}
+
+	#profileImage > img{
+		width: 150px;
+		height: 150px;
+		border-radius: 100%;
+
+	}
+
+	#userInfoContainer{
+		margin-top: 3%;
+	}
+
+	#userInfoContainer > p{
+
+	}
+
+	#nameContainer{
+
+	}
+
+	#emailContainer{
+
+	}
+
+	#joinDateContainer{
+
+	}
+
+	#expiryContainer{
+
+	}
+
+	#expiryDiv{
+
+	}
+
+	#highContainer, #medContainer, #lowContainer{
+	}
+
+	#medContainer{
+
+	}
+
+	.priority{
+	}
+}
