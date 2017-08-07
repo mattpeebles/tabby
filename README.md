@@ -1,6 +1,8 @@
 # Tabby
 [![Build Status](https://travis-ci.org/mattpeebles/sscapstone.svg?branch=master)](https://travis-ci.org/mattpeebles/sscapstone)
 
+http://minimal-tabby.herokuapp.com/
+
 ## Description
 Tabby provides a simple way for a user to stay on top of a sea of browser tabs. I found that when I browse the internet, I come across a ton of interesting sites that I open with the intention of getting to later. In short order, I have over a hundred tabs open, with no real way to determine which are the most interesting to me and no real motivation to plumb through them all.
 
