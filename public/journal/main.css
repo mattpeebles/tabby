@@ -358,7 +358,8 @@ input.valid:focus{
 
 /***********************************/
 
-@media screen and (min-device-width: 601px){
+@media screen and (min-device-width: 601px)
+				and (max-device-width: 1200px){
 			/*styling for priority headers*/
 	/***********************************/
 		.priorityDiv{ 
