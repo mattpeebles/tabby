@@ -65,8 +65,14 @@
 			margin-bottom: 5%;
 		}
 
-		#buttonContainer{
+		.buttonContainer{
 			text-align: center;
+		}
+
+		#demo{
+			padding: 7px 15px;
+			font-size: 14px;
+			text-transform: none;
 		}
 
 		#registerCall{

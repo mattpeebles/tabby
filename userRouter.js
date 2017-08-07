@@ -64,6 +64,30 @@ userRouter.post('/', (req, res) => {
 		return res.status(422).json({message: 'Incorrect field type: email'})
 	}
 
+		//Demo profile creation
+	if (email === "admin@tabbyadmin.com"){
+		
+		return Users.hashPassword(password)
+			.then(hash => {
+				
+				return Users
+					.create({
+						user: {	firstName: firstName,
+								lastName: lastName
+							},
+						email: faker.internet.email(),
+						password: hash,
+						status: 'demo',
+						joinDate: joinDate || Date.now(),
+						journalId: journalId || generateJournalId(),
+						priorityExpiry: priorityExpiry || {'high': 2, 'medium': 4, 'low': 7}
+					})
+			})
+			.then(user => {
+				return res.status(201).json({redirect: '/login/index.html', user: user.userRepr()})
+			})
+	};
+
 	if (!(password)){
 		return res.status(422).json({message: 'Missing field: password'})
 	}

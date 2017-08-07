@@ -28,7 +28,45 @@ function signIn(){
 	})
 }
 
+function demo(){
+	$('#demo').on('click', (event) => {
+		let newAdmin = {
+			user: {
+				firstName: 'Tabby',
+				lastName: 'Admin'
+			},
+			email: 'admin@tabbyadmin.com',
+			password: 'admin',
+		}
+
+		$('#email').val(newAdmin.email)
+		$('#password').val(newAdmin.password)
+
+		$.ajax({
+			type: 'post',
+			url: windowURL + '/users',
+			data: JSON.stringify(newAdmin),
+			contentType: 'application/json',
+			success: function(data){
+				$.ajax({
+					type: 'post',
+					url: windowURL + '/login',
+					data: JSON.stringify({email: data.user.email, password: newAdmin.password}),
+					contentType: 'application/json',
+					success: function(data){
+						window.location.href = windowURL + data.redirect
+					}
+				})
+			}
+		})
+		.catch(error => {
+			console.log(error)
+		})
+	})
+}
+
 
 $(() => {
+	demo()
 	signIn()
 })

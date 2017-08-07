@@ -28,4 +28,24 @@ function deleteExpired(){
 		})
 }
 
+function removeDemo(){
+	Users
+		.find({status: 'demo'})
+		.exec()
+		.then(demos => {
+			demos.forEach(demo => {
+				let id = demo.id
+				Users
+					.findByIdAndRemove(id)
+					.exec()
+					.then(() => {
+						console.log('demo profile deleted')
+					})
+			})
+		})
+		.then(() => {
+			console.log('All demo profiles have been deleted')
+		})
+}
+
 deleteExpired()

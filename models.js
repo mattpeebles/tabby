@@ -10,8 +10,9 @@ const UserSchema = mongoose.Schema({
 			lastName: {type: String, default: ''}},
 	joinDate: {type: Date, default: nowDate()},
 	email: {type: String, required: true, unique: true},
+	status: {type: String},
 	password: {type: String, required: true},
-	journalId: {type: String}, //unique string that identifies the journal of user
+	journalId: {type: String, unique: true}, //unique string that identifies the journal of user
 	priorityExpiry: {type: Object} //object that contains the expiration date for different priorities
 })
 
@@ -26,6 +27,7 @@ UserSchema.methods.userRepr = function(){
 		user: {firstName: this.user.firstName,
 				lastName: this.user.lastName},
 		email: this.email,
+		status: this.status,
 		journalId: this.journalId,
 		joinDate: this.joinDate.toString(),
 		priorityExpiry: this.priorityExpiry || {high: 2, medium: 4, low: 7}
