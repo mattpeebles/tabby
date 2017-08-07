@@ -12,6 +12,24 @@ The length of time each link is retained is customizable by the user but is alwa
 
 ## Screenshots
 
+Adding entries to a new or empty journal
+![alt text](/resources/screenCaps/addEmpty.gif "Empty Journal Gif")
+
+Adding entry
+![alt text](/resources/screenCaps/add.gif "Add Entry Gif")
+
+Follow link
+![alt text](/resources/screenCaps/followLink.gif "Follow Link Gif")
+
+Editing an entries priority and title
+![alt text](/resources/screenCaps/edit.gif "Edit Entry Gif")
+
+Editing the expiration settings
+![alt text](/resources/screenCaps/editExpiry.gif "Edit Expiration Gif")
+
+Deleting an entry
+![alt text](/resources/screenCaps/delete.gif "Delete Entry Gif")
+
 ## Definitions
 - Entry: a link that a user has submitted
 - Priority Expiry - the length of time in days that the database holds the post depending on priority. 
