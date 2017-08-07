@@ -1,5 +1,5 @@
 # Tabby
-[![Build Status](https://travis-ci.org/mattpeebles/sscapstone.svg?branch=master)](https://travis-ci.org/mattpeebles/sscapstone)
+[![Build Status](https://travis-ci.org/mattpeebles/tabby.svg?branch=master)](https://travis-ci.org/mattpeebles/tabby)
 
 http://minimal-tabby.herokuapp.com/
 
@@ -86,7 +86,7 @@ There are two REST APIs built to run this app - users and entries. Users hooks a
 
 #### Session Management
 
-Login
+##### Login
 ```javascript
 app.post('/login', function handleLocalAuthentication(req, res, next) {
     passport.authenticate('local', function(err, user, info) {  
@@ -106,7 +106,7 @@ app.post('/login', function handleLocalAuthentication(req, res, next) {
 });
 ```
 
-Logout
+##### Logout
 ```javascript
 app.get('/logout', (req, res) => {
 	req.logOut()
@@ -115,15 +115,19 @@ app.get('/logout', (req, res) => {
 ```
 
 #### Users hook description
+
+##### Get
 ```javascript
 userRouter.get('/me', authorize, (req, res) => {
 	res.json({user: req.user.userRepr()})
 })
 ```
--This hook displays the profile information of the signed in user
--Requires user to be signed in
--Passes authorize middleware
+- This hook displays the profile information of the signed in user
+- Requires user to be signed in
+- Passes authorize middleware
 
+
+##### Post
 ```javascript
 userRouter.post('/email', (req, res) => {
 	let {email} = req.body
@@ -141,7 +145,7 @@ userRouter.post('/email', (req, res) => {
 		})
 })
 ```
--Used to provide feedback to users when they are registering their new account or changing their email
+- Used to provide feedback to users when they are registering their new account or changing their email
 
 ```javascript
 userRouter.post('/', (req, res) => {
@@ -210,10 +214,12 @@ userRouter.post('/', (req, res) => {
 		})
 })
 ```
--Allows a user to create a profile
--Uses bcrypt to hash password
--Uses faker to create a random journal id that entries are built off of
+- Allows a user to create a profile
+- Uses bcrypt to hash password
+- Uses faker to create a random journal id that entries are built off of
 
+
+##### Put
 ```javascript
 userRouter.put('/:id', (req, res) => {
 	if (!(req.params.id === req.body.id)){
@@ -303,9 +309,11 @@ userRouter.put('/:id', (req, res) => {
 	}
 })
 ```
--Allows for updates to first and last name, email, password, and priority Expiry
--When updating priority expiry, each entry in the user's journal is updated with a new expiration date depending on the new priority
+- Allows for updates to first and last name, email, password, and priority Expiry
+- When updating priority expiry, each entry in the user's journal is updated with a new expiration date depending on the new priority
 
+
+##### Delete
 ```javascript
 userRouter.delete('/:id', authorize, (req, res) => {
 	Users
@@ -337,6 +345,8 @@ userRouter.delete('/:id', authorize, (req, res) => {
 -subsequently deletes journal by call the Entries delete /journalId hook
 
 #### Entries hook description
+
+##### Get
 ```javascript
 entryRouter.get('/', (req, res) => {
 	Entry
@@ -353,7 +363,7 @@ entryRouter.get('/', (req, res) => {
 		})
 })
 ```
--returns all entries in database
+- returns all entries in database
 
 ```javascript
 entryRouter.get('/entries', authorize, (req, res) => {
@@ -377,9 +387,11 @@ entryRouter.get('/entries', authorize, (req, res) => {
 		})
 })
 ```
--Returns all user entries. This is determined by the journal id of the user.
--Requires user to be signed in
+- Returns all user entries. This is determined by the journal id of the user.
+- Requires user to be signed in
 
+
+##### Post
 ```javascript
 entryRouter.post('/', authorize, (req, res) => {
 	const requiredFields = ['link', 'priority'];
@@ -472,12 +484,13 @@ entryRouter.post('/', authorize, (req, res) => {
 			})
 })
 ```
--Allows user to post new entries to their journal
--Only requires a valid link, all other schema requirements are provided on the backend
--URL scraper grabs title and main image of link
--Expiry date is calculated based off of user priority expiry
--Requires user to be signed in
+- Allows user to post new entries to their journal
+- Only requires a valid link, all other schema requirements are provided on the backend
+- URL scraper grabs title and main image of link
+- Expiry date is calculated based off of user priority expiry
+- Requires user to be signed in
 
+##### Put
 ```javascript
 entryRouter.put('/:entryId', (req, res) => {
 
@@ -545,9 +558,11 @@ entryRouter.put('/:entryId', (req, res) => {
 		}
 })
 ```
--allows user to update the link and priority of each post
--Updating priority requires that the expiration date be recalculated each time
+- allows user to update the link and priority of each post
+- Updating priority requires that the expiration date be recalculated each time
 
+
+##### Delete
 ```javascript
 entryRouter.delete('/:entryId', (req, res) => {
 
@@ -559,7 +574,7 @@ entryRouter.delete('/:entryId', (req, res) => {
 		})
 })
 ```
--deletes individual entry
+- deletes individual entry
 
 ```javascript
 entryRouter.delete('/journal/:journalId', (req, res) => {
@@ -573,3 +588,4 @@ entryRouter.delete('/journal/:journalId', (req, res) => {
 		})
 })
 ```
+- Deletes entire journal with all associated entries
