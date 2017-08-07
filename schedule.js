@@ -49,3 +49,4 @@ function removeDemo(){
 }
 
 deleteExpired()
+removeDemo()
