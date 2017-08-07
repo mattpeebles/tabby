@@ -39,7 +39,9 @@ Deleting an entry
 ## Technology
 	
 Front-end: HTML, CSS, Javascript/ECMAScript 6
+
 Back-end: node.js, Mongo, Mongoose
+
 TDD: Mocha/Chai
 
 Supplements worth mentioning
