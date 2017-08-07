@@ -2,27 +2,42 @@ const windowURL = window.location.origin
 
 
 function format(){
-	let elementArray = ['#currentEmail', '#currentPassword', '#newEmail', '#newPassword']
-
+	let elementArray = ['#currentEmail', '#currentPassword', '#newEmail', '#confirmNewEmail']
+	
+	let errorCount = 0,
+		filledCount = 0
+		
 		elementArray.forEach(element => {
-			if ($(element).val() == ''){
+			
+			if($(element).val() !== ""){
+				filledCount++
+			} 
+
+			else if ($(element).val() == ''){
 				let parent = $(element).parent()
 				$(element).removeClass('valid')
 				$(element).removeClass('error')
 				$(parent).children('.feedback').remove()
 				$(parent).removeClass('has-success')
 				$(parent).removeClass('has-danger')
+				$('#registerButton').prop('disabled', true)
+				errorCount++
 
 			}
 
-			else if ($(element).hasClass('error')){
+			if ($(element).hasClass('error')){
 					let parent = $(element).parent()
 					$(element).removeClass('valid')
 					$(parent).children('.feedback').remove()
 					$(parent).removeClass('has-success').addClass('has-danger')
+					$('#registerButton').prop('disabled', true)
+					errorCount++
 			}
 		}) 
 
+		if(errorCount == 0 && filledCount === 4){
+			$('#submitButton').prop('disabled', false)
+		} 
 }
 
 function displayError(){
@@ -65,6 +80,7 @@ function validateForm(){
 					data: JSON.stringify(data),
 					contentType: 'application/json',
 					success: function(data){
+							//provides instant feedback to user about email
 						if (data.message === 'Email has already been used to create an account'){
 							   let parent = $('#newEmail').parent()
 			    				$(parent).removeClass('has-success')
@@ -109,54 +125,60 @@ function changeEmail(){
 		let newPasswordData;
 		let id;
 
-		$.ajax({
-			type: 'get',
-			url: windowURL + '/users/me',
-			success: function(data){
-				loginData = {
-					email: currentEmail,
-					password: currentPassword
-				}
-
-				id = data.user.id;
-
-				newEmailData = {
-					id: id, 
-					email: $('#newEmail').val()
-				}
-
-				$.ajax({
-					type: 'get',
-					url: windowURL + '/logout',
-					success: function(){
-
-						$.ajax({
-							type: 'post',
-							url: windowURL + '/login',
-							data: JSON.stringify(loginData),
-							contentType: 'application/json',
-							success: function(data){
-
-								$.ajax({
-									type: 'put',
-									url: windowURL + `/users/${id}`,
-									data: JSON.stringify(newEmailData),
-									contentType: 'application/json',
-									success: function(data){
-										alert('Email successfully changed')
-										window.location.href = windowURL + '/profile'
-									}
-								})
-							},
-							error: function(err){
-								alert('You entered the wrong password. Please log in')
-								window.location.href = windowURL + '/login'
-							}
-						})
+			//failsafe in case validator fails
+		if($('#newEmail').val() == $('#confirmNewEmail').val()){
+		
+				//follows pattern get user info to get user id > logout > login with provided current password and email
+				//if successfully logged in then email is updated
+			$.ajax({
+				type: 'get',
+				url: windowURL + '/users/me',
+				success: function(data){
+					loginData = {
+						email: currentEmail,
+						password: currentPassword
 					}
-				})
-			}
-		})
+
+					id = data.user.id;
+
+					newEmailData = {
+						id: id, 
+						email: $('#newEmail').val()
+					}
+
+					$.ajax({
+						type: 'get',
+						url: windowURL + '/logout',
+						success: function(){
+
+							$.ajax({
+								type: 'post',
+								url: windowURL + '/login',
+								data: JSON.stringify(loginData),
+								contentType: 'application/json',
+								success: function(data){
+
+									$.ajax({
+										type: 'put',
+										url: windowURL + `/users/${id}`,
+										data: JSON.stringify(newEmailData),
+										contentType: 'application/json',
+										success: function(data){
+											alert('Email successfully changed')
+											window.location.href = windowURL + '/profile'
+										}
+									})
+								},
+								error: function(err){
+									alert('You entered the wrong password. Please log in')
+									window.location.href = windowURL + '/login'
+								}
+							})
+						}
+					})
+				}
+			})
+		}
 
 	})
 }

@@ -266,6 +266,12 @@ input.valid:focus{
 			text-align: center;
 		}
 
+		#submitDiv > button > img{
+			width: 30px;
+			height: 30px;
+			margin-right: 2%;
+		}
+
 		#cancelNewForm{
 			position: absolute;
 			top: 3%;

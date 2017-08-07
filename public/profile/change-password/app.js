@@ -2,26 +2,41 @@ const windowURL = window.location.origin
 
 function format(){
 	let elementArray = ['#currentPassword', '#newPassword', '#confirmNewPassword']
-
+	
+	let errorCount = 0,
+		filledCount = 0
+	
 		elementArray.forEach(element => {
-			if ($(element).val() == ''){
+			
+			if($(element).val() !== ""){
+				filledCount++
+			} 
+
+			else if ($(element).val() == ''){
 				let parent = $(element).parent()
 				$(element).removeClass('valid')
 				$(element).removeClass('error')
 				$(parent).children('.feedback').remove()
 				$(parent).removeClass('has-success')
 				$(parent).removeClass('has-danger')
+				$('#submitButton').prop('disabled', true)
+				errorCount++
 
 			}
 
-			else if ($(element).hasClass('error')){
+			if ($(element).hasClass('error')){
 					let parent = $(element).parent()
 					$(element).removeClass('valid')
 					$(parent).children('.feedback').remove()
 					$(parent).removeClass('has-success').addClass('has-danger')
+					$('#submitButton').prop('disabled', true)
+					errorCount++
 			}
 		}) 
 
+		if(errorCount == 0 && filledCount === 3){
+			$('#submitButton').prop('disabled', false)
+		} 
 }
 
 function displayError(){
@@ -74,56 +89,65 @@ function changePassword(){
 		let newPasswordData;
 		let id;
 
-		$.ajax({
-			type: 'get',
-			url: windowURL + '/users/me',
-			success: function(data){
-				let email = data.user.email
 
-				loginData = {
-					email: email,
-					password: currentPassword
-				}
+		
+			//fail safe in case validator fails
+		if($('#newPassword').val() == $('#confirmNewPassword').val()){
 
-				id = data.user.id;
 
-				newPasswordData = {
-					id: id, 
-					password: $('#newPassword').val()
-				}
+			//follows pattern get user info to get user email > logout > login with provided current password
+			//if successfully logged in then password is updated
+			$.ajax({
+				type: 'get',
+				url: windowURL + '/users/me',
+				success: function(data){
+					let email = data.user.email
 
-				$.ajax({
-					type: 'get',
-					url: windowURL + '/logout',
-					success: function(){
-
-						$.ajax({
-							type: 'post',
-							url: windowURL + '/login',
-							data: JSON.stringify(loginData),
-							contentType: 'application/json',
-							success: function(data){
-
-								$.ajax({
-									type: 'put',
-									url: windowURL + `/users/${id}`,
-									data: JSON.stringify(newPasswordData),
-									contentType: 'application/json',
-									success: function(data){
-										alert('Password successfully changed')
-										window.location.href = windowURL + '/profile'
-									}
-								})
-							},
-							error: function(err){
-								alert('You entered the wrong password. Please log in')
-								window.location.href = windowURL + '/login'
-							}
-						})
+					loginData = {
+						email: email,
+						password: currentPassword
 					}
-				})
-			}
-		})
+
+					id = data.user.id;
+
+					newPasswordData = {
+						id: id, 
+						password: $('#newPassword').val()
+					}
+
+					$.ajax({
+						type: 'get',
+						url: windowURL + '/logout',
+						success: function(){
+
+							$.ajax({
+								type: 'post',
+								url: windowURL + '/login',
+								data: JSON.stringify(loginData),
+								contentType: 'application/json',
+								success: function(data){
+
+									$.ajax({
+										type: 'put',
+										url: windowURL + `/users/${id}`,
+										data: JSON.stringify(newPasswordData),
+										contentType: 'application/json',
+										success: function(data){
+											alert('Password successfully changed')
+											window.location.href = windowURL + '/profile'
+										}
+									})
+								},
+								error: function(err){
+									alert('You entered the wrong password. Please log in')
+									window.location.href = windowURL + '/login'
+								}
+							})
+						}
+					})
+				}
+			})
+		}
 
 	})
 }

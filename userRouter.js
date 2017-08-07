@@ -10,7 +10,7 @@ const jsonParser = bodyParser.json()
 
 const {addDays, nowDate} = require('./resources/date-module')
 
-const {passport, authorize} = require('./passportModule')
+const {passport, authorize} = require('./auth')
 
 userRouter.use(jsonParser)
 userRouter.use(require('cookie-parser')())

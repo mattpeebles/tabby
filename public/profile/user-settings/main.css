@@ -21,6 +21,9 @@
 		box-shadow: 0 0 5px green;
 	}
 
+	.feedback{
+		margin-right: 2%;
+	}
 
 	.title-font{
 		font-family: 'Fjalla One', sans-serif

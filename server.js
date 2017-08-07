@@ -10,7 +10,7 @@ const jsonParser = bodyParser.json()
 const mongoose = require('mongoose')
 mongoose.Promise = global.Promise
 
-const {passport, authorize} = require('./passportModule')
+const {passport, authorize} = require('./auth')
 
 const morgan = require('morgan')
 const session  = require('express-session')

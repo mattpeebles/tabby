@@ -137,7 +137,7 @@ const windowURL = window.location.origin
 
 					mediumHtml = '<div class=\"row\">'
 					mediumHtml += mediumArray[index]
-					mediumCounter = 1 //this is two because i've pushed an element right before.	
+					mediumCounter = 1	
 				}
 			}
 
@@ -157,7 +157,7 @@ const windowURL = window.location.origin
 
 					lowHtml = '<div class=\"row\">'
 					lowHtml += lowArray[index]
-					lowCounter = 2 //this is two because i've pushed an element right before.	
+					lowCounter = 1 	
 				}
 			}
 
@@ -178,6 +178,7 @@ const windowURL = window.location.origin
 
 			elementArray.forEach(element => {
 				if ($(element).hasClass('error')){
+
 						let failureHtml =   
 							  `<span class="glyphicon glyphicon-remove form-control-feedback feedback error" aria-hidden="true"></span>` +
 							  `<span id="inputError2Status" class="sr-only feedback">(error)</span>`
@@ -187,12 +188,18 @@ const windowURL = window.location.origin
 						$(parent).children('.feedback').remove()
 						$(parent).removeClass('has-success').addClass('has-danger')
 						$(parent).append(failureHtml)  
+
+						$('#newLinkFormSubmit').prop('disabled', true)
+				}
+
+				else{
+					$('#newLinkFormSubmit').prop('disabled', false)
 				}
 			}) 
 	}
 
 	function displayError(){
-		$('input').on('keydown', () => {
+		$('input').on('keyup', () => {
 			setTimeout(formatError, 100)
 		})
 	}
@@ -207,19 +214,19 @@ const windowURL = window.location.origin
 				required: true,
 				url: true,
 				normalizer: function(value){
-					
 						// determines if link has http:// or https://, if not, adds http:// for validation
-					if(value.indexOf("http://") == -1 || value.indexOf("https://") == -1){
-						value = 'http://' + value
-						return value
-					}
-					else {
-						return value
-					}
+
+						if(value.indexOf("http://") === -1 && value.indexOf("https://") == -1){
+							value = 'http://' + value
+							return value
+						}
+
+						else {
+							return value
+						}
 				}
 			}
 		},
-
 		// changes success messages
 		success: function(label){
     		let successHtml =   
@@ -264,13 +271,18 @@ const windowURL = window.location.origin
 		$("#linkSection").on('click', '#newLinkFormSubmit', (event) => {
 			event.preventDefault()
 
+			$('#newLinkFormSubmit').prepend(`<img src="/resources/images/loading.gif">`)
+			
+
+
 			let url = $('#linkUrl').val()
 			let priority = $('#linkPriority').val()
 
+			let link = (url.indexOf("http://") === -1 && url.indexOf("https://") == -1) ? 'http://' + url : url
 
 			let newLink = {
 				'priority': priority,
-				'link': url
+				'link': link
 			}
 
 			$.ajax({
@@ -289,10 +301,12 @@ const windowURL = window.location.origin
 					let parent = $('#linkUrl').parent()
 					$('#linkUrl').val('').focus()
 					$('#linkUrl').addClass('error')
+					$('#linkUrl-error').remove()
 					$(parent).append(`<label id="linkUrl-error" class="error" for="linkUrl">${res.responseJSON.message}</label>`)
 					$('#linkUrl').removeClass('valid')
 					$(parent).children('.feedback').remove()
 					$(parent).removeClass('has-success').addClass('has-danger')
+					$('#newLinkFormSubmit').children().remove()
 				}
 			})
 		})
@@ -314,23 +328,23 @@ const windowURL = window.location.origin
 			let title = $(parentDiv).children('.linkTitle').text()
 			
 			let formTemplate = "<div class=\"editForm\" id=\"editLinkFormDiv-" + linkID + "\">" +
-						"<form class=\"normal-font\" id=\"editLinkForm\">" +
-							`<button type="cancel" id="cancelEditForm" class="pull-right btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>` +
-							"<label class=\"title-font\" id=\"editFormLabel\">Update Entry</label>" +
-							"<div class=\'form-group\'>" +
-								`<input type="text" name="putTitle" id="putTitle" placeholder="${title}"" class="form-control">` +
-							"</div>" +
-							"<div class=\'form-group\'>" +
-								"<select name=\"priority\" id=\"linkPriority\" class=\"form-control\">" +
-									"<option id=\"high\" value=\"high\">Gotta Read</option>" +
-									"<option id=\"medium\"value=\"medium\">Will Read</option>" +
-									"<option id=\"low\" value=\"low\">Interesting</option>" +
-							"</div>" +
-							"<div class=\'form-group\'>" +
-								"<input type=\"submit\" name=\"submit\" id=\"editLinkFormSubmit\" class=\"btn btn-variant\"></input>" +
-							"</div>"
-						"<form>" +
-					"</div>";
+									"<form class=\"normal-font\" id=\"editLinkForm\">" +
+										`<button type="cancel" id="cancelEditForm" class="pull-right btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>` +
+										"<label class=\"title-font\" id=\"editFormLabel\">Update Entry</label>" +
+										"<div class=\'form-group\'>" +
+											`<input type="text" name="putTitle" id="putTitle" placeholder="${title}"" class="form-control">` +
+										"</div>" +
+										"<div class=\'form-group\'>" +
+											"<select name=\"priority\" id=\"linkPriority\" class=\"form-control\">" +
+												"<option id=\"high\" value=\"high\">Gotta Read</option>" +
+												"<option id=\"medium\"value=\"medium\">Will Read</option>" +
+												"<option id=\"low\" value=\"low\">Interesting</option>" +
+										"</div>" +
+										"<div class=\'form-group\'>" +
+											"<input type=\"submit\" name=\"submit\" id=\"editLinkFormSubmit\" class=\"btn btn-variant\"></input>" +
+										"</div>"
+									"<form>" +
+								"</div>";
 
 			let formParentDiv = "#editLinkFormDiv-" + linkID
 			
@@ -431,10 +445,6 @@ const windowURL = window.location.origin
 // *********************************** //
 
 
-function displayPopover(){
-	$('#iconAdd').popover({content: "Add New Entry", trigger: "hover", placement: 'bottom', animation: true})
-}
-
 
 	//Add and remove edit features
 // *********************************** //
@@ -461,5 +471,4 @@ $(() => {
 	signout()
 	displayError()
 	cancelEditForm()
-	// displayPopover()
 })

@@ -67,7 +67,7 @@ function editUserData(data){
 			`</div>`+
 			`<div class='form-group has-feedback' id='buttonContainer'>` +
 				`<div class='col-sm-offset-2 col-sm-10' id='buttonDiv'>` +
-					`<input class='btn btn-variant' type="submit" name="submit" id="editUserSubmit"></input>` +
+					`<input class='btn btn-variant' type="submit" name="submit" id="editUserSubmit" disabled></input>` +
 				`</div>` +
 			`</div>` +
 		`</form>`;
@@ -83,8 +83,11 @@ function editUserData(data){
 
 function format(){
 	let elementArray = ['#firstName', '#lastName', '#high', '#medium', '#low']
+	
+	let errorCount = 0
 
-		elementArray.forEach(element => {
+		elementArray.forEach(element => {		
+
 			if ($(element).val() == ''){
 				let parent = $(element).parent()
 				$(element).removeClass('valid')
@@ -92,23 +95,32 @@ function format(){
 				$(parent).children('.feedback').remove()
 				$(parent).removeClass('has-success')
 				$(parent).removeClass('has-danger')
-
 			}
 
-			else if ($(element).hasClass('error')){
+			if ($(element).hasClass('error')){
 					let parent = $(element).parent()
 					$(element).removeClass('valid')
 					$(parent).children('.feedback').remove()
 					$(parent).removeClass('has-success').addClass('has-danger')
+					$('#editUserSubmit').prop('disabled', true)
+					errorCount++
 			}
 		}) 
+		
+		if(errorCount == 0){
+			$('#editUserSubmit').prop('disabled', false)
+		} 
 
 }
 
 function displayError(){
 	$('input').on('keydown', () => {
 		setTimeout(format, 100)
-	})
+	});
+
+	$(window).mousemove(() => {
+		setTimeout(format, 100)
+	});
 }
 
 function validateForm(){
@@ -193,7 +205,7 @@ function getAndEditUserData(){
 
 				
 				if(userData.priorityExpiry !== undefined){
-						//if user changes only one priority, this ensures the object is filled with previous data when submitting
+						//if user changes only one priority, this ensures the object is filled with previous priority numbers when submitting
 					if (userData.priorityExpiry.high === undefined){
 						userData.priorityExpiry.high = parseInt($('#high').attr('placeholder'))
 					};
@@ -203,7 +215,6 @@ function getAndEditUserData(){
 					};
 
 					if (userData.priorityExpiry.low === undefined){
-						console.log('hi')
 						userData.priorityExpiry.low = parseInt($('#low').attr('placeholder'))
 					};
 				}

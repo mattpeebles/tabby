@@ -2,8 +2,16 @@ const windowURL = window.location.origin
 
 function formatError(){
 	let elementArray = ['#firstName', '#lastName', '#email', '#password', '#confirmPassword']
-
+	
+	let errorCount = 0,
+		filledCount = 0
+		
 		elementArray.forEach(element => {
+			
+			if($(element).val() !== ""){
+				filledCount++
+			}
+
 			if ($(element).hasClass('error')){
 					let failureHtml =   
 						  `<span class="glyphicon glyphicon-remove form-control-feedback feedback error" aria-hidden="true"></span>` +
@@ -14,12 +22,22 @@ function formatError(){
 					$(parent).children('.feedback').remove()
 					$(parent).removeClass('has-success').addClass('has-danger')
 					$(parent).append(failureHtml)  
+					$('#registerButton').prop('disabled', true)
+					errorCount++
 			}
-		}) 
+		})
+
+		if(errorCount == 0 && filledCount === 5){
+			$('#registerButton').prop('disabled', false)
+		} 
 }
 
 function displayError(){
 	$('input').on('keydown', () => {
+		setTimeout(formatError, 100)
+	})
+
+	$('input').on('focusout', () => {
 		setTimeout(formatError, 100)
 	})
 }
@@ -55,6 +73,7 @@ function validateForm(){
 					email: $('#email').val()
 				}
 
+					//this provides immediate feedback to users about whether email has already been taken
 				$.ajax({
 					type: 'post',
 					url: windowURL + '/users/email',
@@ -131,7 +150,7 @@ function register(){
 					email: userData.email,
 					password: userData.password
 				}
-
+					//automatically signs in user on successful register
 				$.ajax({
 					type: 'post',
 					url: windowURL + '/login',

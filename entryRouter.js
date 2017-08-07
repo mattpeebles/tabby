@@ -7,7 +7,7 @@ mongoose.Promise = global.Promise
 
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
-const {passport, authorize} = require('./passportModule')
+const {passport, authorize} = require('./auth')
 
 const schedule = require('node-schedule')
 
